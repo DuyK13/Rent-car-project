@@ -22,8 +22,5 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-# properties file
-/BE/rentcarproject/src/main/resources/application.properties
-
 # log file
 /BE/rentcarproject/rentcar.log
