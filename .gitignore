@@ -23,5 +23,7 @@
 hs_err_pid*
 
 # properties file
+/BE/rentcarproject/src/main/resources/application.properties
 
 # log file
+/BE/rentcarproject/rentcar.log
