@@ -8,4 +8,7 @@ import com.iuh.rencar_project.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
+	boolean existsByUsername(String username);
+	
+	boolean existsByIdAndPassword(Long id, String password);
 }

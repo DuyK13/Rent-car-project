@@ -10,54 +10,52 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.iuh.rencar_project.utils.enums.UserStatus;
+import com.iuh.rencar_project.utils.enums.Status;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "Comments")
+@Table(name = "comments")
 public class Comment {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	Long id;
 
 	@Column(nullable = false)
-	private String name;
+	String name;
 
 	@Column(nullable = false)
-	private String email;
+	String email;
 
 	@Column(name = "created_date", nullable = false)
-	private Date createdDate;
+	Date createdDate;
 
 	@Column(nullable = false)
-	private String content;
+	String content;
 
 	@Column(nullable = false)
-	private int likes;
-	
+	int likes;
+
 	@Column(nullable = false)
-	private int dislike;
+	int dislike;
 
 	@Column(name = "status")
 	@Enumerated(EnumType.ORDINAL)
-	private UserStatus status;
+	Status status;
 
 	@OneToOne
 	@JoinColumn(name = "comment_id", referencedColumnName = "id", nullable = false)
-	private Comment comment;
-	
-	@ManyToOne
-	@JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
-	private Post post;
+	Comment comment;
 }

@@ -7,43 +7,38 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.iuh.rencar_project.utils.enums.CarType;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "Cars")
+@Table(name = "cars")
 public class Car {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	Long id;
 
 	@Column(nullable = false, unique = true)
-	private String name;
+	String name;
 
 	@Column(nullable = false, unique = true)
-	private int year;
+	int year;
 
 	@Column(nullable = false)
-	private Long price;
+	Long price;
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
-	private CarType type;
-
-	@ManyToOne
-	@JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
-	private Category category;
+	CarType type;
 }

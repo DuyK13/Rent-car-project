@@ -1,5 +1,6 @@
 package com.iuh.rencar_project.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,57 +25,60 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.iuh.rencar_project.utils.enums.PaymentType;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "Bill")
-@ToString
 public class Bill {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	Long id;
 
 	@Column(nullable = false)
-	private String fullname;
+	String fullname;
+
+	@Column(unique = true)
+	String slug;
 
 	@Column(name = "phone_number", nullable = false)
-	private String phoneNumber;
+	String phoneNumber;
 
 	@Column(nullable = false)
-	private String email;
+	String email;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	@Column(name = "date_set")
-	private Date dateSet;
-	
+	Date dateSet;
+
 	@CreatedDate
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	@Column(name = "created_date", nullable = false)
-	private Date createdDate;
+	Date createdDate;
 
 	@Column(nullable = false)
-	private Long time;
+	Long time;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "payment_type", nullable = false)
-	private PaymentType paymentType;
+	PaymentType paymentType;
 
+	@ManyToMany(cascade = CascadeType.REMOVE)
+	@JoinTable(name = "bills_courses", joinColumns = { @JoinColumn(name = "bill_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "course_id") })
+	List<Course> courses = new ArrayList<Course>();
 
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "Bill_Course", joinColumns = { @JoinColumn(name = "Bill_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "Course_id") })
-	private List<Course> courses;
-	
 	@ManyToOne
 	@JoinColumn(name = "car_id", referencedColumnName = "id", nullable = false)
-	private Car car;
+	Car car;
 }

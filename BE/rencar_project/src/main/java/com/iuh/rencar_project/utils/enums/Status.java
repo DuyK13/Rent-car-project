@@ -1,5 +1,5 @@
 package com.iuh.rencar_project.utils.enums;
 
-public enum UserStatus {
+public enum Status {
 	NON_ACTIVE, ACTIVE;
 }

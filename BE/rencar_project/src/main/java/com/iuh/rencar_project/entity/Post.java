@@ -15,40 +15,51 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "Posts")
+@Table(name = "posts")
 public class Post {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	Long id;
 
-	private String title;
+	String title;
+
+	@Column(unique = true)
+	String slug;
 
 	@CreationTimestamp
 	@Column(name = "created_date")
-	private Date createdDate;
+	Date createdDate;
 
 	@Lob
-	private String content;
+	String content;
 
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "Post_Tag", joinColumns = { @JoinColumn(name = "Post_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "Tag_id") })
-	private List<Tag> tags = new ArrayList<Tag>();
+	@ManyToMany
+	@JoinTable(name = "posts_tags", joinColumns = { @JoinColumn(name = "post_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "tag_id") })
+	List<Tag> tags = new ArrayList<>();
 
 	@ManyToOne
-	@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-	private User user;
+	@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, unique = true)
+	User user;
+	
+	@OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@JoinColumn(name = "post_id", unique = true)
+	List<Comment> comments = new ArrayList<>();
 }

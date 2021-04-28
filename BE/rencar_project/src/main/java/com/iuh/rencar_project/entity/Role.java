@@ -2,29 +2,35 @@ package com.iuh.rencar_project.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.iuh.rencar_project.utils.enums.RolesType;
+
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "Roles")
+@Table(name = "roles")
 public class Role {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	Long id;
 
-	@Column(nullable = false)
-	private String name;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false, unique = true)
+	RolesType name;
 
 }

@@ -1,11 +1,12 @@
 package com.iuh.rencar_project.utils.enums;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@NoArgsConstructor
 public enum CarType {
 
 	MANUAL("Xe số sàn"), AUTO("Xe số tự động");
