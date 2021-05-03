@@ -9,21 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.iuh.rencar_project.utils.mapper.annotation.EncodedMapping;
-
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import com.iuh.rencar_project.utils.mapper.annotation.PasswordEncodedMapping;
 
 @Component
-@RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class PasswordEncoderMapper {
 
 	@Autowired
-	final PasswordEncoder passwordEncoder;
-	
-	@EncodedMapping
+	private PasswordEncoder passwordEncoder;
+
+	@PasswordEncodedMapping
 	public String encode(String value) {
 		return passwordEncoder.encode(value);
 	}

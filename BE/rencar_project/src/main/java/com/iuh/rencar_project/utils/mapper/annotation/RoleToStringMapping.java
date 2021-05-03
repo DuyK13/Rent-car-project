@@ -1,8 +1,3 @@
-/**
- * @author trant
- * @created_date Apr 19, 2021
- * @version 1.0
- */
 package com.iuh.rencar_project.utils.mapper.annotation;
 
 import java.lang.annotation.ElementType;
@@ -12,11 +7,15 @@ import java.lang.annotation.Target;
 
 import org.mapstruct.Qualifier;
 
+/**
+* @author Trần Thế Duy
+* @datetime May 2, 2021 11:30:01 AM
+* @version 0.1
+*/
+
 @Qualifier
-@Target({
-	ElementType.TYPE,
-	ElementType.METHOD
-})
+@Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.CLASS)
-public @interface EncodedMapping {
+public @interface RoleToStringMapping {
+
 }

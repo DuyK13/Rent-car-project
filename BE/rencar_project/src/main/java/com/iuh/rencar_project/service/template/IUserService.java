@@ -5,33 +5,50 @@
  */
 package com.iuh.rencar_project.service.template;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 
-import com.iuh.rencar_project.dto.request.PasswordRequestDTO;
-import com.iuh.rencar_project.dto.request.UserRequestDTO;
+import com.iuh.rencar_project.dto.request.PasswordRequest;
+import com.iuh.rencar_project.dto.request.UserRequest;
 import com.iuh.rencar_project.entity.User;
 
 public interface IUserService {
+	/**
+	 * Save {@link User}
+	 * 
+	 * @param userRequest
+	 * @return {@link String}
+	 */
+	String save(UserRequest userRequest);
+
+	/**
+	 * Update {@link User}
+	 * 
+	 * @param id
+	 * @param userRequest
+	 * @return {@link String}
+	 */
+	String update(Long id, UserRequest userRequest);
+
+	String update(Long id);
+
+	/**
+	 * Exists {@link User} by username
+	 * 
+	 * @param username
+	 * @return {@link Boolean}
+	 */
+	Boolean existsByUsername(String username);
 
 	User findById(Long id);
 
-	List<User> findAll();
-	
-	Page<User> findPaginated(int page, int size);
+	User findByUsername(String username);
 
-	boolean existsByUsername(String username);
-	
-	boolean existsByIdAndPassword(Long id, String password);
+	Page<User> findAllPaginated(int pageNo);
 
-	String save(UserRequestDTO userRequestDTO);
+	String delete(Long id);
 
-	String updateById(Long id);
+	String changePassword(Long id, PasswordRequest passwordRequest);
 
-	String updateById(Long id, UserRequestDTO userRequestDTO);
-	
-	String updatePasswordById(Long id, PasswordRequestDTO passwordRequestDTO);
+	Boolean isRightPassword(String username, String password);
 
-	String deleteById(Long id);
 }

@@ -13,7 +13,10 @@ import java.lang.annotation.Target;
 import org.mapstruct.Qualifier;
 
 @Qualifier
-@Target({ ElementType.TYPE, ElementType.METHOD })
+@Target({
+	ElementType.TYPE,
+	ElementType.METHOD
+})
 @Retention(RetentionPolicy.CLASS)
-public @interface StatusDecoderMapping {
+public @interface PasswordEncodedMapping {
 }

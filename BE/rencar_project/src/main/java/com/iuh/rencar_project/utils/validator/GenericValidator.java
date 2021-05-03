@@ -12,30 +12,25 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import com.iuh.rencar_project.dto.request.PasswordRequestDTO;
-import com.iuh.rencar_project.dto.request.UserRequestDTO;
+import com.iuh.rencar_project.dto.request.LoginRequest;
 
 @PropertySource(ignoreResourceNotFound = true, value = "classpath:validation.properties")
 @Component
 public class GenericValidator implements Validator {
-	
+
 	@Autowired
-	private UserRequestDTOValidator userRequestValidator;
-	
-	@Autowired
-	private PasswordRequestDTOValidator passwordRequestDTOValidator;
+	private LoginRequestValidator loginRequestValidator;
 	
 	@Override
 	public boolean supports(Class<?> clazz) {
-		return (UserRequestDTO.class.equals(clazz)||PasswordRequestDTO.class.equals(clazz));
+		return (LoginRequest.class.equals(clazz));
 	}
 
 	@Override
 	public void validate(Object target, Errors errors) {
-		if (target instanceof UserRequestDTO)
-			ValidationUtils.invokeValidator(userRequestValidator, target, errors);
-		else if (target instanceof PasswordRequestDTO)
-			ValidationUtils.invokeValidator(passwordRequestDTOValidator, target, errors);
+		if(target instanceof LoginRequest) {
+			ValidationUtils.invokeValidator(loginRequestValidator, target, errors);
+		}
 	}
 
 }

@@ -5,25 +5,23 @@
  */
 package com.iuh.rencar_project.utils.mapper;
 
-import java.util.List;
-
+import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.Mappings;
 
-import com.iuh.rencar_project.dto.RoleDTO;
+import com.iuh.rencar_project.dto.request.RoleRequest;
+import com.iuh.rencar_project.dto.response.RoleResponse;
 import com.iuh.rencar_project.entity.Role;
 
 @Mapper(componentModel = "spring")
 public interface IRoleMapper {
 
-	@Mappings({ @Mapping(source = "roleDTO.name", target = "name"), @Mapping(target = "id", ignore = true) })
-	Role toEntity(RoleDTO roleDTO);
+	@Mapping(target = "id", ignore = true)
+	Role toEntity(RoleRequest roleRequest);
 
-	RoleDTO toDTO(Role role);
-	
-	List<RoleDTO> toListDTO(List<Role> roles);
+	@InheritConfiguration(name = "toEntity")
+	void updateEntity(RoleRequest roleRequest, @MappingTarget Role role);
 
-	void updateEntity(RoleDTO roleDTO, @MappingTarget Role role);
+	RoleResponse toResponse(Role role);
 }

@@ -8,31 +8,22 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.iuh.rencar_project.utils.enums.CarType;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "cars")
+@Table(name = "cars", uniqueConstraints = { @UniqueConstraint(columnNames = "name") })
 public class Car {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	String name;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	int year;
 
 	@Column(nullable = false)
