@@ -51,18 +51,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
+		http.cors().and().csrf().disable().httpBasic().and().exceptionHandling()
+				.authenticationEntryPoint(authenticationEntryPoint).and().authorizeRequests().and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+				.authorizeRequests()
+				.antMatchers("/api/login", "/api/logout").permitAll()
+				.antMatchers("/api/admin/**").hasAuthority(ERole.ROLE_ADMIN.name())
 				.antMatchers("/api/auth/**").hasAnyAuthority(ERole.ROLE_ADMIN.name(), ERole.ROLE_MODERATOR.name())
-				.antMatchers("/api/login", "/api/logout").permitAll().anyRequest().authenticated();
+				.anyRequest().authenticated();
 		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
-	
-//	public MethodInvokingFactoryBean methodInvokingFactoryBean() {
-//		MethodInvokingFactoryBean methodInvokingFactoryBean = new MethodInvokingFactoryBean();
-//		methodInvokingFactoryBean.setTargetClass(SecurityContextHolder.class);
-//		methodInvokingFactoryBean.setTargetMethod("setStrategyName");
-//		methodInvokingFactoryBean.setArguments(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
-//		return methodInvokingFactoryBean;
-//	}
+
 }

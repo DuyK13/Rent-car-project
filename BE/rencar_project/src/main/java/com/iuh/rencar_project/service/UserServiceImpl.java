@@ -55,7 +55,6 @@ public class UserServiceImpl implements IUserService {
 		if (this.existsByUsername(username))
 			throw new EntityException("User " + username + " exists");
 		try {
-			System.out.println(userMapper.toEntity(userRequest));
 			userRepository.saveAndFlush(userMapper.toEntity(userRequest));
 		} catch (Exception e) {
 			logger.error("User Exception: ", e);

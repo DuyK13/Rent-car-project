@@ -16,10 +16,10 @@ import com.iuh.rencar_project.entity.User;
 import com.iuh.rencar_project.utils.mapper.annotation.PasswordEncodedMapping;
 import com.iuh.rencar_project.utils.mapper.annotation.RoleToStringMapping;
 import com.iuh.rencar_project.utils.mapper.annotation.StringToRoleMapping;
-import com.iuh.rencar_project.utils.mapper.helper.CollectionMapper;
+import com.iuh.rencar_project.utils.mapper.helper.HelperMapper;
 import com.iuh.rencar_project.utils.mapper.helper.PasswordEncoderMapper;
 
-@Mapper(componentModel = "spring", uses = { PasswordEncoderMapper.class, CollectionMapper.class })
+@Mapper(componentModel = "spring", uses = { PasswordEncoderMapper.class, HelperMapper.class })
 public interface IUserMapper {
 	@Mappings({ @Mapping(target = "roles", source = "roles", qualifiedBy = StringToRoleMapping.class),
 			@Mapping(target = "id", ignore = true),

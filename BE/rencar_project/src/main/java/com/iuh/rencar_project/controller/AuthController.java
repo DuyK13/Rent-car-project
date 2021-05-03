@@ -7,6 +7,7 @@
 ===============================================================================*/
 package com.iuh.rencar_project.controller;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,22 +29,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.iuh.rencar_project.dto.request.PasswordRequest;
 import com.iuh.rencar_project.dto.request.RoleRequest;
+import com.iuh.rencar_project.dto.request.TagRequest;
 import com.iuh.rencar_project.dto.request.UserRequest;
 import com.iuh.rencar_project.dto.response.MessageResponse;
 import com.iuh.rencar_project.dto.response.PageResponse;
 import com.iuh.rencar_project.dto.response.RoleResponse;
+import com.iuh.rencar_project.dto.response.TagResponse;
 import com.iuh.rencar_project.dto.response.UserResponse;
+import com.iuh.rencar_project.entity.Tag;
 import com.iuh.rencar_project.entity.User;
-import com.iuh.rencar_project.security.UserDetailsImpl;
 import com.iuh.rencar_project.service.template.IRoleService;
+import com.iuh.rencar_project.service.template.ITagService;
 import com.iuh.rencar_project.service.template.IUserService;
+import com.iuh.rencar_project.utils.exception.bind.AccessDeniedException;
 import com.iuh.rencar_project.utils.mapper.IRoleMapper;
+import com.iuh.rencar_project.utils.mapper.ITagMapper;
 import com.iuh.rencar_project.utils.mapper.IUserMapper;
 
 /**
  * The Class AuthController.
  */
-@RequestMapping("/api/auth")
+@RequestMapping("/api")
 @RestController
 public class AuthController {
 
@@ -56,6 +61,9 @@ public class AuthController {
 	@Autowired
 	private IUserService userService;
 
+	@Autowired
+	private ITagService tagService;
+
 	/** The role mapper. */
 	@Autowired
 	private IRoleMapper roleMapper;
@@ -63,6 +71,9 @@ public class AuthController {
 	/** The user mapper. */
 	@Autowired
 	private IUserMapper userMapper;
+
+	@Autowired
+	private ITagMapper tagMapper;
 
 	// ======================================
 	// =============== ROLE =================
@@ -74,7 +85,7 @@ public class AuthController {
 	 * @param roleRequest the role request
 	 * @return the response entity
 	 */
-	@PostMapping("/roles")
+	@PostMapping("/admin/roles")
 	public ResponseEntity<?> saveRole(@RequestBody RoleRequest roleRequest) {
 		return new ResponseEntity<>(new MessageResponse(roleService.save(roleRequest)), HttpStatus.OK);
 	}
@@ -84,7 +95,7 @@ public class AuthController {
 	 *
 	 * @return the roles
 	 */
-	@GetMapping("/roles")
+	@GetMapping("/admin/roles")
 	public ResponseEntity<?> getRoles() {
 		List<RoleResponse> roleResponses = roleService.findAll().stream().map(role -> {
 			return roleMapper.toResponse(role);
@@ -102,15 +113,16 @@ public class AuthController {
 	 * @param var the var
 	 * @return the user by id or username
 	 */
-	@GetMapping("/users/{var}")
-	public ResponseEntity<?> getUserByIdOrUsername(@PathVariable(name = "var") String var) {
-		System.out.println(((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-				.getUsername());
+	@GetMapping("/auth/users/{var}")
+	public ResponseEntity<?> getUserByIdOrUsername(@PathVariable(name = "var") String var, Principal principal) {
 		UserResponse userResponse;
 		try {
 			userResponse = userMapper.toResponse(userService.findById(Long.valueOf(var)));
 		} catch (Exception e) {
 			userResponse = userMapper.toResponse(userService.findByUsername(var));
+		}
+		if (!principal.getName().equals(userResponse.getUsername()) && !principal.getName().equals("admin")) {
+			throw new AccessDeniedException("Access Denied!");
 		}
 		return new ResponseEntity<>(userResponse, HttpStatus.OK);
 	}
@@ -121,7 +133,7 @@ public class AuthController {
 	 * @param userRequest the user request
 	 * @return the response entity
 	 */
-	@PostMapping("/users")
+	@PostMapping("/auth/users")
 	public ResponseEntity<?> saveUser(@RequestBody UserRequest userRequest) {
 		return new ResponseEntity<>(new MessageResponse(userService.save(userRequest)), HttpStatus.OK);
 	}
@@ -133,7 +145,7 @@ public class AuthController {
 	 * @param userRequest the user request
 	 * @return the response entity
 	 */
-	@PutMapping("/users/{id}")
+	@PutMapping("/auth/users/{id}")
 	public ResponseEntity<?> updateUser(@PathVariable(name = "id") Long id,
 			@RequestBody(required = false) Optional<UserRequest> userRequest) {
 		if (userRequest.isPresent()) {
@@ -150,7 +162,7 @@ public class AuthController {
 	 * @param id the id
 	 * @return the response entity
 	 */
-	@DeleteMapping("/users/{id}")
+	@DeleteMapping("/admin/users/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable(name = "id") Long id) {
 		return new ResponseEntity<>(new MessageResponse(userService.delete(id)), HttpStatus.OK);
 	}
@@ -161,7 +173,7 @@ public class AuthController {
 	 * @param pageNo the page no
 	 * @return the user paginated
 	 */
-	@GetMapping("/users")
+	@GetMapping("/auth/users")
 	public ResponseEntity<?> getUserPaginated(@RequestParam(name = "pageNo") int pageNo) {
 		Page<UserResponse> pageUserResponse = userService.findAllPaginated(pageNo)
 				.map(new Function<User, UserResponse>() {
@@ -176,7 +188,7 @@ public class AuthController {
 		return new ResponseEntity<>(pageResult, HttpStatus.OK);
 	}
 
-	@PostMapping("/users/{id}/change-password")
+	@PostMapping("/auth/users/{id}/change-password")
 	public ResponseEntity<?> changeUserPassword(@RequestBody PasswordRequest passwordRequest,
 			@PathVariable(name = "id") Long id) {
 		return new ResponseEntity<>(new MessageResponse(userService.changePassword(id, passwordRequest)),
@@ -186,6 +198,49 @@ public class AuthController {
 	// ======================================
 	// =============== TAG ==================
 	// ======================================
-	
-	
+
+	@PostMapping("/auth/tags")
+	public ResponseEntity<?> saveTag(@RequestBody TagRequest tagRequest) {
+		return new ResponseEntity<>(new MessageResponse(tagService.save(tagRequest)), HttpStatus.OK);
+	}
+
+	@PutMapping("/auth/tags/{id}")
+	public ResponseEntity<?> updateTag(@PathVariable(name = "id") Long id, @RequestBody TagRequest tagRequest) {
+		return new ResponseEntity<>(new MessageResponse(tagService.update(id, tagRequest)), HttpStatus.OK);
+
+	}
+
+	@DeleteMapping("/auth/tags/{id}")
+	public ResponseEntity<?> deleteTag(@PathVariable(name = "id") Long id) {
+		return new ResponseEntity<>(new MessageResponse(tagService.delete(id)), HttpStatus.OK);
+	}
+
+	@GetMapping("/auth/tags/{var}")
+	public ResponseEntity<?> getTagByIdOrName(@PathVariable(name = "var") String var) {
+		TagResponse tagResponse;
+		try {
+			tagResponse = tagMapper.toResponse(tagService.findById(Long.valueOf(var)));
+		} catch (NumberFormatException e) {
+			tagResponse = tagMapper.toResponse(tagService.findBySlug(var));
+		}
+		return new ResponseEntity<>(tagResponse, HttpStatus.OK);
+	}
+
+	@GetMapping("/auth/tags")
+	public ResponseEntity<?> getTagPaginated(@RequestParam(name = "pageNo") int pageNo) {
+		Page<TagResponse> pageUserResponse = tagService.findAllPaginated(pageNo).map(new Function<Tag, TagResponse>() {
+
+			@Override
+			public TagResponse apply(Tag tag) {
+				return tagMapper.toResponse(tag);
+			}
+		});
+		PageResponse<TagResponse> pageResult = new PageResponse<TagResponse>(pageUserResponse.getContent(),
+				pageUserResponse.getTotalPages(), pageUserResponse.getNumber());
+		return new ResponseEntity<>(pageResult, HttpStatus.OK);
+	}
+
+	// ======================================
+	// =============== TAG ==================
+	// ======================================
 }

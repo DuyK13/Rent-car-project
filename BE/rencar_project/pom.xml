@@ -10,7 +10,7 @@
 		<relativePath />
 	</parent>
 	<groupId>com.iuh</groupId>
-	<artifactId>rencar_project</artifactId>
+	<artifactId>rentcar_project</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>rencar_project</name>
 	<description>Rent car project</description>

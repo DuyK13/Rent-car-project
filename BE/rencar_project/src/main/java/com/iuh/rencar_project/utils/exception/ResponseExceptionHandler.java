@@ -26,6 +26,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iuh.rencar_project.dto.response.ErrorResponse;
+import com.iuh.rencar_project.utils.exception.bind.AccessDeniedException;
 import com.iuh.rencar_project.utils.exception.bind.EntityException;
 import com.iuh.rencar_project.utils.exception.bind.InvalidInputException;
 import com.iuh.rencar_project.utils.exception.bind.NotFoundException;
@@ -40,7 +41,9 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 	private final HttpStatus BAD_REQUEST = HttpStatus.BAD_REQUEST;
 
 	private final HttpStatus NOT_FOUND = HttpStatus.NOT_FOUND;
-	
+
+	private final HttpStatus FORBIDDEN = HttpStatus.FORBIDDEN;
+
 	@Autowired
 	ObjectMapper objectMapper;
 
@@ -81,6 +84,13 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 		ErrorResponse response = new ErrorResponse(ex.getMessage(), BAD_REQUEST, now);
 		logger.error("Entity Exception: ", ex.getMessage());
 		return new ResponseEntity<Object>(objectMapper.writeValueAsString(response), BAD_REQUEST);
+	}
+
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) throws JsonProcessingException {
+		ErrorResponse response = new ErrorResponse(ex.getMessage(), BAD_REQUEST, now);
+		logger.error("Access Denied Exception: ", ex.getMessage());
+		return new ResponseEntity<Object>(objectMapper.writeValueAsString(response), FORBIDDEN);
 	}
 
 }

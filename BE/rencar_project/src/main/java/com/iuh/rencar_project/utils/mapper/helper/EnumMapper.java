@@ -13,11 +13,6 @@ import com.iuh.rencar_project.utils.mapper.annotation.StatusEncoderMapping;
 @Component
 public class EnumMapper {
 
-//	@StatusDecoderMapping
-//	public int toInt(Status value) {
-//		return value.ordinal();
-//	}
-//
 	@StatusEncoderMapping
 	public Status toStatus(int value) {
 		if(value == 0)

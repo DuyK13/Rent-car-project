@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -27,11 +28,13 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.iuh.rencar_project.utils.enums.Status;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "posts", uniqueConstraints = { @UniqueConstraint(columnNames = "title"),
 		@UniqueConstraint(columnNames = "slug") })
 public class Post {
@@ -188,7 +191,7 @@ public class Post {
 		this.comments = comments;
 	}
 
-	public Post() { 
+	public Post() {
 		super();
 		this.status = Status.ACTIVE;
 	}

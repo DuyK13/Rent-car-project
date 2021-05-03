@@ -46,10 +46,10 @@ public class LoginLogoutController {
 
 	@Autowired
 	private JwtUtils jwtUtils;
-	
+
 	@Autowired
 	private GenericValidator genericValidator;
-	
+
 	@InitBinder
 	public void setup(WebDataBinder webDataBinder) {
 		webDataBinder.addValidators(genericValidator);
