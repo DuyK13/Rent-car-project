@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Fashi Template" />
+    <meta name="keywords" content="Fashi, unica, creative, html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
+    <title>index</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA=" crossorigin="anonymous"></script>
+    <script src="./js/require.js"></script>
+    <script src="../test/js/app.js"></script>
+</head>
+
+<body>
+    <!-- Header Section Begin -->
+    <!-- <div id="includedHeader"></div> -->
+    <!-- Header End -->
+    <button>click</button>
+    <p style="color:red"></p>
+    <!--   <div id="body">
+        <form id="userForm">
+            <input type="text" name="username" id="username" />
+            <input type="text" name="password" id="password" />
+            <input type="checkbox" id="role-admin" name="roles" value="ROLE_ADMIN" />
+            <label for="role-admin"> ROLE_ADMIN</label><br />
+            <input type="checkbox" id="role-moderator" name="roles" value="ROLE_MODERATOR" />
+            <label for="role-moderator"> ROLE_MODERATOR</label><br />
+            <input type="submit" value="Submit" disabled />
+            <input type="reset" value="Cancel" disabled />
+        </form>
+        <br />
+        <button id="enableForm">Enable</button>
+        <p id="value"></p>
+    </div> -->
+    <!-- Footer Section Begin -->
+    <!-- <div id="includedFooter"></div> -->
+    <!-- Footer Section End -->
+    <script>
+    $(document).ready(function() {
+        var data = {
+            username: "admin",
+            password: "admin"
+        };
+        $("button").click(function() {
+            $.ajax({
+                url: "http://localhost:8081/api/login",
+                type: "POST",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(dataa) {
+                    console.log(dataa.email);
+                    console.log(dataa.id);
+                    console.log(dataa.roles);
+                    console.log(dataa.token);
+                    console.log(dataa.username);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                	var jsonData = XMLHttpRequest.responseJSON;
+                	$("p").html(jsonData.message);
+                }
+            });
+        });
+    });
+    /*var orig = [];
+
+    $(document).ready(function () {
+        //     $("#includedHeader").load("_header.html");
+        //     $("#includedFooter").load("_footer.html");
+        $("#userForm input").prop("disabled", true);
+    });
+
+    $.fn.getType = function () {
+        if (this[0].tagName == "INPUT")
+            return $(this[0]).attr("type").toLowerCase();
+        else return this[0].tagName.toLowerCase();
+    };
+
+    $("form").bind("change keyup", function () {
+        var disable = true;
+        $("form :input").each(function () {
+            var type = $(this).getType();
+            var id = $(this).attr("id");
+            if (type == "text" || type == "select") {
+                disable = $.trim(orig[id].value) == $(this).val().trim();
+            } else if (type == "radio" || type == "checkbox") {
+                disable = orig[id].checked == $(this).is(":checked");
+            }
+            if (disable) {
+                $("#userForm input[type='submit']").prop("disabled", true);
+            } else {
+                $("#userForm input[type='submit']").prop("disabled", false);
+            }
+            if (!disable) {
+                return false;
+            }
+        });
+
+        $("#userForm input[type='submit']").prop("disabled", disable); // update button
+    });
+
+    $("#userForm input[type='reset']").click(function (e) {
+        $(this).prop("disabled", true);
+        $("#enableForm").prop("disabled", false);
+        $(this).closest("form").find("input[type='text']").val("");
+        $(this)
+            .closest("form")
+            .find("input[type='checkbox']")
+            .removeAttr("checked");
+    });
+
+    $("#enableForm").click(function (e) {
+        e.preventDefault();
+        $(this).prop("disabled", true);
+        $("#userForm input").prop("disabled", false);
+        $("#userForm #username").val("admin");
+        $("#userForm #password").val("admin");
+        $("#userForm input[type='checkbox']").attr("checked", "checked");
+        $("#userForm input[type='submit']").prop("disabled", true);
+
+        $("form :input").each(function () {
+            var type = $(this).getType();
+            var tmp = { type: type, value: $(this).val() };
+            if (type == "radio") {
+                tmp.checked = $(this).is(":checked");
+            }
+            if (type == "checkbox") {
+                tmp.checked = $(this).is(":checked");
+            }
+            orig[$(this).attr("id")] = tmp;
+        });
+    });
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        var formData = new FormData();
+        var text = $("#userForm").find("input[type=text]");
+        $.each(text, function (key, val) {
+            formData.append($(val).attr('name'), $(val).val());
+        });
+        var checkbox = $("#userForm").find("input[type=checkbox]:checked");
+        var roles = checkbox.map((key, val) => { return $(val).val(); }).get();
+        console.log(roles);
+        formData.append($(checkbox).attr('name'), JSON.stringify(roles));
+        const value = Object.fromEntries(formData.entries());
+        console.log(JSON.stringify(value));
+        // const data = new FormData(event.target);
+        // console.log(data.entries());
+        // const value = Object.fromEntries(data.entries());
+        // value.roles = data.getAll("roles");
+        // console.log(value);
+    }
+        
+    $("form").submit(handleSubmit);*/
+    </script>
+</body>
+
+</html>
