@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>403 Error</title>
+
+<link href="https://fonts.googleapis.com/css?family=Nunito:400,700"
+	rel="stylesheet" />
+
+<style type="text/css">
+* {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+    background-color: black;
+}
+
+#forbidden {
+	position: relative;
+	height: 100vh;
+}
+
+#forbidden .forbidden {
+	position: absolute;
+	left: 50%;
+	top: 20%;
+	-webkit-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+
+.forbidden {
+	width: 100%;
+}
+
+.forbidden .forbidden-401-left {
+    width: 50%;
+    text-align: center;
+	float: left;
+}
+.forbidden .forbidden-401-right {
+    width: 50%;
+	float: left;
+}
+
+.forbidden h1 {
+	font-family: 'Nunito', sans-serif;
+	font-size: 14px;
+	font-weight: 100;
+	margin-top: 0px;
+	margin-bottom: 10px;
+	color: #ffffff;
+}
+
+.forbidden h2 {
+	font-family: 'Nunito', sans-serif;
+	font-size: 24px;
+	font-weight: 500;
+	margin: 0;
+    font-weight: bold;
+	color: #ffffff;
+}
+
+.forbidden p {
+	font-family: 'Nunito', sans-serif;
+	color: #ffffff;
+    font-size: 14px;
+}
+
+.forbidden a {
+	font-family: 'Nunito', sans-serif;
+	display: inline-block;
+	font-weight: 400;
+	border-radius: 40px;
+	text-decoration: none;
+	color: #ffffff;
+}
+.forbidden button {
+    display: inline-block;
+	background-color: red;
+    border: none;
+    height: 35px;
+    width: 70px;
+    border-radius: 10%;
+}
+@media only screen and (max-width: 767px) {
+	.forbidden .forbidden-403 {
+		width: 110px;
+		height: 110px;
+	}
+	.forbidden {
+		padding-left: 15px;
+		padding-right: 15px;
+		padding-top: 110px;
+	}
+}
+</style>
+</head>
+
+<body>
+	<div id="forbidden">
+		<div class="forbidden">
+			<div class="forbidden-401-left">
+                <img src="./326726-64.png">
+                <h1>Status code 401</h1>
+            </div>
+            <div class="forbidden-401-right">
+                <h2>OPPSSS!!!!! Xin Lỗi...</h2>
+                <p>Bạn không có quyền truy cập vào trang này.</p>
+                <p>Vui lòng trở lại trang trước để tiếp tục sử dụng website.</p>
+                <button><a href="#">Quay lại</a></button>
+            </div>
+		</div>
+	</div>
+</body>
+</html>
