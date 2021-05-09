@@ -48,6 +48,9 @@
                 url: "http://localhost:8081/api/login",
                 type: "POST",
                 data: JSON.stringify(data),
+                headers:{
+                	"Authorization": "Bear "
+                }
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function(dataa) {
@@ -58,6 +61,7 @@
                     console.log(dataa.username);
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
+            
                 	var jsonData = XMLHttpRequest.responseJSON;
                 	$("p").html(jsonData.message);
                 }
