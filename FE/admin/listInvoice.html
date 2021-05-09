@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
+    <!-- Twitter meta-->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:site" content="@pratikborsadiya">
+    <meta property="twitter:creator" content="@pratikborsadiya">
+    <!-- Open Graph Meta-->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Vali Admin">
+    <meta property="og:title" content="Vali - Free Bootstrap 4 admin theme">
+    <meta property="og:url" content="http://pratikborsadiya.in/blog/vali-admin">
+    <meta property="og:image" content="http://pratikborsadiya.in/blog/vali-admin/hero-social.png">
+    <meta property="og:description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
+    <title>Danh Sách Users</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Main CSS-->
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <!-- Font-icon css-->
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body class="app sidebar-mini">
+    <!-- Navbar-->
+    <header class="app-header"><a class="app-header__logo" href="dashboard.html">Thuê Xe Tập Lái</a>
+      <!-- Sidebar toggle button--><a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
+      <!-- Navbar Right Menu-->
+      <ul class="app-nav">
+        <!-- Tìm Kiếm Thông Tin !-->
+        <!--
+        <li class="app-search">
+          <input class="app-search__input" type="search" placeholder="Search">
+          <button class="app-search__button"><i class="fa fa-search"></i></button>
+        </li> -->
+        <!--Thông Báo Cho Người Dùng-->
+        <li class="dropdown"><a class="app-nav__item" href="#" data-toggle="dropdown" aria-label="Show notifications"><i class="fa fa-bell-o fa-lg"></i></a>
+          <ul class="app-notification dropdown-menu dropdown-menu-right">
+            <li class="app-notification__title">Bạn Có Thông Báo Mới</li>
+            <div class="app-notification__content">
+              <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span></span>
+                  <div>
+                    <p class="app-notification__message">Lisa Đã Đặt Hàng Thành Công</p>
+                    <p class="app-notification__meta">2 phút trước</p>
+                  </div></a></li>
+              <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-danger"></i><i class="fa fa-hdd-o fa-stack-1x fa-inverse"></i></span></span>
+                  <div>
+                    <p class="app-notification__message">Lisa Đã Trả Xe</p>
+                    <p class="app-notification__meta">30 phút trước</p>
+                  </div></a></li>
+              <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-success"></i><i class="fa fa-money fa-stack-1x fa-inverse"></i></span></span>
+                  <div>
+                    <p class="app-notification__message">Thành Công</p>
+                    <p class="app-notification__meta">2 ngày trước</p>
+                  </div></a></li>
+              <div class="app-notification__content">
+                <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span></span>
+                    <div>
+                      <p class="app-notification__message">An Đã Thực Hiện Thành Công</p>
+                      <p class="app-notification__meta">2 phút trước</p>
+                    </div></a></li>
+                <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-danger"></i><i class="fa fa-hdd-o fa-stack-1x fa-inverse"></i></span></span>
+                    <div>
+                      <p class="app-notification__message">Mail server not working</p>
+                      <p class="app-notification__meta">5 min ago</p>
+                    </div></a></li>
+                <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-success"></i><i class="fa fa-money fa-stack-1x fa-inverse"></i></span></span>
+                    <div>
+                      <p class="app-notification__message">Lisa Thanh Toán Thành Công</p>
+                      <p class="app-notification__meta">2 ngày trước</p>
+                    </div></a></li>
+              </div>
+            </div>
+            <li class="app-notification__footer"><a href="#">Xem Tất Cả Thông Báo</a></li>
+          </ul>
+        </li>
+        <!--Profile Người Dùng-->
+        <li class="dropdown"><a class="app-nav__item" href="#" data-toggle="dropdown" aria-label="Open Profile Menu"><i class="fa fa-user fa-lg"></i></a>
+          <ul class="dropdown-menu settings-menu dropdown-menu-right">
+            
+            <li><a class="dropdown-item" href="chitiettaikhoan.html"><i class="fa fa-user fa-lg"></i> Hồ Sơ</a></li>
+            <li><a class="dropdown-item" href="page-login.html"><i class="fa fa-sign-out fa-lg"></i> Đăng Xuất</a></li>
+          </ul>
+        </li>
+      </ul>
+    </header>
+     <!-- Thong Tin Admin Và Các Trang Quản Lý-->
+     <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+     <aside class="app-sidebar">
+       <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" style="width:50px;height: 50px;" src="https://st4.depositphotos.com/4329009/19956/v/600/depositphotos_199564354-stock-illustration-creative-vector-illustration-default-avatar.jpg" alt="User Image">
+         <div>
+           <p class="app-sidebar__user-name">Nguyễn Văn Vỹ</p>
+           <p class="app-sidebar__user-designation">Lập Trình Viên</p>
+         </div>
+       </div>
+      <!-- Các Chức Năng Thực Hiện !-->
+      <ul class="app-menu">
+        <li><a class="app-menu__item" href="dashboard.html"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a></li>
+        <li class="treeview is-expanded"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-book"></i><span class="app-menu__label">Hoá Đơn</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+          <ul class="treeview-menu">
+            <li><a class="treeview-item active" href="listInvoice.html"><i class="icon fa fa-briefcase"></i>Danh Sách Hoá Đơn</a></li>
+            <li><a class="treeview-item" href="xuathoadon.html"><i class="icon fa fa-print"></i> Xuất Hoá Đơn</a></li>
+          </ul>
+        </li>
+        <!-- Quản Lý Doanh Thu !-->
+        <li><a class="app-menu__item" href="charts.html"><i class="app-menu__icon fa fa-pie-chart"></i><span class="app-menu__label">Quản Lý Doanh Thu</span></a></li>
+        <!-- Quản Lý User !-->
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-user"></i><span class="app-menu__label">Quản Lý User</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+          <ul class="treeview-menu">
+            <li><a class="treeview-item" href="listUser.html"><i class="icon fa fa-address-book-o"></i>Danh Sách Người Dùng</a></li>
+            <li><a class="treeview-item" href="chitiettaikhoan.html"><i class="icon fa fa-info-circle"></i> Thông Tin Chi Tiết Người Dùng</a></li>
+            <li><a class="treeview-item" href="forgotPassword.html"><i class="icon fa fa-key"></i> Quen Mật Khẩu</a></li>
+          </ul>
+        </li>
+        <!-- Quản Lý Sản Phẩm !-->
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-th-list"></i><span class="app-menu__label">Sản Phẩm</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+          <ul class="treeview-menu">
+            <!-- <li><a class="treeview-item" href="table-basic.html"><i class="icon fa fa-circle-o"></i>Quản Lý Người Dùng</a></li>  !-->
+            <li><a class="treeview-item" href="listProduct.html"><i class="icon fa fa-shopping-basket"></i>Danh Sách Sản Phẩm</a></li>
+          </ul>
+        </li>
+        <!-- Quản Lý Bài Post !-->
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-crop"></i><span class="app-menu__label">Bài Post</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+          <ul class="treeview-menu">
+            <li><a class="treeview-item" href="postBaiviet.html"><i class="icon fa fa-bullhorn"></i> Đăng Bài Post</a></li>
+            <li><a class="treeview-item" href="listComment.html"><i class="icon fa fa-comments"></i>Danh Sách Comment</a></li>
+          </ul>
+        </li>
+      </ul>
+    </aside>
+    <main class="app-content">
+      <div class="app-title">
+        <div>
+          <h1><i class="fa fa-th-list"></i> Quản Lý Hoá Đơn</h1>
+        </div>
+        <ul class="app-breadcrumb breadcrumb side">
+          <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+          <li class="breadcrumb-item">Danh Sách Hoá Đơn</li>
+          <li class="breadcrumb-item active"><a href="#">Hoá Đơn</a></li>
+        </ul>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="tile">
+            <div class="tile-body">
+                <div class="table-responsive">
+                <table class="table table-hover table-bordered" id="sampleTable">
+                  <thead>
+                    <tr>
+                      <th>Tên Đơn Hàng</th>  
+                      <th>Số Điện Thoại</th>
+                      <th>Email</th>
+                      <th>Ngày tạo đơn</th>
+                      <th>Giờ Bắt Đầu</th>
+                      <th>Hình Thức Thanh Toán</th>
+                      <th>Khoá Học</th>
+                      <th>Xe Thuê</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Đơn Thuê Xe</td>
+                      <td>0987654321</td>
+                      <td>nguyenvanvy1405@gmail.com</td>
+                      <td>28/05/2020</td>
+                      <td>6:00 am</td>
+                      <td>Momo</td>
+                      <td>Sa Hình</td>
+                      <td>4 Chỗ</td>
+                      <td><button class="btn btn-primary"><i class="fa fa-check-square-o"></i></button></td>
+                    </tr>
+                    </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+
+		<!-- Modal Thông Báo -->
+		<div class="modal fade" id="modalAlert" tabindex="-1" role="dialog"
+			aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Result</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" id="modalAlertContent"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+    <!-- Essential javascripts for application to work-->
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/main.js"></script>
+    <!-- The javascript plugin to display page loading on top-->
+    <script src="/js/plugins/pace.min.js"></script>
+   
+    <!-- Data table plugin JS-->
+    <script type="text/javascript" src="/js/plugins/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/js/plugins/dataTables.bootstrap.min.js"></script>
+    <!-- Dinh dang ngay thang nam-->
+    <script type="text/javascript" src="/js/bootstrap-datapicker.js"></script>
+    <script type="text/javascript">$('#sampleTable').DataTable();</script>
+    <!-- Google analytics script-->
+    <script type="text/javascript">
+      if(document.location.hostname == 'pratikborsadiya.in') {
+      	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      	ga('create', 'UA-72504830-1', 'auto');
+      	ga('send', 'pageview');
+      }
+      
+      $(".datepicker").datepicker({
+        format: "dd/mm/yyyy",
+         todayHighlight: true,
+      });
+    </script>
+  </body>
+</html>
