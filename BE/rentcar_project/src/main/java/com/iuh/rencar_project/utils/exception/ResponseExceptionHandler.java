@@ -36,7 +36,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final static Logger logger = LogManager.getLogger(ResponseExceptionHandler.class);
 
-    private final LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC"));
+    private final LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
 
     private final HttpStatus BAD_REQUEST = HttpStatus.BAD_REQUEST;
 

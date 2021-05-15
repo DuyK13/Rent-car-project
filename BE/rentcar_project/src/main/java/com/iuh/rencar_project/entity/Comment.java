@@ -4,7 +4,7 @@ import com.iuh.rencar_project.utils.enums.Status;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "comments")
@@ -21,9 +21,8 @@ public class Comment {
 	private String email;
 
 	@CreatedDate
-	@Column(name = "created_date", nullable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date createdDate;
+	@Column(name = "created_date")
+	private LocalDateTime createdDate;
 
 	@Column(nullable = false)
 	private String content;
@@ -40,8 +39,8 @@ public class Comment {
 	@JoinColumn(name = "comment_id", referencedColumnName = "id", nullable = false)
 	private Comment comment;
 
-	public Comment(Long id, String name, String email, Date createdDate, String content, int likes, int dislike,
-			Status status, Comment comment) {
+	public Comment(Long id, String name, String email, LocalDateTime createdDate, String content, int likes, int dislike,
+				   Status status, Comment comment) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -85,11 +84,11 @@ public class Comment {
 		this.email = email;
 	}
 
-	public Date getCreatedDate() {
+	public LocalDateTime getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(Date createdDate) {
+	public void setCreatedDate(LocalDateTime createdDate) {
 		this.createdDate = createdDate;
 	}
 

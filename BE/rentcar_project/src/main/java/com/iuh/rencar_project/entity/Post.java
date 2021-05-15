@@ -6,17 +6,16 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "posts", uniqueConstraints = { @UniqueConstraint(columnNames = "title"),
-		@UniqueConstraint(columnNames = "slug") })
+@Table(name = "posts", uniqueConstraints = {@UniqueConstraint(columnNames = "title"),
+		@UniqueConstraint(columnNames = "slug")})
 public class Post {
 
 	@Id
@@ -35,10 +34,8 @@ public class Post {
 	private User createdBy;
 
 	@CreatedDate
-	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	@Column(name = "created_date")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date createdDate;
+	private LocalDateTime createdDate;
 
 	@LastModifiedBy
 	@ManyToOne
@@ -46,10 +43,8 @@ public class Post {
 	private User modifiedBy;
 
 	@LastModifiedDate
-	@DateTimeFormat(pattern = "dd-MM-yyyy")
-	@Column(name = "modefied_date")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date modifiedDate;
+	@Column(name = "modified_date")
+	private LocalDateTime modifiedDate;
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
@@ -60,12 +55,33 @@ public class Post {
 	private String content;
 
 	@ManyToMany
-	@JoinTable(name = "posts_tags", joinColumns = { @JoinColumn(name = "post_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "tag_id") })
+	@JoinTable(name = "posts_tags", joinColumns = {@JoinColumn(name = "post_id")}, inverseJoinColumns = {
+			@JoinColumn(name = "tag_id")})
 	private Set<Tag> tags = new HashSet<>();
 
 	@OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private Set<Comment> comments = new HashSet<>();
+
+	public Post(Long id, String title, String slug, User createdBy, LocalDateTime createdDate, User modifiedBy,
+				LocalDateTime modifiedDate, Status status, String content, Set<Tag> tags, Set<Comment> comments) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.slug = slug;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
+		this.modifiedBy = modifiedBy;
+		this.modifiedDate = modifiedDate;
+		this.status = status;
+		this.content = content;
+		this.tags = tags;
+		this.comments = comments;
+	}
+
+	public Post() {
+		super();
+		this.status = Status.ACTIVE;
+	}
 
 	public Long getId() {
 		return id;
@@ -99,11 +115,11 @@ public class Post {
 		this.createdBy = createdBy;
 	}
 
-	public Date getCreatedDate() {
+	public LocalDateTime getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(Date createdDate) {
+	public void setCreatedDate(LocalDateTime createdDate) {
 		this.createdDate = createdDate;
 	}
 
@@ -115,11 +131,11 @@ public class Post {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public Date getModifiedDate() {
+	public LocalDateTime getModifiedDate() {
 		return modifiedDate;
 	}
 
-	public void setModifiedDate(Date modifiedDate) {
+	public void setModifiedDate(LocalDateTime modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
 
@@ -153,26 +169,5 @@ public class Post {
 
 	public void setComments(Set<Comment> comments) {
 		this.comments = comments;
-	}
-
-	public Post(Long id, String title, String slug, User createdBy, Date createdDate, User modifiedBy,
-			Date modifiedDate, Status status, String content, Set<Tag> tags, Set<Comment> comments) {
-		super();
-		this.id = id;
-		this.title = title;
-		this.slug = slug;
-		this.createdBy = createdBy;
-		this.createdDate = createdDate;
-		this.modifiedBy = modifiedBy;
-		this.modifiedDate = modifiedDate;
-		this.status = status;
-		this.content = content;
-		this.tags = tags;
-		this.comments = comments;
-	}
-
-	public Post() {
-		super();
-		this.status = Status.ACTIVE;
 	}
 }

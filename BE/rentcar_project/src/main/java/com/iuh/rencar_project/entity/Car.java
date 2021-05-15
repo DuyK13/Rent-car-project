@@ -6,10 +6,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -42,10 +41,8 @@ public class Car {
     private User createdBy;
 
     @CreatedDate
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
     @Column(name = "created_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     @LastModifiedBy
     @ManyToOne
@@ -53,15 +50,13 @@ public class Car {
     private User modifiedBy;
 
     @LastModifiedDate
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
-    @Column(name = "modefied_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date modifiedDate;
+    @Column(name = "modified_date")
+    private LocalDateTime modifiedDate;
 
     @Column(name = "image_link", nullable = false)
     private String imageLink;
 
-    public Car(Long id, String name, int year, Long price, CarType type, String slug, User createdBy, Date createdDate, User modifiedBy, Date modifiedDate, String imageLink) {
+    public Car(Long id, String name, int year, Long price, CarType type, String slug, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate, String imageLink) {
         this.id = id;
         this.name = name;
         this.year = year;
@@ -127,11 +122,11 @@ public class Car {
         this.createdBy = createdBy;
     }
 
-    public Date getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -143,11 +138,11 @@ public class Car {
         this.modifiedBy = modifiedBy;
     }
 
-    public Date getModifiedDate() {
+    public LocalDateTime getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(Date modifiedDate) {
+    public void setModifiedDate(LocalDateTime modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 
