@@ -1,6 +1,7 @@
 package com.iuh.rencar_project.controller;
 
 import com.iuh.rencar_project.dto.request.RoleRequest;
+import com.iuh.rencar_project.dto.request.UserRequest;
 import com.iuh.rencar_project.dto.response.MessageResponse;
 import com.iuh.rencar_project.dto.response.RoleResponse;
 import com.iuh.rencar_project.service.template.*;
@@ -74,6 +75,11 @@ public class AdminController {
     // ======================================
     // =============== USER =================
     // ======================================
+
+    @PostMapping("/users")
+    public ResponseEntity<?> saveUser(@RequestBody UserRequest userRequest) {
+        return new ResponseEntity<>(new MessageResponse(userService.save(userRequest)), HttpStatus.OK);
+    }
 
     @PutMapping("/users/{id}")
     public ResponseEntity<?> changeUserStatus(@PathVariable(name = "id") Long id) {

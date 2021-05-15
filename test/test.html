@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Fashi Template" />
+  <meta name="keywords" content="Fashi, unica, creative, html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>test</title>
+  <script src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+    crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+  <script>
+    $(document).ready(function () {
+      $.ajax({
+        url: "http://localhost:8081/api/auth/users/1321231",
+        type: "GET",
+        headers: {
+          "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYyMTE2NjgxOSwiaWF0IjoxNjIxMDgwNDE5fQ.LMZtU-Zn1BoYzOoXd-JRH0yxjREdKD68iDdZBaL43TfQwuwsuMBVlefDAohnT6C9vxR2psFub-_ei_i9aBLIOg"
+        },
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+          console.log(data);
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) { 
+          var jsonData = XMLHttpRequest.responseJSON;
+          console.log(jsonData.message);
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

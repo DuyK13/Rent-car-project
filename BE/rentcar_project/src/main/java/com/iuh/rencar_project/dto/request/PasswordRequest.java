@@ -1,8 +1,3 @@
-/**
- * @author trant
- * @created_date Apr 21, 2021
- * @version 1.0
- */
 package com.iuh.rencar_project.dto.request;
 
 public class PasswordRequest {

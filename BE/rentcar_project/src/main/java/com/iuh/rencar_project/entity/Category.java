@@ -6,10 +6,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,10 +37,8 @@ public class Category {
 	private User createdBy;
 
 	@CreatedDate
-	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	@Column(name = "created_date")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date createdDate;
+	private LocalDateTime createdDate;
 
 	@LastModifiedBy
 	@ManyToOne
@@ -49,10 +46,8 @@ public class Category {
 	private User modifiedBy;
 
 	@LastModifiedDate
-	@DateTimeFormat(pattern = "dd-MM-yyyy")
-	@Column(name = "modefied_date")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date modifiedDate;
+	@Column(name = "modified_date")
+	private LocalDateTime modifiedDate;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -64,10 +59,10 @@ public class Category {
 
 	@OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
 	@JoinColumn(name = "category_id")
-	private Set<Car> cars = new HashSet<Car>();
+	private Set<Car> cars = new HashSet<>();
 
-	public Category(Long id, String name, String slug, String description, User createdBy, Date createdDate,
-			User modifiedBy, Date modifiedDate, Status status, Category category, Set<Car> cars) {
+	public Category(Long id, String name, String slug, String description, User createdBy, LocalDateTime createdDate,
+					User modifiedBy, LocalDateTime modifiedDate, Status status, Category category, Set<Car> cars) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -127,11 +122,11 @@ public class Category {
 		this.createdBy = createdBy;
 	}
 
-	public Date getCreatedDate() {
+	public LocalDateTime getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(Date createdDate) {
+	public void setCreatedDate(LocalDateTime createdDate) {
 		this.createdDate = createdDate;
 	}
 
@@ -143,11 +138,11 @@ public class Category {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public Date getModifiedDate() {
+	public LocalDateTime getModifiedDate() {
 		return modifiedDate;
 	}
 
-	public void setModifiedDate(Date modifiedDate) {
+	public void setModifiedDate(LocalDateTime modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
 

@@ -8,7 +8,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,10 +38,8 @@ public class Bill {
     private User createdBy;
 
     @CreatedDate
-    @DateTimeFormat(pattern = "dd-MM-yyyy hh:mm tt")
     @Column(name = "created_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     @DateTimeFormat(pattern = "dd-MM-yyyy hh:mm tt")
     @Column(name = "time_start")
@@ -70,7 +67,7 @@ public class Bill {
         this.state = BillState.Pre_Order;
     }
 
-    public Bill(Long id, String fullname, String slug, String phoneNumber, String email, User createdBy, Date createdDate, LocalDateTime timeStart, Long extraTime, Set<Course> courses, Car car) {
+    public Bill(Long id, String fullname, String slug, String phoneNumber, String email, User createdBy, LocalDateTime createdDate, LocalDateTime timeStart, Long extraTime, Set<Course> courses, Car car) {
         this.id = id;
         this.fullname = fullname;
         this.slug = slug;
@@ -124,11 +121,11 @@ public class Bill {
         this.email = email;
     }
 
-    public Date getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 

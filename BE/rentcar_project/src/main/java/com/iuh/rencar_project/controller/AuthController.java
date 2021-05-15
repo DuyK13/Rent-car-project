@@ -101,11 +101,6 @@ public class AuthController {
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/users")
-    public ResponseEntity<?> saveUser(@RequestBody UserRequest userRequest) {
-        return new ResponseEntity<>(new MessageResponse(userService.save(userRequest)), HttpStatus.OK);
-    }
-
     @PutMapping("/users/{id}")
     public ResponseEntity<?> updateUser(@PathVariable(name = "id") Long id,
                                         @RequestBody(required = false) UserRequest userRequest) {
@@ -122,7 +117,7 @@ public class AuthController {
         return new ResponseEntity<>(pageResult, HttpStatus.OK);
     }
 
-    @PostMapping("/users/{id}/change-password")
+    @PutMapping("/users/{id}/change-password")
     public ResponseEntity<?> changeUserPassword(@RequestBody PasswordRequest passwordRequest,
                                                 @PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(new MessageResponse(userService.changePassword(id, passwordRequest)),
@@ -151,6 +146,8 @@ public class AuthController {
             tagResponse = tagMapper.toResponse(tagService.findById(Long.valueOf(var)));
         } catch (NumberFormatException e) {
             tagResponse = tagMapper.toResponse(tagService.findBySlug(var));
+            System.out.println(tagService.findBySlug(var).getCreatedDate());
+            System.out.println(tagResponse.getCreatedDate());
         }
         return new ResponseEntity<>(tagResponse, HttpStatus.OK);
     }
