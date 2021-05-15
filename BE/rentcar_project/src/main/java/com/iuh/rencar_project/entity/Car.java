@@ -5,12 +5,14 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "cars", uniqueConstraints = {@UniqueConstraint(columnNames = "name")})
 public class Car {
 
@@ -30,6 +32,9 @@ public class Car {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private CarType type;
+
+    @Column(nullable = false)
+    private String slug;
 
     @CreatedBy
     @ManyToOne
@@ -56,12 +61,13 @@ public class Car {
     @Column(name = "image_link", nullable = false)
     private String imageLink;
 
-    public Car(Long id, String name, int year, Long price, CarType type, User createdBy, Date createdDate, User modifiedBy, Date modifiedDate, String imageLink) {
+    public Car(Long id, String name, int year, Long price, CarType type, String slug, User createdBy, Date createdDate, User modifiedBy, Date modifiedDate, String imageLink) {
         this.id = id;
         this.name = name;
         this.year = year;
         this.price = price;
         this.type = type;
+        this.slug = slug;
         this.createdBy = createdBy;
         this.createdDate = createdDate;
         this.modifiedBy = modifiedBy;
@@ -151,5 +157,13 @@ public class Car {
 
     public void setImageLink(String imageLink) {
         this.imageLink = imageLink;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
     }
 }

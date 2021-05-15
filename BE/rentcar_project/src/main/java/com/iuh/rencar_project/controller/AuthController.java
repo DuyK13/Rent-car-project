@@ -19,11 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 @RestController
 public class AuthController {
 
@@ -37,6 +35,14 @@ public class AuthController {
 
     private final IPostService postService;
 
+    private final ICategoryService categoryService;
+
+    private final ICarService carService;
+
+    private final ICourseService courseService;
+
+    private final IBillService billService;
+
     private final IRoleMapper roleMapper;
 
     private final IUserMapper userMapper;
@@ -47,40 +53,41 @@ public class AuthController {
 
     private final ICommentMapper commentMapper;
 
+    private final ICategoryMapper categoryMapper;
+
+    private final ICarMapper carMapper;
+
+    private final ICourseMapper courseMapper;
+
+    private final IBillMapper billMapper;
+
     @Autowired
-    public AuthController(IRoleService roleService, IUserService userService, ITagService tagService, ICommentService commentService, IPostService postService, IRoleMapper roleMapper, IUserMapper userMapper, ITagMapper tagMapper, IPostMapper postMapper, ICommentMapper commentMapper) {
+    public AuthController(IRoleService roleService, IUserService userService, ITagService tagService, ICommentService commentService, IPostService postService, ICategoryService categoryService, ICarService carService, ICourseService courseService, IBillService billService, IRoleMapper roleMapper, IUserMapper userMapper, ITagMapper tagMapper, IPostMapper postMapper, ICommentMapper commentMapper, ICategoryMapper categoryMapper, ICarMapper carMapper, ICourseMapper courseMapper, IBillMapper billMapper) {
         this.roleService = roleService;
         this.userService = userService;
         this.tagService = tagService;
         this.commentService = commentService;
         this.postService = postService;
+        this.categoryService = categoryService;
+        this.carService = carService;
+        this.courseService = courseService;
+        this.billService = billService;
         this.roleMapper = roleMapper;
         this.userMapper = userMapper;
         this.tagMapper = tagMapper;
         this.postMapper = postMapper;
         this.commentMapper = commentMapper;
-    }
-
-    // ======================================
-    // =============== ROLE =================
-    // ======================================
-
-    @PostMapping("/admin/roles")
-    public ResponseEntity<?> saveRole(@RequestBody RoleRequest roleRequest) {
-        return new ResponseEntity<>(new MessageResponse(roleService.save(roleRequest)), HttpStatus.OK);
-    }
-
-    @GetMapping("/admin/roles")
-    public ResponseEntity<?> getRoles() {
-        List<RoleResponse> roleResponses = roleService.findAll().stream().map(roleMapper::toResponse).collect(Collectors.toList());
-        return new ResponseEntity<>(roleResponses, HttpStatus.OK);
+        this.categoryMapper = categoryMapper;
+        this.carMapper = carMapper;
+        this.courseMapper = courseMapper;
+        this.billMapper = billMapper;
     }
 
     // ======================================
     // =============== USER =================
     // ======================================
 
-    @GetMapping("/auth/users/{var}")
+    @GetMapping("/users/{var}")
     public ResponseEntity<?> getUserByIdOrUsername(@PathVariable(name = "var") String var, Principal principal) {
         UserResponse userResponse;
         try {
@@ -94,29 +101,19 @@ public class AuthController {
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/auth/users")
+    @PostMapping("/users")
     public ResponseEntity<?> saveUser(@RequestBody UserRequest userRequest) {
         return new ResponseEntity<>(new MessageResponse(userService.save(userRequest)), HttpStatus.OK);
     }
 
-    @PutMapping("/auth/users/{id}")
+    @PutMapping("/users/{id}")
     public ResponseEntity<?> updateUser(@PathVariable(name = "id") Long id,
                                         @RequestBody(required = false) UserRequest userRequest) {
         return new ResponseEntity<>(new MessageResponse(userService.update(id, userRequest)), HttpStatus.OK);
 
     }
 
-    @PutMapping("/admin/users/{id}")
-    public ResponseEntity<?> changeUserStatus(@PathVariable(name = "id") Long id){
-        return new ResponseEntity<>(new MessageResponse(userService.update(id)), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/admin/users/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable(name = "id") Long id) {
-        return new ResponseEntity<>(new MessageResponse(userService.delete(id)), HttpStatus.OK);
-    }
-
-    @GetMapping("/auth/users")
+    @GetMapping("/users")
     public ResponseEntity<?> getUserPaginated(@RequestParam(name = "pageNo") int pageNo) {
         Page<UserResponse> pageUserResponse = userService.findAllPaginated(pageNo)
                 .map(userMapper::toResponse);
@@ -125,7 +122,7 @@ public class AuthController {
         return new ResponseEntity<>(pageResult, HttpStatus.OK);
     }
 
-    @PostMapping("/auth/users/{id}/change-password")
+    @PostMapping("/users/{id}/change-password")
     public ResponseEntity<?> changeUserPassword(@RequestBody PasswordRequest passwordRequest,
                                                 @PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(new MessageResponse(userService.changePassword(id, passwordRequest)),
@@ -136,23 +133,18 @@ public class AuthController {
     // =============== TAG ==================
     // ======================================
 
-    @PostMapping("/auth/tags")
+    @PostMapping("/tags")
     public ResponseEntity<?> saveTag(@RequestBody TagRequest tagRequest) {
         return new ResponseEntity<>(new MessageResponse(tagService.save(tagRequest)), HttpStatus.OK);
     }
 
-    @PutMapping("/auth/tags/{id}")
+    @PutMapping("/tags/{id}")
     public ResponseEntity<?> updateTag(@PathVariable(name = "id") Long id, @RequestBody TagRequest tagRequest) {
         return new ResponseEntity<>(new MessageResponse(tagService.update(id, tagRequest)), HttpStatus.OK);
 
     }
 
-    @DeleteMapping("/auth/tags/{id}")
-    public ResponseEntity<?> deleteTag(@PathVariable(name = "id") Long id) {
-        return new ResponseEntity<>(new MessageResponse(tagService.delete(id)), HttpStatus.OK);
-    }
-
-    @GetMapping("/auth/tags/{var}")
+    @GetMapping("/tags/{var}")
     public ResponseEntity<?> getTagByIdOrSlug(@PathVariable(name = "var") String var) {
         TagResponse tagResponse;
         try {
@@ -163,7 +155,7 @@ public class AuthController {
         return new ResponseEntity<>(tagResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/auth/tags")
+    @GetMapping("/tags")
     public ResponseEntity<?> getTagPaginated(@RequestParam(name = "pageNo") int pageNo) {
         Page<TagResponse> pageUserResponse = tagService.findAllPaginated(pageNo).map(tagMapper::toResponse);
         PageResponse<TagResponse> pageResult = new PageResponse<>(pageUserResponse.getContent(),
@@ -175,12 +167,12 @@ public class AuthController {
     // =============== POST =================
     // ======================================
 
-    @PostMapping("/auth/posts")
+    @PostMapping("/posts")
     public ResponseEntity<?> savePost(@RequestBody PostRequest postRequest) {
         return new ResponseEntity<>(new MessageResponse(postService.save(postRequest)), HttpStatus.OK);
     }
 
-    @GetMapping("/auth/posts/{var}")
+    @GetMapping("/posts/{var}")
     public ResponseEntity<?> getPostByIdOrSlug(@PathVariable(name = "var") String var) {
         PostResponse postResponse;
         try {
@@ -191,19 +183,14 @@ public class AuthController {
         return new ResponseEntity<>(postResponse, HttpStatus.OK);
     }
 
-    @PutMapping("/auth/posts/{id}")
+    @PutMapping("/posts/{id}")
     public ResponseEntity<?> updatePost(@PathVariable(name = "id") Long id,
                                         @RequestBody(required = false) Optional<PostRequest> postRequest) {
         return postRequest.map(request -> new ResponseEntity<>(new MessageResponse(postService.update(id, request)), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(new MessageResponse(postService.update(id)), HttpStatus.OK));
 
     }
 
-    @DeleteMapping("/admin/postss/{id}")
-    public ResponseEntity<?> deletePost(@PathVariable(name = "id") Long id) {
-        return new ResponseEntity<>(new MessageResponse(postService.delete(id)), HttpStatus.OK);
-    }
-
-    @GetMapping("/auth/posts")
+    @GetMapping("/posts")
     public ResponseEntity<?> getPostPaginated(@RequestParam(name = "pageNo", defaultValue = "1am") int pageNo) {
         Page<PostResponse> pagePostResponse = postService.findAllPaginated(pageNo)
                 .map(postMapper::toResponse);
@@ -216,18 +203,18 @@ public class AuthController {
     // =============== COMMENT ==============
     // ======================================
 
-    @PutMapping("/auth/comments/{id}")
+    @PutMapping("/comments/{id}")
     public ResponseEntity<?> updateComment(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(new MessageResponse(commentService.update(id)), HttpStatus.OK);
 
     }
 
-    @DeleteMapping("/auth/comments/{id}")
+    @DeleteMapping("/comments/{id}")
     public ResponseEntity<?> deleteComment(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(new MessageResponse(commentService.delete(id)), HttpStatus.OK);
     }
 
-    @GetMapping("/auth/comments")
+    @GetMapping("/comments")
     public ResponseEntity<?> getCommentPaginated(@RequestParam(name = "pageNo", defaultValue = "1am") int pageNo) {
         Page<CommentResponse> pageCommentResponse = commentService.findAllPaginated(pageNo)
                 .map(commentMapper::toResponse);
@@ -240,5 +227,138 @@ public class AuthController {
     // ============== CATEGORY ==============
     // ======================================
 
+    @PostMapping("/categories")
+    public ResponseEntity<?> saveCategory(@RequestBody CategoryRequest categoryRequest) {
+        return new ResponseEntity<>(new MessageResponse(categoryService.save(categoryRequest)), HttpStatus.OK);
+    }
 
+    @GetMapping("/categories/{var}")
+    public ResponseEntity<?> getCategoryByIdOrSlug(@PathVariable(name = "var") String var) {
+        CategoryResponse categoryResponse;
+        try {
+            categoryResponse = categoryMapper.toResponse(categoryService.findById(Long.valueOf(var)));
+        } catch (NumberFormatException e) {
+            categoryResponse = categoryMapper.toResponse(categoryService.findBySlug(var));
+        }
+        return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
+    }
+
+    @PutMapping("/categories/{id}")
+    public ResponseEntity<?> updateCategory(@PathVariable(name = "id") Long id,
+                                            @RequestBody CategoryRequest categoryRequest) {
+        return new ResponseEntity<>(new MessageResponse(categoryService.update(id, categoryRequest)), HttpStatus.OK);
+    }
+
+    @GetMapping("/categories")
+    public ResponseEntity<?> getCategoryPaginated(@RequestParam(name = "pageNo", defaultValue = "1am") int pageNo) {
+        Page<CategoryResponse> pageCategoryResponse = categoryService.findAllPaginated(pageNo)
+                .map(categoryMapper::toResponse);
+        PageResponse<CategoryResponse> pageResult = new PageResponse<>(pageCategoryResponse.getContent(),
+                pageCategoryResponse.getTotalPages(), pageCategoryResponse.getNumber());
+        return new ResponseEntity<>(pageResult, HttpStatus.OK);
+    }
+
+    // ======================================
+    // ================= CAR ================
+    // ======================================
+
+    @PostMapping("/cars")
+    public ResponseEntity<?> saveCar(@RequestBody CarRequest carRequest) {
+        return new ResponseEntity<>(new MessageResponse(carService.save(carRequest)), HttpStatus.OK);
+    }
+
+    @GetMapping("/cars/{var}")
+    public ResponseEntity<?> getCarByIdOrSlug(@PathVariable(name = "var") String var) {
+        CarResponse carResponse;
+        try {
+            carResponse = carMapper.toResponse(carService.findById(Long.valueOf(var)));
+        } catch (NumberFormatException e) {
+            carResponse = carMapper.toResponse(carService.findBySlug(var));
+        }
+        return new ResponseEntity<>(carResponse, HttpStatus.OK);
+    }
+
+    @PutMapping("/cars/{id}")
+    public ResponseEntity<?> updateCar(@PathVariable(name = "id") Long id,
+                                       @RequestBody CarRequest carRequest) {
+        return new ResponseEntity<>(new MessageResponse(carService.update(id, carRequest)), HttpStatus.OK);
+    }
+
+    @GetMapping("/cars")
+    public ResponseEntity<?> getCarPaginated(@RequestParam(name = "pageNo", defaultValue = "1am") int pageNo) {
+        Page<CarResponse> pageCarResponse = carService.findAllPaginated(pageNo)
+                .map(carMapper::toResponse);
+        PageResponse<CarResponse> pageResult = new PageResponse<>(pageCarResponse.getContent(),
+                pageCarResponse.getTotalPages(), pageCarResponse.getNumber());
+        return new ResponseEntity<>(pageResult, HttpStatus.OK);
+    }
+
+    // ======================================
+    // ============== COURSE ================
+    // ======================================
+
+    @PostMapping("/courses")
+    public ResponseEntity<?> saveCourse(@RequestBody CourseRequest courseRequest) {
+        return new ResponseEntity<>(new MessageResponse(courseService.save(courseRequest)), HttpStatus.OK);
+    }
+
+    @GetMapping("/courses/{var}")
+    public ResponseEntity<?> getCourseByIdOrSlug(@PathVariable(name = "var") String var) {
+        CourseResponse courseResponse;
+        try {
+            courseResponse = courseMapper.toResponse(courseService.findById(Long.valueOf(var)));
+        } catch (NumberFormatException e) {
+            courseResponse = courseMapper.toResponse(courseService.findBySlug(var));
+        }
+        return new ResponseEntity<>(courseResponse, HttpStatus.OK);
+    }
+
+    @PutMapping("/courses/{id}")
+    public ResponseEntity<?> updateCourse(@PathVariable(name = "id") Long id,
+                                          @RequestBody CourseRequest courseRequest) {
+        return new ResponseEntity<>(new MessageResponse(courseService.update(id, courseRequest)), HttpStatus.OK);
+    }
+
+    @GetMapping("/courses")
+    public ResponseEntity<?> getCoursePaginated(@RequestParam(name = "pageNo", defaultValue = "1am") int pageNo) {
+        Page<CourseResponse> pageCourseResponse = courseService.findAllPaginated(pageNo)
+                .map(courseMapper::toResponse);
+        PageResponse<CourseResponse> pageResult = new PageResponse<>(pageCourseResponse.getContent(),
+                pageCourseResponse.getTotalPages(), pageCourseResponse.getNumber());
+        return new ResponseEntity<>(pageResult, HttpStatus.OK);
+    }
+
+    // ======================================
+    // ================ BILL ================
+    // ======================================
+
+    @PostMapping("/bills")
+    public ResponseEntity<?> saveBill(@RequestBody BillRequest billRequest) {
+        return new ResponseEntity<>(new MessageResponse(billService.save(billRequest)), HttpStatus.OK);
+    }
+
+    @GetMapping("/bills/{var}")
+    public ResponseEntity<?> getBillByIdOrSlug(@PathVariable(name = "var") String var) {
+        BillResponse billResponse;
+        try {
+            billResponse = billMapper.toResponse(billService.findById(Long.valueOf(var)));
+        } catch (NumberFormatException e) {
+            billResponse = billMapper.toResponse(billService.findBySlug(var));
+        }
+        return new ResponseEntity<>(billResponse, HttpStatus.OK);
+    }
+
+    @PutMapping("/bills/{id}")
+    public ResponseEntity<?> updateBill(@PathVariable(name = "id") Long id) {
+        return new ResponseEntity<>(new MessageResponse(billService.update(id)), HttpStatus.OK);
+    }
+
+    @GetMapping("/bills")
+    public ResponseEntity<?> getBillPaginated(@RequestParam(name = "pageNo", defaultValue = "1am") int pageNo) {
+        Page<BillResponse> pageBillResponse = billService.findAllPaginated(pageNo)
+                .map(billMapper::toResponse);
+        PageResponse<BillResponse> pageResult = new PageResponse<>(pageBillResponse.getContent(),
+                pageBillResponse.getTotalPages(), pageBillResponse.getNumber());
+        return new ResponseEntity<>(pageResult, HttpStatus.OK);
+    }
 }

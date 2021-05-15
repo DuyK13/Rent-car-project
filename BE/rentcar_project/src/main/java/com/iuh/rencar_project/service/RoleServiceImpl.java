@@ -1,8 +1,3 @@
-/**
- * @author trant
- * @created_date Apr 18, 2021
- * @version 1.0
- */
 package com.iuh.rencar_project.service;
 
 import com.iuh.rencar_project.dto.request.RoleRequest;
@@ -22,62 +17,71 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EnumType;
 import java.util.List;
 
+/**
+ * @author Duy Trần Thế
+ * @version 1.0
+ * @date 5/15/2021 10:09 AM
+ */
 @Service
 public class RoleServiceImpl implements IRoleService {
 
-	private static final Logger logger = LogManager.getLogger(RoleServiceImpl.class);
+    private static final Logger logger = LogManager.getLogger(RoleServiceImpl.class);
 
-	@Autowired
-	private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-	@Autowired
-	private IRoleMapper roleMapper;
+    private final IRoleMapper roleMapper;
 
-	@Override
-	public String save(RoleRequest roleRequest) {
-		if (this.existsByName(roleRequest.getName()))
-			throw new EntityException("Role " + roleRequest.getName() + " exists");
-		try {
-			roleRepository.saveAndFlush(roleMapper.toEntity(roleRequest));
-		} catch (Exception e) {
-			logger.error("Role Exception: ", e);
-			throw new EntityException("Role " + roleRequest.getName() + " save fail", e);
-		}
-		return "Role " + roleRequest.getName() + " save success";
-	}
+    @Autowired
+    public RoleServiceImpl(RoleRepository roleRepository, IRoleMapper roleMapper) {
+        this.roleRepository = roleRepository;
+        this.roleMapper = roleMapper;
+    }
 
-	@Override
-	public Role findById(Long id) {
-		return roleRepository.findById(id)
-				.orElseThrow(() -> new NotFoundException("Role with id: " + id + " not found"));
-	}
+    @Override
+    public String save(RoleRequest roleRequest) {
+        if (this.existsByName(roleRequest.getName()))
+            throw new EntityException("Role " + roleRequest.getName() + " exists");
+        try {
+            roleRepository.saveAndFlush(roleMapper.toEntity(roleRequest));
+        } catch (Exception e) {
+            logger.error("Role Exception: ", e);
+            throw new EntityException("Role " + roleRequest.getName() + " save fail", e);
+        }
+        return "Role " + roleRequest.getName() + " save success";
+    }
 
-	@Override
-	public Role findByName(String name) {
-		return roleRepository.findByName(EnumType.valueOf(ERole.class, name))
-				.orElseThrow(() -> new NotFoundException("Role " + name + " not found"));
-	}
+    @Override
+    public Role findById(Long id) {
+        return roleRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Role with id: " + id + " not found"));
+    }
 
-	@Override
-	public Boolean existsByName(String name) {
-		return roleRepository.existsByName(EnumType.valueOf(ERole.class, name));
-	}
+    @Override
+    public Role findByName(String name) {
+        return roleRepository.findByName(EnumType.valueOf(ERole.class, name))
+                .orElseThrow(() -> new NotFoundException("Role " + name + " not found"));
+    }
 
-	@Override
-	public List<Role> findAll() {
-		return roleRepository.findAll();
-	}
+    @Override
+    public Boolean existsByName(String name) {
+        return roleRepository.existsByName(EnumType.valueOf(ERole.class, name));
+    }
 
-	@PostConstruct
-	private void initRole() {
-		if (!this.existsByName("ROLE_ADMIN")) {
-			roleRepository.saveAndFlush(new Role(1L, ERole.ROLE_ADMIN));
-		}
-		if (!this.existsByName("ROLE_MODERATOR")) {
-			roleRepository.saveAndFlush(new Role(2L, ERole.ROLE_MODERATOR));
-		}
-		if (!this.existsByName("ROLE_USER")) {
-			roleRepository.saveAndFlush(new Role(3L, ERole.ROLE_USER));
-		}
-	}
+    @Override
+    public List<Role> findAll() {
+        return roleRepository.findAll();
+    }
+
+    @PostConstruct
+    private void initRole() {
+        if (!this.existsByName("ROLE_ADMIN")) {
+            roleRepository.saveAndFlush(new Role(1L, ERole.ROLE_ADMIN));
+        }
+        if (!this.existsByName("ROLE_MODERATOR")) {
+            roleRepository.saveAndFlush(new Role(2L, ERole.ROLE_MODERATOR));
+        }
+        if (!this.existsByName("ROLE_STAFF")) {
+            roleRepository.saveAndFlush(new Role(3L, ERole.ROLE_STAFF));
+        }
+    }
 }

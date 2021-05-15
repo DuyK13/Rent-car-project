@@ -49,10 +49,10 @@ public class Course {
 	private User modifiedBy;
 
 	@LastModifiedDate
-	@DateTimeFormat(pattern = "dd-MM-yyyy")
-	@Column(name = "modefied_date")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date modifiedDate;
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @Column(name = "modified_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modifiedDate;
 
 	public Course(Long id, String title, Long price, String slug, Long timeCourse, User createdBy, Date createdDate,
 			User modifiedBy, Date modifiedDate) {

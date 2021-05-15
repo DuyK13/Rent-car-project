@@ -7,9 +7,11 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface CarRepository extends JpaRepository<Car, Long>{
+public interface CarRepository extends JpaRepository<Car, Long> {
 
     Optional<Car> findBySlug(String slug);
 
     Boolean existsByName(String name);
+
+    Optional<Car> findByName(String name);
 }

@@ -1,10 +1,7 @@
 package com.iuh.rencar_project.utils.mapper.helper;
 
 import com.iuh.rencar_project.entity.*;
-import com.iuh.rencar_project.service.template.ICategoryService;
-import com.iuh.rencar_project.service.template.ICommentService;
-import com.iuh.rencar_project.service.template.IRoleService;
-import com.iuh.rencar_project.service.template.ITagService;
+import com.iuh.rencar_project.service.template.*;
 import com.iuh.rencar_project.utils.StringUtils;
 import com.iuh.rencar_project.utils.enums.CarType;
 import com.iuh.rencar_project.utils.mapper.annotation.*;
@@ -26,6 +23,27 @@ public class HelperMapper {
     private ICommentService commentService;
 
     private ICategoryService categoryService;
+
+    private ICourseService courseService;
+
+    private IBillService billService;
+
+    private ICarService carService;
+
+    @Autowired
+    public void setCarService(ICarService carService) {
+        this.carService = carService;
+    }
+
+    @Autowired
+    public void setBillService(IBillService billService) {
+        this.billService = billService;
+    }
+
+    @Autowired
+    public void setCourseService(ICourseService courseService) {
+        this.courseService = courseService;
+    }
 
     @Autowired
     public void setTagService(ITagService tagService) {
@@ -97,7 +115,17 @@ public class HelperMapper {
     }
 
     @CarTypeToStringMapping
-    public String toString(CarType carType){
+    public String toString(CarType carType) {
         return carType.getDisplayName();
+    }
+
+    @StringToCourseMapping
+    public Course toCourse(String title) {
+        return courseService.findByTitle(title);
+    }
+
+    @StringToCarMapping
+    public Car toCar(String name) {
+        return carService.findByName(name);
     }
 }

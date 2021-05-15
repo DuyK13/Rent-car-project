@@ -2,6 +2,7 @@ package com.iuh.rencar_project.service.template;
 
 import com.iuh.rencar_project.dto.request.CarRequest;
 import com.iuh.rencar_project.entity.Car;
+import org.springframework.data.domain.Page;
 
 /**
  * @author Duy Trần Thế
@@ -18,7 +19,11 @@ public interface ICarService {
 
     Car findBySlug(String slug);
 
+    Car findByName(String name);
+
     Car findById(Long id);
 
     Boolean existsByName(String name);
+
+    Page<Car> findAllPaginated(int pageNo);
 }

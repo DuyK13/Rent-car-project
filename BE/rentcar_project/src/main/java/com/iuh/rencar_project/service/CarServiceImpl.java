@@ -9,12 +9,18 @@ import com.iuh.rencar_project.utils.exception.bind.NotFoundException;
 import com.iuh.rencar_project.utils.mapper.ICarMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 /**
  * @author Duy Trần Thế
  * @version 1.0
  * @date 5/9/2021 2:55 PM
  */
+@Service
 public class CarServiceImpl implements ICarService {
     private static final Logger logger = LogManager.getLogger(CarServiceImpl.class);
     private final CarRepository carRepository;
@@ -24,7 +30,6 @@ public class CarServiceImpl implements ICarService {
         this.carRepository = carRepository;
         this.carMapper = carMapper;
     }
-
 
     @Override
     public String save(CarRequest carRequest) {
@@ -60,9 +65,9 @@ public class CarServiceImpl implements ICarService {
     public String delete(Long id) {
         Car car = this.findById(id);
         String name = car.getName();
-        try{
+        try {
             carRepository.deleteById(id);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("Car Exception: ", e);
             throw new EntityException("Car " + name + " delete fail");
         }
@@ -71,16 +76,27 @@ public class CarServiceImpl implements ICarService {
 
     @Override
     public Car findBySlug(String slug) {
-        return carRepository.findBySlug(slug).orElseThrow(()-> new NotFoundException("Car with slug " + slug + " not found"));
+        return carRepository.findBySlug(slug).orElseThrow(() -> new NotFoundException("Car with slug " + slug + " not found"));
     }
 
     @Override
     public Car findById(Long id) {
-        return carRepository.findById(id).orElseThrow(()-> new NotFoundException("Car with id " + id + " not found"));
+        return carRepository.findById(id).orElseThrow(() -> new NotFoundException("Car with id " + id + " not found"));
     }
 
     @Override
     public Boolean existsByName(String name) {
         return carRepository.existsByName(name);
+    }
+
+    @Override
+    public Car findByName(String name) {
+        return carRepository.findByName(name).orElseThrow(() -> new NotFoundException("Car with name " + name + " not found"));
+    }
+
+    @Override
+    public Page<Car> findAllPaginated(int pageNo) {
+        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
+        return carRepository.findAll(pageable);
     }
 }
