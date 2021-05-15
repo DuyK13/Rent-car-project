@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Thuê xe ô tô tập lái tại TPHCM -【Đưa Đón Tại Nhà】</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+  <link href="assets/css/style.css" rel="stylesheet">
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/icofont/icofont.min.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="assets/vendor/owl.carousel/assets/owl.carousel.min.css" rel="stylesheet">
+  <link href="assets/vendor/venobox/venobox.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  <style type="text/css">
+
+#wrapper
+{
+	background-color:#ffffff;
+	width:974px;
+	margin:0 auto;
+	position:relative;
+}
+
+#content
+{
+	clear:both;
+}
+
+#center
+{
+	float:left;
+	width:620px;
+	margin-bottom:5px;
+}
+
+
+
+#latest img
+{
+	float:left;
+	margin:5px 7px 7px 0;
+	padding:1px;
+	border:#c9bba0 1px solid;
+}
+
+#headline h3, #featured h3, #popular h3, #latest h3, .sitem h3, #top h3
+{
+	background-color:#d5c6a6;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:11px;
+	color:#333333;
+	padding:3px 7px;
+	text-transform:uppercase;
+	border:#cbbb9a 1px solid;
+	margin-top:0;
+	margin-bottom:3px;
+}
+
+
+#latest, #bottom
+{
+	clear:both;
+}
+
+#sidebar
+{
+	float:right;
+	width:334px;
+	margin:10px;
+}
+
+.sitem, .topitem
+{
+	padding:10px;
+	border:#daccb0 1px solid;
+	background-color:#f4f1e9;
+	margin-bottom:10px;
+	font-family:Arial, Helvetica, sans-serif;
+	color:#333333;
+	overflow:hidden;
+}
+
+.sitem form, .topitem form, .sitem input, .topitem input, .sitem textarea, .topitem textarea, .sitem select, .topitem select
+{
+	max-width:306px;
+}
+
+#left .sitem form, #right .sitem form, .sitem input, #right .sitem input, .sitem textarea, #right .sitem textarea, .sitem select, #right .sitem select
+{
+	max-width:135px;
+}
+
+.sitem img, .topitem img
+{
+	max-width:308px;
+}
+
+#left .sitem img, #right .sitem img
+{
+	max-width:137px;
+}
+
+.sitem h3, #top h3
+{
+	margin-bottom:3px;
+}
+
+ul#categories, .topitem ul
+{
+	list-style-type:none;
+	font-family:Georgia, "Times New Roman", Times, serif;
+	overflow:hidden;
+}
+
+ul#categories li, .topitem ul li
+{
+	margin-left:0;
+	min-height:20px;
+	padding:5px 0 2px 0;
+	font-size:18px;
+	color:#333333;
+}
+
+ul#categories li ul, .topitem li ul
+{
+	margin-left:15px;
+}
+
+ul#categories li a:link, ul#categories li a:visited, .topitem ul li a:link, .topitem ul li a:visited
+{
+	color:#cc3300;
+	text-decoration:none;
+	padding-top:2px;
+}
+
+ul#categories li a:hover, ul#categories li a:active, .topitem ul li a:hover, .topitem ul li a:active
+{
+	color:#cc3300;
+	text-decoration:underline;
+}
+
+
+.sitem, .widget
+{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+}
+
+.sitem ul
+{
+	list-style-type:square;
+	margin-left:14px;
+}
+
+.sitem ul li
+{
+	padding-left:0;
+	margin-left:0;
+	margin-bottom:2px;
+}
+
+
+.sitem ul li a:link, .sitem ul li a:visited, .topitem ul li a:link, .topitem ul li a:visited
+{
+	display:block;
+	color:#cc3300;
+	text-decoration:none;
+	padding-top:2px;
+	padding-bottom:1px;
+	border-bottom:#cc3300 1px dotted;
+}
+
+.sitem ul li a:hover, .sitem ul li a:active, .topitem ul li a:hover, .topitem ul li a:active
+{
+	text-decoration:underline;
+}
+
+#footer
+{
+	clear:both;
+	background-color:#d5c6a6;
+	padding-top:15px;
+	background-image:url(images/flinks.png);
+	background-position:top;
+	background-repeat:repeat-x;
+}
+
+
+a:hover
+{
+	text-decoration: none;
+}
+
+hr
+{
+	border:none;
+	height:3px;
+	background-image:url(images/separator.gif);
+	background-repeat:repeat-x;
+	padding:3px 0;
+}
+
+
+ul
+{
+	list-style-type:none;
+}
+
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+.tab button:hover {
+  background-color: #ddd;
+}
+.tab button.active {
+  background-color: #ccc;
+}
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+  </style>
+</head>
+
+<body>
+   <!-- ======= Header ======= -->
+  <header id="header" class="header-bar" style="height:100px;">
+    <div class="container d-flex align-items-center">
+
+      <h1 class="logo mr-auto"><a href="index.html">Dịch Vụ Thuê Xe Tập Lái</a></h1>
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <!-- <a href="index.html" class="logo mr-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+      <nav class="nav-menu d-none d-lg-block" >
+        <ul>
+          <li><a href="index.html">Trang Chủ</a></li>
+          <li><a href="#about">Khoá Học Tập Lái</a></li>
+          <li><a href="#chefs">Chi Tiết Dòng Xe</a></li>
+          <li class="active"><a href="#">Tin Tức</a></li>
+          <li><a href="#contact">Liên Hệ</a></li>
+          <li class="book-a-table text-center"><a href="#book-a-table">Đăng Ký Thuê Xe</a></li>
+        </ul>
+      </nav><!-- .nav-menu -->
+
+    </div>
+  </header><!-- End Header -->
+ 
+  <main id="app-content">
+    <div class="tab">
+        <button class="tablinks active">Danh Sách Hoá Đơn Đợi Thanh Toán</button>
+        <button class="tablinks">Danh Sách Đã Thanh Toán</button>
+        <button class="tablinks">Chờ Thanh Toán</button>
+    </div>
+       
+      <div id="Danh Sách Hoá Đơn Đợi Thanh Toán" class="tabcontent">
+          <div class="app-title">
+            <div>
+              <h1><i class="fa fa-th-list"></i> Danh Sách Hoá Đơn Đợi Thanh Toán</h1>
+            </div>
+            <ul class="app-breadcrumb breadcrumb side">
+              <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+              <li class="breadcrumb-item">Danh Sách Hoá Đơn Đợi Thanh Toán</li>
+              <li class="breadcrumb-item active"><a href="#">Đợi Thanh Toán</a></li>
+            </ul>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="tile">
+                <div class="tile-body">
+                
+                  <div class="table-responsive">
+                    <table class="table table-hover table-bordered" id="sampleTable">
+                      <thead>
+                        <tr>
+                          <th>Hình Ảnh</th>  
+                          <th>Tên Xe</th>
+                          <th>Năm Sản Xuất</th>
+                          <th>Giá Thuê</th>
+                          <th>Tình Trạng</th>
+                          <th>Thanh Toán</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><img class="app-sidebar__user-avatar" style="width:50px;height: 50px;" src="https://st4.depositphotos.com/4329009/19956/v/600/depositphotos_199564354-stock-illustration-creative-vector-illustration-default-avatar.jpg" alt="User Image"></td>
+                          <td>Vios</td>
+                          <td>2017</td>
+                          <td>350.000đ</td>
+                          <td style="color: green;">Đang Được Thuê</td>
+                          <td><a href="#" data-toggle="modal" data-target="#modalCreate"><i class="fa fa-credit-card"></i></a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+       
+      <div id="Danh Sách Đã Thanh Toán" class="tabcontent">
+        
+            <div class="app-title">
+              <div>
+                <h1><i class="fa fa-th-list"></i> Danh Sách Đã Thanh Toán</h1>
+              </div>
+              <ul class="app-breadcrumb breadcrumb side">
+                <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+                <li class="breadcrumb-item">Danh Sách Đã Thanh Toán</li>
+                <li class="breadcrumb-item active"><a href="#">Đã Thanh Toán</a></li>
+              </ul>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="tile">
+                  <div class="tile-body">
+                  
+                    <div class="table-responsive">
+                      <table class="table table-hover table-bordered" id="sampleTable1">
+                        <thead>
+                          <tr>
+                            <th>Hình Ảnh</th>  
+                            <th>Tên Xe</th>
+                            <th>Năm Sản Xuất</th>
+                            <th>Giá Thuê</th>
+                            <th>Tình Trạng</th>
+                                                        
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><img class="app-sidebar__user-avatar" style="width:50px;height: 50px;" src="https://st4.depositphotos.com/4329009/19956/v/600/depositphotos_199564354-stock-illustration-creative-vector-illustration-default-avatar.jpg" alt="User Image"></td>
+                            <td>Vios</td>
+                            <td>2017</td>
+                            <td>350.000đ</td>
+                            <td style="color: green;">Đang Được Thuê</td>
+                                                    
+                          </tr>
+                          </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
+      </div>
+       
+      <div id="Chờ Thanh Toán" class="tabcontent">
+        
+            <div class="app-title">
+              <div>
+                <h1><i class="fa fa-th-list"></i> Danh Sách Chờ Thanh Toán</h1>
+              </div>
+              <ul class="app-breadcrumb breadcrumb side">
+                <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+                <li class="breadcrumb-item">Danh Sách Chờ Thanh Toán</li>
+                <li class="breadcrumb-item active"><a href="#">Chờ Thanh Toán</a></li>
+              </ul>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="tile">
+                  <div class="tile-body">
+                
+                    <div class="table-responsive">
+                      <table class="table table-hover table-bordered" id="sampleTable2">
+                        <thead>
+                          <tr>
+                            <th>Hình Ảnh</th>  
+                            <th>Tên Xe</th>
+                            <th>Năm Sản Xuất</th>
+                            <th>Giá Thuê</th>
+                            <th>Tình Trạng</th>
+                            <th>Tiếp Thanh Toán</th>
+                                       
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><img class="app-sidebar__user-avatar" style="width:50px;height: 50px;" src="https://st4.depositphotos.com/4329009/19956/v/600/depositphotos_199564354-stock-illustration-creative-vector-illustration-default-avatar.jpg" alt="User Image"></td>
+                            <td>Vios</td>
+                            <td>2017</td>
+                            <td>350.000đ</td>
+                            <td style="color: green;">Đang Được Thuê</td>
+                            <td><a href="#" ></a><i class="fa fa-credit-card"></i></a></td>
+                        
+                          </tr>
+                          </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        
+      </div>
+  </main>
+  <!-- Dialog create -->
+  <div class="modal fade" id="modalCreate" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document" >
+      <div class="modal-content" style="width: 850px;">
+          <div class="modal-header">
+              <h5 class="modal-title">Tạo Mới Sản Phẩm</h5>
+              <button type="button" class="close" data-dismiss="modal"
+                  aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body" >
+              <form id="formCreate" action="javascript:createNewTask()">
+                  <div id="formCreateAlert"></div>
+                  <div class="row">
+                    <div class="col-md-4 order-md-2 mb-4">
+                      <h4 class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted">Chi Tiết Hoá Đơn</span>
+                
+                      </h4>
+                      <ul class="list-group mb-3">
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                          <div>
+                            <h6 class="my-0">Product name</h6>
+                            <small class="text-muted">Brief description</small>
+                          </div>
+                          <span class="text-muted">$12</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                          <div>
+                            <h6 class="my-0">Second product</h6>
+                            <small class="text-muted">Brief description</small>
+                          </div>
+                          <span class="text-muted">$8</span>
+                        </li>
+                        
+                        
+                        <li class="list-group-item d-flex justify-content-between">
+                          <span>Tổng Tiền Đơn Hàng</span>
+                          <strong>$20</strong>
+                        </li>
+                      </ul>
+            
+                    </div>
+                    <div class="col-md-8 order-md-1">
+                      <h4 class="mb-3">Thông Tin Khách Hàng</h4>
+                      <form class="needs-validation" novalidate>
+                        <div class="row">
+                          <div class="col-md-6 mb-3">
+                            <label for="firstName">Họ Tên</label>
+                            <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+                            <div class="invalid-feedback">
+                              Valid first name is required.
+                            </div>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <label for="lastName">Last name</label>
+                            <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
+                            <div class="invalid-feedback">
+                              Valid last name is required.
+                            </div>
+                          </div>
+                        </div>
+            
+                        <div class="mb-3">
+                          <label for="username">Username</label>
+                          <div class="input-group">
+                            
+                            <input type="text" class="form-control" id="username" placeholder="Username" required>
+                            <div class="invalid-feedback" style="width: 100%;">
+                              Your username is required.
+                            </div>
+                          </div>
+                        </div>
+            
+                        <div class="mb-3">
+                          <label for="email">Email</label>
+                          <input type="email" class="form-control" id="email" placeholder="you@example.com">
+                          <div class="invalid-feedback">
+                            Please enter a valid email address for shipping updates.
+                          </div>
+                        </div>
+            
+                        <div class="mb-3">
+                          <label for="address">Address</label>
+                          <input type="text" class="form-control" id="address" placeholder="1234 Main St" required>
+                          <div class="invalid-feedback">
+                            Please enter your shipping address.
+                          </div>
+                        </div>
+            
+                        <hr class="mb-4">
+            
+                        <h4 class="mb-3">Phương Thức Thanh Toán</h4>
+            
+                        <div class="d-block my-3">
+                          <div class="custom-control custom-radio">
+                            <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked required>
+                            <label class="custom-control-label" for="credit">Thanh Toán Trưc Tiếp</label>
+                          </div>
+                          <div class="custom-control custom-radio">
+                            <input id="debit" name="paymentMethod" type="radio" class="custom-control-input" required>
+                            <label class="custom-control-label" for="debit">Thanh Toán Mã QR</label>
+                          </div>
+                          
+                        </div>
+                    
+                    
+                        <hr class="mb-4">
+                        <button class="btn btn-primary btn-lg btn-block" type="submit">Thanh Toán</button>
+                      </form>
+                    </div>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-lg-3 col-md-6">
+            <div class="footer-info">
+              <h3>Restaurantly</h3>
+              <p>
+                A108 Adam Street <br>
+                NY 535022, USA<br><br>
+                <strong>Phone:</strong> +1 5589 55488 55<br>
+                <strong>Email:</strong> info@example.com<br>
+              </p>
+              <div class="social-links mt-3">
+                <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+                <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+                <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+                <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+                <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-6 footer-links">
+            <h4>Useful Links</h4>
+            <ul>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-3 col-md-6 footer-links">
+            <h4>Our Services</h4>
+            <ul>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-4 col-md-6 footer-newsletter">
+            <h4>Our Newsletter</h4>
+            <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
+            <form action="" method="post">
+              <input type="email" name="email"><input type="submit" value="Subscribe">
+            </form>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+
+  <div id="preloader"></div>
+  <a href="#" class="back-to-top"><i class="bx bx-up-arrow-alt"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/jquery/jquery.min.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/jquery.easing/jquery.easing.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/owl.carousel/owl.carousel.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/venobox/venobox.min.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+  <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/main.js"></script>
+    
+  <script type="text/javascript">
+    var buttons = document.getElementsByClassName('tablinks');
+    var contents = document.getElementsByClassName('tabcontent');
+    function showContent(id){
+        for (var i = 0; i < contents.length; i++) {
+            contents[i].style.display = 'none';
+        }
+        var content = document.getElementById(id);
+        content.style.display = 'block';
+    }
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener("click", function(){
+            var id = this.textContent;
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove("active");
+            }
+            this.className += " active";
+            showContent(id);
+        });
+    }
+    showContent('Danh Sách Hoá Đơn Đợi Thanh Toán');
+</script>
+<!-- The javascript plugin to display page loading on top-->
+<script src="/js/plugins/pace.min.js"></script>
+   
+<!-- Data table plugin JS-->
+<script type="text/javascript" src="/js/plugins/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/js/plugins/dataTables.bootstrap.min.js"></script>
+<!-- Dinh dang ngay thang nam-->
+<script type="text/javascript" src="/js/bootstrap-datapicker.js"></script>
+<script type="text/javascript">$('#sampleTable').DataTable();</script>
+<script type="text/javascript">$('#sampleTable1').DataTable();</script>
+<script type="text/javascript">$('#sampleTable2').DataTable();</script>
+<script type="text/javascript">
+    if(document.location.hostname == 'pratikborsadiya.in') {
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-72504830-1', 'auto');
+        ga('send', 'pageview');
+    }
+    
+</script>
+</body>
+
+</html>
