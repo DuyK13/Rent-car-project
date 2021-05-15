@@ -14,17 +14,15 @@ public interface ICategoryService {
 
     String update(Long id, CategoryRequest categoryRequest);
 
-    String update(Long id);
-
     String delete(Long id);
 
     Category findById(Long id);
-
-    Category findByBySlug(String slug);
 
     Page<Category> findAllPaginated(int pageNo);
 
     Boolean existsByName(String name);
 
     Category findByName(String name);
+
+    Category findBySlug(String var);
 }
