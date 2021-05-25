@@ -3,6 +3,7 @@ package com.iuh.rencar_project.service.template;
 import com.iuh.rencar_project.dto.request.CarRequest;
 import com.iuh.rencar_project.entity.Car;
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author Duy Trần Thế
@@ -11,9 +12,9 @@ import org.springframework.data.domain.Page;
  */
 public interface ICarService {
 
-    String save(CarRequest carRequest);
+    String save(CarRequest carRequest, MultipartFile multipartFile);
 
-    String update(Long id, CarRequest carRequest);
+    String update(Long id, CarRequest carRequest, MultipartFile multipartFile);
 
     String delete(Long id);
 
@@ -26,4 +27,6 @@ public interface ICarService {
     Boolean existsByName(String name);
 
     Page<Car> findAllPaginated(int pageNo);
+
+    Car findByCategorySlugAndCarSlugForGuest(String categorySlug, String carSlug);
 }

@@ -71,12 +71,14 @@ public class UserServiceImpl implements IUserService {
         String currentUsername = currentUser.getUsername();
         if (this.existsByUsername(userRequest.getUsername()) && !currentUsername.equals(userRequest.getUsername()))
             throw new EntityException("User " + userRequest.getUsername() + " exists");
+        if(this.existsByEmail(userRequest.getEmail()) && !currentUser.getEmail().equals(userRequest.getEmail()))
+            throw new EntityException("User email " + userRequest.getEmail() + " exists");
         try {
             userMapper.updateUserInformation(userRequest, currentUser);
             userRepository.saveAndFlush(currentUser);
         } catch (Exception e) {
-            logger.error(e.getMessage(), e.getCause());
-            throw new EntityException("User " + currentUsername + " update fail");
+            logger.error(e.getMessage(), e);
+            throw new EntityException(e.getMessage(), e);
         }
         return "User " + currentUsername + " update success";
     }
@@ -107,6 +109,11 @@ public class UserServiceImpl implements IUserService {
     @Override
     public Boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     @Override
@@ -159,6 +166,12 @@ public class UserServiceImpl implements IUserService {
     public Boolean isRightPassword(String username, String password) {
         User currentUser = this.findByUsername(username);
         return passwordEncoder.matches(password, currentUser.getPassword());
+    }
+
+    @Override
+    public Boolean isUserActive(String username) {
+        User currentUser = this.findByUsername(username);
+        return currentUser.getStatus().compareTo(Status.ACTIVE) == 0;
     }
 
     @DependsOn("initRole")

@@ -33,6 +33,8 @@ public class LoginRequestValidator implements Validator {
 			errors.rejectValue("username", "username.notFound", "User " + loginRequest.getUsername() + " not found");
 		} else if (!userService.isRightPassword(loginRequest.getUsername(), loginRequest.getPassword())) {
 			errors.rejectValue("password", "password.wrong", "User " + loginRequest.getUsername() + " wrong password");
+		} else if(!userService.isUserActive(loginRequest.getUsername())){
+			errors.rejectValue("username", "username.inactive", "User " + loginRequest.getUsername() + " is not active or block");
 		}
 	}
 

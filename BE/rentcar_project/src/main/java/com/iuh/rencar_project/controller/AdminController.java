@@ -3,10 +3,14 @@ package com.iuh.rencar_project.controller;
 import com.iuh.rencar_project.dto.request.RoleRequest;
 import com.iuh.rencar_project.dto.request.UserRequest;
 import com.iuh.rencar_project.dto.response.MessageResponse;
+import com.iuh.rencar_project.dto.response.PageResponse;
 import com.iuh.rencar_project.dto.response.RoleResponse;
+import com.iuh.rencar_project.dto.response.UserResponse;
 import com.iuh.rencar_project.service.template.*;
 import com.iuh.rencar_project.utils.mapper.IRoleMapper;
+import com.iuh.rencar_project.utils.mapper.IUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,8 +47,10 @@ public class AdminController {
 
     private final IRoleMapper roleMapper;
 
+    private final IUserMapper userMapper;
+
     @Autowired
-    public AdminController(IRoleService roleService, IUserService userService, ITagService tagService, ICommentService commentService, IPostService postService, ICategoryService categoryService, ICarService carService, ICourseService courseService, IBillService billService, IRoleMapper roleMapper) {
+    public AdminController(IRoleService roleService, IUserService userService, ITagService tagService, ICommentService commentService, IPostService postService, ICategoryService categoryService, ICarService carService, ICourseService courseService, IBillService billService, IRoleMapper roleMapper, IUserMapper userMapper) {
         this.roleService = roleService;
         this.userService = userService;
         this.tagService = tagService;
@@ -55,6 +61,7 @@ public class AdminController {
         this.courseService = courseService;
         this.billService = billService;
         this.roleMapper = roleMapper;
+        this.userMapper = userMapper;
     }
 
     // ======================================
@@ -89,6 +96,15 @@ public class AdminController {
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(new MessageResponse(userService.delete(id)), HttpStatus.OK);
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<?> getUserPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
+        Page<UserResponse> pageUserResponse = userService.findAllPaginated(pageNo)
+                .map(userMapper::toResponse);
+        PageResponse<UserResponse> pageResult = new PageResponse<>(pageUserResponse.getContent(),
+                pageUserResponse.getTotalPages(), pageUserResponse.getNumber());
+        return new ResponseEntity<>(pageResult, HttpStatus.OK);
     }
 
     // ======================================
@@ -128,17 +144,26 @@ public class AdminController {
     // ======================================
     // ============== COURSE ================
     // ======================================
-    @DeleteMapping("/courses/{id}")
-    public ResponseEntity<?> deleteCourse(@PathVariable(name = "id") Long id) {
-        return new ResponseEntity<>(new MessageResponse(courseService.delete(id)), HttpStatus.OK);
+
+    @PutMapping("/courses/{id}")
+    public ResponseEntity<?> changeCourseStatus(@PathVariable(name = "id") Long id){
+        return new ResponseEntity<>(new MessageResponse(courseService.update(id)), HttpStatus.OK);
     }
 
     // ======================================
-    // ============== BILL ================
+    // ============== BILL ==================
     // ======================================
     @DeleteMapping("/bills/{id}")
     public ResponseEntity<?> deleteBill(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(new MessageResponse(billService.delete(id)), HttpStatus.OK);
+    }
+
+    // ======================================
+    // ============== COMMENT ===============
+    // ======================================
+    @DeleteMapping("/comments/{id}")
+    public ResponseEntity<?> deleteComment(@PathVariable(name = "id") Long id) {
+        return new ResponseEntity<>(new MessageResponse(commentService.delete(id)), HttpStatus.OK);
     }
 }
 

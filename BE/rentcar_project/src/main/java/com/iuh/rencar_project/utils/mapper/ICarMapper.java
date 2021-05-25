@@ -3,10 +3,7 @@ package com.iuh.rencar_project.utils.mapper;
 import com.iuh.rencar_project.dto.request.CarRequest;
 import com.iuh.rencar_project.dto.response.CarResponse;
 import com.iuh.rencar_project.entity.Car;
-import com.iuh.rencar_project.utils.mapper.annotation.CarTypeToStringMapping;
-import com.iuh.rencar_project.utils.mapper.annotation.StringToCarTypeMapping;
-import com.iuh.rencar_project.utils.mapper.annotation.StringToSlugMapping;
-import com.iuh.rencar_project.utils.mapper.annotation.UserToStringMapping;
+import com.iuh.rencar_project.utils.mapper.annotation.*;
 import com.iuh.rencar_project.utils.mapper.helper.HelperMapper;
 import org.mapstruct.*;
 
@@ -29,7 +26,7 @@ public interface ICarMapper {
             @Mapping(target = "createdDate", ignore = true),
             @Mapping(target = "modifiedBy", ignore = true),
             @Mapping(target = "modifiedDate", ignore = true),
-            @Mapping(target = "imageLink", source = "image")
+            @Mapping(target = "imageLink", ignore = true)
     })
     Car toEntity(CarRequest carRequest);
 
@@ -39,7 +36,8 @@ public interface ICarMapper {
     @Mappings({
             @Mapping(target = "createdBy", source = "createdBy", qualifiedBy = UserToStringMapping.class),
             @Mapping(target = "modifiedBy", source = "modifiedBy", qualifiedBy = UserToStringMapping.class),
-            @Mapping(target = "carType", source = "type", qualifiedBy = CarTypeToStringMapping.class)
+            @Mapping(target = "type", source = "type", qualifiedBy = CarTypeToStringMapping.class),
+            @Mapping(target = "categoryName", source = "id", qualifiedBy = CarIdToCarCategoryNameMapping.class)
     })
     CarResponse toResponse(Car car);
 }

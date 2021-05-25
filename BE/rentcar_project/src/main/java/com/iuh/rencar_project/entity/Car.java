@@ -53,7 +53,7 @@ public class Car {
     @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
 
-    @Column(name = "image_link", nullable = false)
+    @Column(name = "image_link", unique = true)
     private String imageLink;
 
     public Car(Long id, String name, int year, Long price, CarType type, String slug, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate, String imageLink) {

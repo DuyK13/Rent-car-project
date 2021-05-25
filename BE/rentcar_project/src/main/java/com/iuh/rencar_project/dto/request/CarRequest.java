@@ -10,14 +10,14 @@ public class CarRequest {
     private int year;
     private Long price;
     private String carType;
-    private String image;
+    private String categoryName;
 
-    public CarRequest(String name, int year, Long price, String carType, String image) {
+    public CarRequest(String name, int year, Long price, String carType, String categoryName) {
         this.name = name;
         this.year = year;
         this.price = price;
         this.carType = carType;
-        this.image = image;
+        this.categoryName = categoryName;
     }
 
     public String getName() {
@@ -52,12 +52,12 @@ public class CarRequest {
         this.carType = carType;
     }
 
-    public String getImage() {
-        return image;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public CarRequest() {

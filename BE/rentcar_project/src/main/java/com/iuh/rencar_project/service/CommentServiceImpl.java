@@ -4,6 +4,7 @@ import com.iuh.rencar_project.dto.request.CommentRequest;
 import com.iuh.rencar_project.entity.Comment;
 import com.iuh.rencar_project.repository.CommentRepository;
 import com.iuh.rencar_project.service.template.ICommentService;
+import com.iuh.rencar_project.service.template.IPostService;
 import com.iuh.rencar_project.utils.enums.Status;
 import com.iuh.rencar_project.utils.exception.bind.EntityException;
 import com.iuh.rencar_project.utils.exception.bind.NotFoundException;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Duy Trần Thế
@@ -27,17 +29,22 @@ public class CommentServiceImpl implements ICommentService {
     private static final Logger logger = LogManager.getLogger(CommentServiceImpl.class);
     private final CommentRepository commentRepository;
     private final ICommentMapper commentMapper;
+    private final IPostService postService;
 
     @Autowired
-    public CommentServiceImpl(CommentRepository commentRepository, ICommentMapper commentMapper) {
+    public CommentServiceImpl(CommentRepository commentRepository, ICommentMapper commentMapper, IPostService postService) {
         this.commentRepository = commentRepository;
         this.commentMapper = commentMapper;
+        this.postService = postService;
     }
 
     @Override
-    public String save(CommentRequest commentRequest) {
+    @Transactional(rollbackFor = {Exception.class})
+    public String save(String postSlug, CommentRequest commentRequest) {
         try {
-            commentRepository.saveAndFlush(commentMapper.toEntity(commentRequest));
+            Comment comment = commentMapper.toEntity(commentRequest);
+            commentRepository.saveAndFlush(comment);
+//            postService.updatePostComment(postSlug, comment);
         } catch (Exception e) {
             logger.error("Comment Exception: ", e);
             throw new EntityException("Comment save fail");

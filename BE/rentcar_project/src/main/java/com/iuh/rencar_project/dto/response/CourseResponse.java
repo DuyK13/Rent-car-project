@@ -19,11 +19,12 @@ public class CourseResponse {
     private Date createdDate;
     private String modifiedBy;
     private Date modifiedDate;
+    private String status;
 
     public CourseResponse() {
     }
 
-    public CourseResponse(Long id, String title, Long price, String slug, Long timeCourse, String createdBy, Date createdDate, String modifiedBy, Date modifiedDate) {
+    public CourseResponse(Long id, String title, Long price, String slug, Long timeCourse, String createdBy, Date createdDate, String modifiedBy, Date modifiedDate, String status) {
         this.id = id;
         this.title = title;
         this.price = price;
@@ -33,6 +34,7 @@ public class CourseResponse {
         this.createdDate = createdDate;
         this.modifiedBy = modifiedBy;
         this.modifiedDate = modifiedDate;
+        this.status = status;
     }
 
     public Long getId() {
@@ -105,5 +107,13 @@ public class CourseResponse {
 
     public void setModifiedDate(Date modifiedDate) {
         this.modifiedDate = modifiedDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

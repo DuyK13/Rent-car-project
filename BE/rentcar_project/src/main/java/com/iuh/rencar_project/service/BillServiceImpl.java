@@ -44,7 +44,7 @@ public class BillServiceImpl implements IBillService {
     public String save(BillRequest billRequest) {
         try {
             Bill bill = billMapper.toEntity(billRequest);
-            bill.setSlug(passwordEncoder.encode(this.getCurrentId() + ""));
+            bill.setSlug(passwordEncoder.encode(this.getCurrentId() + "").replace("//", ""));
             billRepository.saveAndFlush(bill);
         } catch (Exception e) {
             logger.error("Bill Exception: ", e);
@@ -54,17 +54,47 @@ public class BillServiceImpl implements IBillService {
     }
 
     @Override
-    public String update(Long id) {
-        Bill bill = this.findById(id);
-        String billId = "#" + bill.getId();
+    public String saveByStaff(BillRequest billRequest) {
         try {
+            Bill bill = billMapper.toEntity(billRequest);
+            bill.setSlug(passwordEncoder.encode(this.getCurrentId() + "").replace("//", ""));
             bill.setState(BillState.Pending_Payment);
             billRepository.saveAndFlush(bill);
         } catch (Exception e) {
             logger.error("Bill Exception: ", e);
-            throw new EntityException("Bill " + billId + " reservation confirmation successful");
+            throw new EntityException("Bill save fail");
         }
-        return "Bill " + billId + " reservation confirmation failed";
+        return "Bill save success";
+    }
+
+    @Override
+    public String updateBillPreOrder(Long id) {
+        Bill bill = this.findById(id);
+        String billId = "#" + bill.getId();
+        try {
+            if (bill.getState().compareTo(BillState.Pre_Order) == 0)
+                bill.setState(BillState.Pending_Payment);
+            billRepository.saveAndFlush(bill);
+        } catch (Exception e) {
+            logger.error("Bill Exception: ", e);
+            throw new EntityException("Bill " + billId + " confirm pre order failed");
+        }
+        return "Bill " + billId + " confirm pre order successful";
+    }
+
+    @Override
+    public String updateBillPendingPayment(Long id) {
+        Bill bill = this.findById(id);
+        String billId = "#" + bill.getId();
+        try {
+            if (bill.getState().compareTo(BillState.Pending_Payment) == 0)
+                bill.setState(BillState.Payed);
+            billRepository.saveAndFlush(bill);
+        } catch (Exception e) {
+            logger.error("Bill Exception: ", e);
+            throw new EntityException("Bill " + billId + " confirm pay failed");
+        }
+        return "Bill " + billId + " confirm pay successful";
     }
 
     @Override

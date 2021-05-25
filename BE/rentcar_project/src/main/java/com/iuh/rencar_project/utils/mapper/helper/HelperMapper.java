@@ -8,6 +8,9 @@ import com.iuh.rencar_project.utils.mapper.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * @author Trần Thế Duy
  * @version 0.1
@@ -99,11 +102,15 @@ public class HelperMapper {
 
     @LongToCommentMapping
     public Comment toComment(Long id) {
+        if(id == null)
+            return null;
         return commentService.findById(id);
     }
 
     @StringToCategoryMapping
     public Category toCategory(String name) {
+        if(name.isEmpty())
+            return null;
         return categoryService.findByName(name);
     }
 
@@ -127,5 +134,12 @@ public class HelperMapper {
     @StringToCarMapping
     public Car toCar(String name) {
         return carService.findByName(name);
+    }
+
+    @CarIdToCarCategoryNameMapping
+    public String addCategoryNameToCar(Long carId){
+        Car car = carService.findById(carId);
+        Category category = categoryService.findByCar(car);
+        return category.getName();
     }
 }

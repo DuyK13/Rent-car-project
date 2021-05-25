@@ -16,18 +16,21 @@ public class BillResponse {
     private String slug;
     private String phoneNumber;
     private String email;
+    private String staff;
     private Date createdDate;
     private LocalDateTime timeStart;
     private Long extraTime;
     private List<CourseResponse> courses;
     private CarResponse car;
     private String state;
+    private Long totalMoney;
 
-    public BillResponse(Long id, String fullname, String slug, String phoneNumber, String email, Date createdDate, LocalDateTime timeStart, Long extraTime, List<CourseResponse> courses, CarResponse car, String state) {
+    public BillResponse(Long id, String fullname, String slug, String phoneNumber, String staff, String email, Date createdDate, LocalDateTime timeStart, Long extraTime, List<CourseResponse> courses, CarResponse car, String state, Long totalMoney) {
         this.id = id;
         this.fullname = fullname;
         this.slug = slug;
         this.phoneNumber = phoneNumber;
+        this.staff = staff;
         this.email = email;
         this.createdDate = createdDate;
         this.timeStart = timeStart;
@@ -35,6 +38,7 @@ public class BillResponse {
         this.courses = courses;
         this.car = car;
         this.state = state;
+        this.totalMoney = totalMoney;
     }
 
     public BillResponse() {
@@ -126,5 +130,21 @@ public class BillResponse {
 
     public void setCar(CarResponse car) {
         this.car = car;
+    }
+
+    public Long getTotalMoney() {
+        return totalMoney;
+    }
+
+    public void setTotalMoney(Long totalMoney) {
+        this.totalMoney = totalMoney;
+    }
+
+    public String getStaff() {
+        return staff;
+    }
+
+    public void setStaff(String staff) {
+        this.staff = staff;
     }
 }

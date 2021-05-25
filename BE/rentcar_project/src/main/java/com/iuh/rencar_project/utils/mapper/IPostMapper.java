@@ -15,7 +15,7 @@ import org.mapstruct.*;
  * @version 1.0
  * @date 5/8/2021 12:06 PM
  */
-@Mapper(componentModel = "spring", uses = {HelperMapper.class, ICommentMapper.class})
+@Mapper(componentModel = "spring", uses = {HelperMapper.class})
 public interface IPostMapper {
 
     @Mappings({
@@ -24,7 +24,6 @@ public interface IPostMapper {
             @Mapping(target = "slug", source = "title", qualifiedBy = StringToSlugMapping.class),
             @Mapping(target = "status", ignore = true),
             @Mapping(target = "content", source = "content"),
-            @Mapping(target = "comments", ignore = true),
             @Mapping(target = "createdBy", ignore = true),
             @Mapping(target = "createdDate", ignore = true),
             @Mapping(target = "modifiedBy", ignore = true),

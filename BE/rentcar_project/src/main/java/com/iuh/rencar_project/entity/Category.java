@@ -57,7 +57,7 @@ public class Category {
 	@JoinColumn(name = "parent_id", referencedColumnName = "id")
 	private Category category;
 
-	@OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "category_id")
 	private Set<Car> cars = new HashSet<>();
 

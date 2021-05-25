@@ -1,7 +1,7 @@
 package com.iuh.rencar_project.entity;
 
 import com.iuh.rencar_project.utils.enums.Status;
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,126 +10,138 @@ import java.time.LocalDateTime;
 @Table(name = "comments")
 public class Comment {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Column(nullable = false)
-	private String name;
+    @Column(nullable = false)
+    private String name;
 
-	@Column(nullable = false)
-	private String email;
+    @Column(nullable = false)
+    private String email;
 
-	@CreatedDate
-	@Column(name = "created_date")
-	private LocalDateTime createdDate;
+    @CreationTimestamp
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
 
-	@Column(nullable = false)
-	private String content;
+    @Column(nullable = false)
+    private String content;
 
-	private int likes;
+    private int likes;
 
-	private int dislike;
+    private int dislike;
 
-	@Enumerated(EnumType.ORDINAL)
-	@Column(nullable = false)
-	private Status status;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false)
+    private Status status;
 
-	@OneToOne
-	@JoinColumn(name = "comment_id", referencedColumnName = "id", nullable = false)
-	private Comment comment;
+    @OneToOne
+    @JoinColumn(name = "comment_id", referencedColumnName = "id")
+    private Comment comment;
 
-	public Comment(Long id, String name, String email, LocalDateTime createdDate, String content, int likes, int dislike,
-				   Status status, Comment comment) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.email = email;
-		this.createdDate = createdDate;
-		this.content = content;
-		this.likes = likes;
-		this.dislike = dislike;
-		this.status = status;
-		this.comment = comment;
-	}
+    @ManyToOne
+    @JoinColumn(name = "post_id", referencedColumnName = "id")
+    private Post post;
 
-	public Comment() {
-		super();
-		this.likes = 0;
-		this.dislike = 0;
-		this.status = Status.INACTIVE;
-	}
+    public Comment(Long id, String name, String email, LocalDateTime createdDate, String content, int likes, int dislike,
+                   Status status, Comment comment, Post post) {
+        super();
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.createdDate = createdDate;
+        this.content = content;
+        this.likes = likes;
+        this.dislike = dislike;
+        this.status = status;
+        this.comment = comment;
+        this.post = post;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Comment() {
+        super();
+        this.likes = 0;
+        this.dislike = 0;
+        this.status = Status.INACTIVE;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public LocalDateTime getCreatedDate() {
-		return createdDate;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setCreatedDate(LocalDateTime createdDate) {
-		this.createdDate = createdDate;
-	}
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
 
-	public String getContent() {
-		return content;
-	}
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+    public String getContent() {
+        return content;
+    }
 
-	public int getLikes() {
-		return likes;
-	}
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-	public void setLikes(int likes) {
-		this.likes = likes;
-	}
+    public int getLikes() {
+        return likes;
+    }
 
-	public int getDislike() {
-		return dislike;
-	}
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
 
-	public void setDislike(int dislike) {
-		this.dislike = dislike;
-	}
+    public int getDislike() {
+        return dislike;
+    }
 
-	public Status getStatus() {
-		return status;
-	}
+    public void setDislike(int dislike) {
+        this.dislike = dislike;
+    }
 
-	public void setStatus(Status status) {
-		this.status = status;
-	}
+    public Status getStatus() {
+        return status;
+    }
 
-	public Comment getComment() {
-		return comment;
-	}
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
-	public void setComment(Comment comment) {
-		this.comment = comment;
-	}
+    public Comment getComment() {
+        return comment;
+    }
 
+    public void setComment(Comment comment) {
+        this.comment = comment;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
 }

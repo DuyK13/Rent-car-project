@@ -97,4 +97,7 @@ public interface IUserService {
      */
     Boolean isRightPassword(String username, String password);
 
+    Boolean isUserActive(String username);
+
+    boolean existsByEmail(String email);
 }

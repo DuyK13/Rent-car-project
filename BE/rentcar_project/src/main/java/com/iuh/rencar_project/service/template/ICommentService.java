@@ -10,7 +10,7 @@ import org.springframework.data.domain.Page;
  * @date 5/8/2021 2:07 PM
  */
 public interface ICommentService {
-    String save(CommentRequest commentRequest);
+    String save(String postSlug, CommentRequest commentRequest);
 
     String update(Long id);
 

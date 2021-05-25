@@ -1,5 +1,6 @@
 package com.iuh.rencar_project.entity;
 
+import com.iuh.rencar_project.utils.enums.Status;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -49,8 +50,11 @@ public class Course {
 	@Column(name = "modified_date")
 	private LocalDateTime modifiedDate;
 
+	@Column(nullable = false)
+	private Status status;
+
 	public Course(Long id, String title, Long price, String slug, Long timeCourse, User createdBy, LocalDateTime createdDate,
-				  User modifiedBy, LocalDateTime modifiedDate) {
+				  User modifiedBy, LocalDateTime modifiedDate, Status status) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -61,10 +65,12 @@ public class Course {
 		this.createdDate = createdDate;
 		this.modifiedBy = modifiedBy;
 		this.modifiedDate = modifiedDate;
+		this.status = status;
 	}
 
 	public Course() {
 		super();
+		this.status = Status.ACTIVE;
 	}
 
 	public Long getId() {
@@ -139,4 +145,11 @@ public class Course {
 		this.modifiedDate = modifiedDate;
 	}
 
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
 }
