@@ -4,6 +4,8 @@ import com.iuh.rencar_project.dto.request.TagRequest;
 import com.iuh.rencar_project.entity.Tag;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 public interface ITagService {
 
 	String save(TagRequest tagRequest);
@@ -21,4 +23,6 @@ public interface ITagService {
 	Page<Tag> findAllPaginated(int pageNo);
 	
 	Boolean existsByName(String name);
+
+    List<Tag> findAll();
 }

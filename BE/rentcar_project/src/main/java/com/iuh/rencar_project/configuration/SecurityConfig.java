@@ -20,7 +20,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private final JwtAuthenticationEntryPoint authenticationEntryPoint;
@@ -55,12 +54,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable().httpBasic().and().exceptionHandling()
-				.authenticationEntryPoint(authenticationEntryPoint).and().authorizeRequests().and().sessionManagement()
+				.authenticationEntryPoint(authenticationEntryPoint).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.authorizeRequests()
-				.antMatchers("/api/login", "/api/logout").permitAll()
+				.antMatchers("/api/login", "/api/logout", "/api/guest/**").permitAll()
 				.antMatchers("/api/admin/**").hasAuthority(ERole.ROLE_ADMIN.name())
 				.antMatchers("/api/auth/**").hasAnyAuthority(ERole.ROLE_ADMIN.name(), ERole.ROLE_MODERATOR.name(), ERole.ROLE_STAFF.name())
+				.antMatchers("/api/staff/**").hasAnyAuthority(ERole.ROLE_ADMIN.name(), ERole.ROLE_STAFF.name())
+				.antMatchers("/api/moderator/**", "/api/file/**").hasAnyAuthority(ERole.ROLE_MODERATOR.name(), ERole.ROLE_ADMIN.name())
 				.anyRequest().authenticated();
 		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}

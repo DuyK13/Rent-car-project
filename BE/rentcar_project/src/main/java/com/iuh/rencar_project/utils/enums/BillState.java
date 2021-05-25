@@ -6,5 +6,5 @@ package com.iuh.rencar_project.utils.enums;
  * @date 5/15/2021 12:47 PM
  */
 public enum BillState {
-    Pre_Order, Pending_Payment
+    Pre_Order, Pending_Payment, Payed
 }

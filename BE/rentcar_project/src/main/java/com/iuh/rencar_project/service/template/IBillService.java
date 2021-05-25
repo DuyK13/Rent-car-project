@@ -12,7 +12,11 @@ import org.springframework.data.domain.Page;
 public interface IBillService {
     String save(BillRequest billRequest);
 
-    String update(Long id);
+    String saveByStaff(BillRequest billRequest);
+
+    String updateBillPreOrder(Long id);
+
+    String updateBillPendingPayment(Long id);
 
     String delete(Long id);
 

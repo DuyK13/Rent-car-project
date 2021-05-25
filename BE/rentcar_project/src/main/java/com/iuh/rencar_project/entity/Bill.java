@@ -3,6 +3,7 @@ package com.iuh.rencar_project.entity;
 import com.iuh.rencar_project.utils.enums.BillState;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -32,10 +33,10 @@ public class Bill {
     @Column(nullable = false)
     private String email;
 
-    @CreatedBy
+    @LastModifiedBy
     @ManyToOne
-    @JoinColumn(name = "created_by", referencedColumnName = "id")
-    private User createdBy;
+    @JoinColumn(name = "staff_id", referencedColumnName = "id")
+    private User staff;
 
     @CreatedDate
     @Column(name = "created_date")
@@ -63,22 +64,22 @@ public class Bill {
 
     public Bill() {
         super();
-        this.createdBy = null;
         this.state = BillState.Pre_Order;
     }
 
-    public Bill(Long id, String fullname, String slug, String phoneNumber, String email, User createdBy, LocalDateTime createdDate, LocalDateTime timeStart, Long extraTime, Set<Course> courses, Car car) {
+    public Bill(Long id, String fullname, String slug, String phoneNumber, String email, User staff, LocalDateTime createdDate, LocalDateTime timeStart, Long extraTime, Set<Course> courses, Car car, BillState state) {
         this.id = id;
         this.fullname = fullname;
         this.slug = slug;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.createdBy = createdBy;
+        this.staff = staff;
         this.createdDate = createdDate;
         this.timeStart = timeStart;
         this.extraTime = extraTime;
         this.courses = courses;
         this.car = car;
+        this.state = state;
     }
 
     public Long getId() {
@@ -161,12 +162,12 @@ public class Bill {
         this.extraTime = extraTime;
     }
 
-    public User getCreatedBy() {
-        return createdBy;
+    public User getStaff() {
+        return staff;
     }
 
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
+    public void setStaff(User staff) {
+        this.staff = staff;
     }
 
     public BillState getState() {

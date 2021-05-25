@@ -12,24 +12,31 @@ public class CarResponse {
     private String name;
     private int year;
     private Long price;
-    private String carType;
+    private String type;
+    private String slug;
     private String createdBy;
     private Date createdDate;
     private String modifiedBy;
     private Date modifiedDate;
     private String imageLink;
+    private String categoryName;
 
-    public CarResponse(Long id, String name, int year, Long price, String carType, String createdBy, Date createdDate, String modifiedBy, Date modifiedDate, String imageLink) {
+    public CarResponse(Long id, String name, int year, Long price, String type, String slug, String createdBy, Date createdDate, String modifiedBy, Date modifiedDate, String imageLink, String categoryName) {
         this.id = id;
         this.name = name;
         this.year = year;
         this.price = price;
-        this.carType = carType;
+        this.type = type;
+        this.slug = slug;
         this.createdBy = createdBy;
         this.createdDate = createdDate;
         this.modifiedBy = modifiedBy;
         this.modifiedDate = modifiedDate;
         this.imageLink = imageLink;
+        this.categoryName = categoryName;
+    }
+
+    public CarResponse() {
     }
 
     public Long getId() {
@@ -64,12 +71,12 @@ public class CarResponse {
         this.price = price;
     }
 
-    public String getCarType() {
-        return carType;
+    public String getType() {
+        return type;
     }
 
-    public void setCarType(String carType) {
-        this.carType = carType;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getCreatedBy() {
@@ -112,6 +119,19 @@ public class CarResponse {
         this.imageLink = imageLink;
     }
 
-    public CarResponse() {
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
     }
 }

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -91,9 +92,16 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) throws JsonProcessingException {
-        ErrorResponse response = new ErrorResponse(ex.getMessage(), BAD_REQUEST, now);
+        ErrorResponse response = new ErrorResponse(ex.getMessage(), FORBIDDEN, now);
         logger.error("Access Denied Exception: ", ex);
         return new ResponseEntity<>(objectMapper.writeValueAsString(response), FORBIDDEN);
+    }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<Object> handleIOException(IOException ex) throws JsonProcessingException {
+        ErrorResponse response = new ErrorResponse(ex.getMessage(), BAD_REQUEST, now);
+        logger.error("IOException: ", ex);
+        return new ResponseEntity<>(objectMapper.writeValueAsString(response), BAD_REQUEST);
     }
 
 }

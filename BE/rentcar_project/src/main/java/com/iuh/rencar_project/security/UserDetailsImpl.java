@@ -11,106 +11,104 @@ import java.util.stream.Collectors;
 
 /**
  * @author Trần Thế Duy
- * @datetime May 1, 2021 3:42:42 PM
  * @version 0.1
+ * @datetime May 1, 2021 3:42:42 PM
  */
 
 public class UserDetailsImpl implements UserDetails {
 
-	private static final long serialVersionUID = -1727523164440055974L;
+    private static final long serialVersionUID = -1727523164440055974L;
+    private Long id;
+    private String username;
+    private String password;
+    private Collection<? extends GrantedAuthority> authorities;
+    private String email;
 
-	private Long id;
+    public UserDetailsImpl(Long id, String username, String email, String password,
+                           Collection<? extends GrantedAuthority> authorities) {
+        super();
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.authorities = authorities;
+    }
 
-	private String username;
+    public static UserDetailsImpl build(User user) {
+        Collection<GrantedAuthority> authorities = user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName().name())).collect(Collectors.toList());
+        return new UserDetailsImpl(user.getId(), user.getUsername(), user.getEmail(), user.getPassword(), authorities);
+    }
 
-	private String email;
+    @Override
+    public String getUsername() {
+        return username;
+    }
 
-	private String password;
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	private Collection<? extends GrantedAuthority> authorities;
+    @Override
+    public String getPassword() {
+        return password;
+    }
 
-	public UserDetailsImpl(Long id, String username, String email, String password,
-			Collection<? extends GrantedAuthority> authorities) {
-		super();
-		this.id = id;
-		this.username = username;
-		this.email = email;
-		this.password = password;
-		this.authorities = authorities;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null || getClass() != obj.getClass())
-			return false;
-		UserDetailsImpl user = (UserDetailsImpl) obj;
-		return Objects.equals(id, user.getId());
-	}
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
 
-	public static UserDetailsImpl build(User user) {
-		Collection<GrantedAuthority> authorities = user.getRoles().stream().map(role->new SimpleGrantedAuthority(role.getName().name())).collect(Collectors.toList());
-		return new UserDetailsImpl(user.getId(), user.getUsername(), user.getEmail(), user.getPassword(), authorities);
-	}
+    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+        this.authorities = authorities;
+    }
 
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        UserDetailsImpl user = (UserDetailsImpl) obj;
+        return Objects.equals(id, user.getId());
+    }
 
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return authorities;
-	}
-
-	public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
-		this.authorities = authorities;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

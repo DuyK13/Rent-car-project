@@ -2,8 +2,10 @@ package com.iuh.rencar_project.service;
 
 import com.iuh.rencar_project.dto.request.CourseRequest;
 import com.iuh.rencar_project.entity.Course;
+import com.iuh.rencar_project.entity.User;
 import com.iuh.rencar_project.repository.CourseRepository;
 import com.iuh.rencar_project.service.template.ICourseService;
+import com.iuh.rencar_project.utils.enums.Status;
 import com.iuh.rencar_project.utils.exception.bind.EntityException;
 import com.iuh.rencar_project.utils.exception.bind.NotFoundException;
 import com.iuh.rencar_project.utils.mapper.ICourseMapper;
@@ -15,6 +17,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author Duy Trần Thế
@@ -66,6 +70,30 @@ public class CourseServiceImpl implements ICourseService {
     }
 
     @Override
+    public String update(Long id) {
+        Course currentCourse = this.findById(id);
+        String title = currentCourse.getTitle();
+        String message;
+        try {
+            Status status = currentCourse.getStatus();
+            if (status == Status.ACTIVE) {
+                currentCourse.setStatus(Status.INACTIVE);
+                courseRepository.saveAndFlush(currentCourse);
+                message = "Course " + title + " inactive success";
+            } else {
+                currentCourse.setStatus(Status.ACTIVE);
+                courseRepository.saveAndFlush(currentCourse);
+                message = "Course " + title + " active success";
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new EntityException("Course " + title + " change status fail");
+        }
+        return message;
+    }
+
+
+    @Override
     public String delete(Long id) {
         Course course = this.findById(id);
         String title = course.getTitle();
@@ -102,5 +130,10 @@ public class CourseServiceImpl implements ICourseService {
     public Page<Course> findAllPaginated(int pageNo) {
         Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
         return courseRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Course> findAll() {
+        return courseRepository.findAll();
     }
 }

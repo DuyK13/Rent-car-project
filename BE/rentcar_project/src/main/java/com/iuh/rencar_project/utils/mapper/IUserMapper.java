@@ -18,22 +18,23 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 
-@Mapper(componentModel = "spring", uses = { PasswordEncoderMapper.class, HelperMapper.class })
+@Mapper(componentModel = "spring", uses = {PasswordEncoderMapper.class, HelperMapper.class})
 public interface IUserMapper {
-	@Mappings({ @Mapping(target = "roles", source = "roles", qualifiedBy = StringToRoleMapping.class),
-			@Mapping(target = "id", ignore = true),
-			@Mapping(target = "password", source = "password", qualifiedBy = PasswordEncodedMapping.class) })
-	User toEntity(UserRequest userRequest);
+    @Mappings({@Mapping(target = "roles", source = "roles", qualifiedBy = StringToRoleMapping.class),
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "password", source = "password", qualifiedBy = PasswordEncodedMapping.class)})
+    User toEntity(UserRequest userRequest);
 
-	@Mappings({
-		@Mapping(target = "id", ignore = true),
-		@Mapping(target = "password", ignore = true),
-		@Mapping(target = "status", ignore = true),
-		@Mapping(target = "roles", ignore = true)
-	})
-	void updateUserInformation(UserRequest userRequest, @MappingTarget User user);
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "password", ignore = true),
+            @Mapping(target = "status", ignore = true),
+            @Mapping(target = "roles", ignore = true),
+            @Mapping(target = "username", ignore = true)
+    })
+    void updateUserInformation(UserRequest userRequest, @MappingTarget User user);
 
-	@Mapping(target = "roles", source = "roles", qualifiedBy = RoleToStringMapping.class)
-	UserResponse toResponse(User user);
+    @Mapping(target = "roles", source = "roles", qualifiedBy = RoleToStringMapping.class)
+    UserResponse toResponse(User user);
 
 }

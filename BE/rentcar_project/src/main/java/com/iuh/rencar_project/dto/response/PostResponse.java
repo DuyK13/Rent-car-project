@@ -20,9 +20,8 @@ public class PostResponse {
     private String status;
     private String content;
     private List<String> tags;
-    private List<CommentResponse> comments;
 
-    public PostResponse(Long id, String title, String slug, String createdBy, Date createdDate, String modifiedBy, Date modefiedDate, String status, String content, List<String> tags, List<CommentResponse> comments) {
+    public PostResponse(Long id, String title, String slug, String createdBy, Date createdDate, String modifiedBy, Date modefiedDate, String status, String content, List<String> tags) {
         this.id = id;
         this.title = title;
         this.slug = slug;
@@ -33,7 +32,6 @@ public class PostResponse {
         this.status = status;
         this.content = content;
         this.tags = tags;
-        this.comments = comments;
     }
 
     public PostResponse() {
@@ -117,13 +115,5 @@ public class PostResponse {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
-    }
-
-    public List<CommentResponse> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<CommentResponse> comments) {
-        this.comments = comments;
     }
 }

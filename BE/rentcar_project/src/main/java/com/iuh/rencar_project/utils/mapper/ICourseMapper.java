@@ -34,7 +34,7 @@ public interface ICourseMapper {
 
     @Mappings({
             @Mapping(target = "createdBy", source = "createdBy", qualifiedBy = UserToStringMapping.class),
-            @Mapping(target = "modifiedBy", source = "modifiedBy", qualifiedBy = UserToStringMapping.class),
+            @Mapping(target = "modifiedBy", source = "modifiedBy", qualifiedBy = UserToStringMapping.class)
     })
     CourseResponse toResponse(Course course);
 }

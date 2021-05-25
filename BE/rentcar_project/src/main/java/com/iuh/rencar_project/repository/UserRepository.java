@@ -15,4 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	Optional<User> findByUsername(String username);
+
+    boolean existsByEmail(String email);
 }

@@ -1,9 +1,12 @@
 package com.iuh.rencar_project.service;
 
 import com.iuh.rencar_project.dto.request.PostRequest;
+import com.iuh.rencar_project.entity.Comment;
 import com.iuh.rencar_project.entity.Post;
+import com.iuh.rencar_project.entity.Tag;
 import com.iuh.rencar_project.repository.PostRepository;
 import com.iuh.rencar_project.service.template.IPostService;
+import com.iuh.rencar_project.service.template.ITagService;
 import com.iuh.rencar_project.utils.enums.Status;
 import com.iuh.rencar_project.utils.exception.bind.EntityException;
 import com.iuh.rencar_project.utils.exception.bind.NotFoundException;
@@ -16,6 +19,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Duy Trần Thế
@@ -67,6 +75,20 @@ public class PostServiceImpl implements IPostService {
         return "Post " + currentTitle + " update success";
     }
 
+//    @Override
+//    public void updatePostComment(String slug, Comment comment) {
+//        Post post = this.findBySlug(slug);
+//        try{
+//            Set<Comment> comments = post.getComments();
+//            if(!comments.add(comment))
+//                throw new EntityException("Comment fail");
+//            post.setComments(comments);
+//            postRepository.saveAndFlush(post);
+//        }catch (Exception e){
+//            logger.error("Post Exception: ", e);
+//        }
+//    }
+
     @Override
     public String update(Long id) {
         Post currentPost = this.findById(id);
@@ -114,13 +136,35 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
+    public Post findBySlugForGuest(String slug) {
+        return postRepository.findBySlugAndStatusIs(slug, Status.ACTIVE).orElseThrow(() -> new NotFoundException("Post with slug: " + slug + " not found"));
+    }
+
+    @Override
     public Page<Post> findAllPaginated(int pageNo) {
         Pageable pageable = PageRequest.of(pageNo-1, 5, Sort.by(Sort.Order.asc("id")));
         return postRepository.findAll(pageable);
     }
 
     @Override
+    public Page<Post> findAllPaginatedForGuest(int pageNo) {
+        Pageable pageable = PageRequest.of(pageNo-1, 5, Sort.by(Sort.Order.asc("id")));
+        return postRepository.findAllByStatusIs(Status.ACTIVE, pageable);
+    }
+
+    @Override
+    public Page<Post> findAllPaginatedByTagForGuest(Tag tag, int pageNo) {
+        Pageable pageable = PageRequest.of(pageNo -1 , 5, Sort.by(Sort.Order.asc("id")));
+        return postRepository.findByTagsIsContainingAndStatusIs(tag, Status.ACTIVE, pageable);
+    }
+
+    @Override
     public Boolean existsByTitle(String title) {
         return postRepository.existsByTitle(title);
+    }
+
+    @Override
+    public List<Post> findPostsByTag(Tag tag) {
+        return postRepository.findByTagsIsContaining(tag);
     }
 }
