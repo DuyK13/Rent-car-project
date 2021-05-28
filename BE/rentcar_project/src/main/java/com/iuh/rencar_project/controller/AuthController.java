@@ -53,7 +53,11 @@ public class AuthController {
 
     @PutMapping("/users/{id}")
     public ResponseEntity<?> updateUserEmail(@PathVariable(name = "id") Long id,
-                                             @RequestBody(required = false) UserRequest userRequest) {
+                                             @RequestBody(required = false) UserRequest userRequest, Principal principal) {
+        User user = userService.findById(id);
+        if (!principal.getName().equals(user.getUsername())) {
+            throw new AccessDeniedException("Access Denied!");
+        }
         return new ResponseEntity<>(new MessageResponse(userService.update(id, userRequest)), HttpStatus.OK);
 
     }

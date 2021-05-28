@@ -4,7 +4,6 @@ import com.iuh.rencar_project.dto.request.BillRequest;
 import com.iuh.rencar_project.dto.response.BillResponse;
 import com.iuh.rencar_project.dto.response.CarResponse;
 import com.iuh.rencar_project.dto.response.MessageResponse;
-import com.iuh.rencar_project.dto.response.PageResponse;
 import com.iuh.rencar_project.entity.Car;
 import com.iuh.rencar_project.entity.Category;
 import com.iuh.rencar_project.service.template.IBillService;
@@ -12,10 +11,12 @@ import com.iuh.rencar_project.service.template.ICarService;
 import com.iuh.rencar_project.service.template.ICategoryService;
 import com.iuh.rencar_project.utils.mapper.IBillMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Duy Trần Thế
@@ -54,13 +55,7 @@ public class StaffController {
 
     @GetMapping("/bills/{id}")
     public ResponseEntity<?> getBillById(@PathVariable(name = "id") Long id) {
-        BillResponse billResponse = billMapper.toResponse(billService.findById(id));
-        CarResponse carResponse = billResponse.getCar();
-        Car car = carService.findById(carResponse.getId());
-        Category category = categoryService.findByCar(car);
-        carResponse.setCategoryName(category.getName());
-        billResponse.setCar(carResponse);
-        return new ResponseEntity<>(billResponse, HttpStatus.OK);
+        return new ResponseEntity<>(billMapper.toResponse(billService.findById(id)), HttpStatus.OK);
     }
 
     @PutMapping("/bills/{id}/pre-order")
@@ -73,23 +68,20 @@ public class StaffController {
         return new ResponseEntity<>(new MessageResponse(billService.updateBillPendingPayment(id)), HttpStatus.OK);
     }
 
+    @DeleteMapping("/bills/{id}/pre-order")
+    public ResponseEntity<?> deleteBillPreOrder(@PathVariable(name = "id") Long id) {
+        return new ResponseEntity<>(new MessageResponse(billService.deletePreOrder(id)), HttpStatus.OK);
+    }
+
     @GetMapping("/bills/pre-order")
-    public ResponseEntity<?> getBillPaginatedPreOrder(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
-//        Page<BillResponse> pageBillResponse = billService.findAllPaginated(pageNo)
-//                .map(billMapper::toResponse);     
-//        PageResponse<BillResponse> pageResult = new PageResponse<>(pageBillResponse.getContent(),
-//                pageBillResponse.getTotalPages(), pageBillResponse.getNumber());
-//        return new ResponseEntity<>(pageResult, HttpStatus.OK);
-        return null;
+    public ResponseEntity<?> getListPreOrderBill() {
+        List<BillResponse> billResponses = billService.findAllPreOrder().stream().map(billMapper::toResponse).collect(Collectors.toList());
+        return new ResponseEntity<>(billResponses, HttpStatus.OK);
     }
 
     @GetMapping("/bills/pending-payment")
-    public ResponseEntity<?> getBillPaginatedPendingPayment(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
-//        Page<BillResponse> pageBillResponse = billService.findAllPaginated(pageNo)
-//                .map(billMapper::toResponse);
-//        PageResponse<BillResponse> pageResult = new PageResponse<>(pageBillResponse.getContent(),
-//                pageBillResponse.getTotalPages(), pageBillResponse.getNumber());
-//        return new ResponseEntity<>(pageResult, HttpStatus.OK);
-        return null;
+    public ResponseEntity<?> getListPendingPaymentBill() {
+        List<BillResponse> billResponses = billService.findAllPendingPayment().stream().map(billMapper::toResponse).collect(Collectors.toList());
+        return new ResponseEntity<>(billResponses, HttpStatus.OK);
     }
 }

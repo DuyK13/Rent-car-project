@@ -30,7 +30,7 @@ public class Course {
 	private String slug;
 
 	@Column(name = "time_course", nullable = false)
-	private Long timeCourse;
+	private Float timeCourse;
 
 	@CreatedBy
 	@ManyToOne
@@ -53,7 +53,7 @@ public class Course {
 	@Column(nullable = false)
 	private Status status;
 
-	public Course(Long id, String title, Long price, String slug, Long timeCourse, User createdBy, LocalDateTime createdDate,
+	public Course(Long id, String title, Long price, String slug, Float timeCourse, User createdBy, LocalDateTime createdDate,
 				  User modifiedBy, LocalDateTime modifiedDate, Status status) {
 		super();
 		this.id = id;
@@ -105,11 +105,11 @@ public class Course {
 		this.slug = slug;
 	}
 
-	public Long getTimeCourse() {
+	public Float getTimeCourse() {
 		return timeCourse;
 	}
 
-	public void setTimeCourse(Long timeCourse) {
+	public void setTimeCourse(Float timeCourse) {
 		this.timeCourse = timeCourse;
 	}
 

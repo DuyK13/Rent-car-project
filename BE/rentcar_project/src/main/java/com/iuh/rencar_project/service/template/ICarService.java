@@ -16,6 +16,8 @@ public interface ICarService {
 
     String update(Long id, CarRequest carRequest, MultipartFile multipartFile);
 
+    String changeStatus(Long id);
+
     String delete(Long id);
 
     Car findBySlug(String slug);

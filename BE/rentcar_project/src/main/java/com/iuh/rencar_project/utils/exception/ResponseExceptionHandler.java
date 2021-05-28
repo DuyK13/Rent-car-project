@@ -3,10 +3,7 @@ package com.iuh.rencar_project.utils.exception;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iuh.rencar_project.dto.response.ErrorResponse;
-import com.iuh.rencar_project.utils.exception.bind.AccessDeniedException;
-import com.iuh.rencar_project.utils.exception.bind.EntityException;
-import com.iuh.rencar_project.utils.exception.bind.InvalidInputException;
-import com.iuh.rencar_project.utils.exception.bind.NotFoundException;
+import com.iuh.rencar_project.utils.exception.bind.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,4 +101,10 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(objectMapper.writeValueAsString(response), BAD_REQUEST);
     }
 
+    @ExceptionHandler(FileUploadException.class)
+    public ResponseEntity<Object> handleFileUploadException(FileUploadException ex) throws JsonProcessingException {
+        ErrorResponse response = new ErrorResponse(ex.getMessage(), BAD_REQUEST, now);
+        logger.error("File Upload Exception: ", ex);
+        return new ResponseEntity<>(objectMapper.writeValueAsString(response), BAD_REQUEST);
+    }
 }

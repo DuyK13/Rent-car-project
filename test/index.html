@@ -25,7 +25,7 @@
     <form>
       <!-- Test insert date time -->
       <!-- <input type="datetime-local" id="mydate"/> -->
-      <input type="file" id="myFile" />
+      <!-- <input type="file" id="myFile" /> -->
     </form>
     <!-- Test form -->
     <!--   <div id="body">
@@ -48,46 +48,63 @@
     <!-- Footer Section End -->
     <script>
       $(document).ready(function () {
-        var data = {
-          username: "admin",
-          password: "admin",
-        };
-        $("button").click(function () {
-          // Post Json + File upload
-          var formData = new FormData();
-          var car = {
-            name: "name 3",
-            year: 1999,
-            price: 1000000,
-            carType: "MANUAL",
-            categoryName: "category 2",
-          };
-          formData.append(
-            "car",
-            new Blob([JSON.stringify(car)], {
-              type: "application/json",
-            })
-          );
-          formData.append("file", $("#myFile").prop("files")[0]);
-          $.ajax({
-            url: "http://localhost:8081/api/file/upload/cars",
-            type: "POST",
-            headers: {
-              Authorization:
-                "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkdXl0dDEiLCJleHAiOjE2MjE5NjczNjQsImlhdCI6MTYyMTg4MDk2NH0.Z-R2fOPLt8tyZnl-eTbTGuhE-40UIaHoAc08nyko54KMo69O_d3JOHWkkxOcN4DXnEh-VOMSr9hlh0AwgH_AFA",
-            },
-            data: formData,
-            processData: false,
-            contentType: false,
-            processData: false,
-            success: function (dataa) {
-              console.log(dataa);
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-              var jsonData = XMLHttpRequest.responseJSON;
-              console.log(jsonData);
-            },
-          });
+      	var test = [];
+      	$("button").click(function () {
+      		var getData = async () => {
+      			let result;
+      			try{
+      				result = await $.ajax({
+	      				url: "http://localhost:8080/success",
+		                type: "GET",
+		                contentType: "application/json; charset=utf-8",
+		                dataType: "json"
+	               	});
+      				return result;
+      			}catch(error){
+      				console.log(error);
+      			 }
+      			};
+      		console.log(await getData());
+        // var data = {
+        //   username: "admin",
+        //   password: "admin",
+        // };
+        // $("button").click(function () {
+        //   // Post Json + File upload
+        //   var formData = new FormData();
+        //   var car = {
+        //     name: "name 3",
+        //     year: 1999,
+        //     price: 1000000,
+        //     carType: "MANUAL",
+        //     categoryName: "category 2",
+        //   };
+        //   formData.append(
+        //     "car",
+        //     new Blob([JSON.stringify(car)], {
+        //       type: "application/json",
+        //     })
+        //   );
+        //   formData.append("file", $("#myFile").prop("files")[0]);
+        //   $.ajax({
+        //     url: "http://localhost:8081/api/file/upload/cars",
+        //     type: "POST",
+        //     headers: {
+        //       Authorization:
+        //         "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkdXl0dDEiLCJleHAiOjE2MjE5NjczNjQsImlhdCI6MTYyMTg4MDk2NH0.Z-R2fOPLt8tyZnl-eTbTGuhE-40UIaHoAc08nyko54KMo69O_d3JOHWkkxOcN4DXnEh-VOMSr9hlh0AwgH_AFA",
+        //     },
+        //     data: formData,
+        //     processData: false,
+        //     contentType: false,
+        //     processData: false,
+        //     success: function (dataa) {
+        //       console.log(dataa);
+        //     },
+        //     error: function (XMLHttpRequest, textStatus, errorThrown) {
+        //       var jsonData = XMLHttpRequest.responseJSON;
+        //       console.log(jsonData);
+        //     },
+        //   });
           // POST data (no authentication)
           //  	var currentData = {
           //  		fullname: "Duy",

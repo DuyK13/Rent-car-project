@@ -29,9 +29,7 @@ import java.util.stream.Collectors;
 
 @RequestMapping("/api")
 @RestController
-public class LoginLogoutController {
-
-	private final AuthenticationManager authenticationManager;
+public class PublicController {
 
 	private final UserDetailsServiceImpl userDetailsService;
 
@@ -40,8 +38,7 @@ public class LoginLogoutController {
 	private final GenericValidator genericValidator;
 
 	@Autowired
-	public LoginLogoutController(AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService, JwtUtils jwtUtils, GenericValidator genericValidator) {
-		this.authenticationManager = authenticationManager;
+	public PublicController(UserDetailsServiceImpl userDetailsService, JwtUtils jwtUtils, GenericValidator genericValidator) {
 		this.userDetailsService = userDetailsService;
 		this.jwtUtils = jwtUtils;
 		this.genericValidator = genericValidator;
@@ -52,22 +49,8 @@ public class LoginLogoutController {
 		webDataBinder.addValidators(genericValidator);
 	}
 
-//	@PostMapping("/login")
-//	public ResponseEntity<?> login(@Validated @RequestBody LoginRequest loginRequest) {
-//		this.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
-//		UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService
-//				.loadUserByUsername(loginRequest.getUsername());
-//		String token = jwtUtils.generateToken(userDetails);
-//		List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-//				.collect(Collectors.toList());
-//		return new ResponseEntity<>(
-//				new JwtResponse(token, userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles),
-//				HttpStatus.OK);
-//	}
-
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@Validated @RequestBody LoginRequest loginRequest) {
-		this.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
 		UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService
 				.loadUserByUsername(loginRequest.getUsername());
 		String token = jwtUtils.generateToken(userDetails);
@@ -78,13 +61,4 @@ public class LoginLogoutController {
 				HttpStatus.OK);
 	}
 
-	private void authenticate(String username, String password) {
-		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-		} catch (DisabledException e) {
-			throw new DisabledException("USER_DISABLED", e);
-		} catch (BadCredentialsException e) {
-			throw new BadCredentialsException("INVALID_CREDENTIALS", e);
-		}
-	}
 }

@@ -104,8 +104,8 @@ public class ModeratorController {
     // ======================================
 
     @PostMapping("/posts")
-    public ResponseEntity<?> savePost(@RequestBody PostRequest postRequest) {
-        return new ResponseEntity<>(new MessageResponse(postService.save(postRequest)), HttpStatus.OK);
+    public ResponseEntity<?> savePost(@RequestPart(name = "post") PostRequest postRequest, @RequestPart("file") MultipartFile multipartFile) {
+        return new ResponseEntity<>(new MessageResponse(postService.save(postRequest, multipartFile)), HttpStatus.OK);
     }
 
     @GetMapping("/posts/{var}")
@@ -121,8 +121,9 @@ public class ModeratorController {
 
     @PutMapping("/posts/{id}")
     public ResponseEntity<?> updatePost(@PathVariable(name = "id") Long id,
-                                        @RequestBody(required = false) Optional<PostRequest> postRequest) {
-        return postRequest.map(request -> new ResponseEntity<>(new MessageResponse(postService.update(id, request)), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(new MessageResponse(postService.update(id)), HttpStatus.OK));
+                                        @RequestPart(name = "post", required = false) Optional<PostRequest> postRequest, @RequestPart(name = "file", required = false) MultipartFile multipartFile) {
+        System.out.println(multipartFile.getOriginalFilename());
+        return postRequest.map(request -> new ResponseEntity<>(new MessageResponse(postService.update(id, request, multipartFile)), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(new MessageResponse(postService.update(id)), HttpStatus.OK));
 
     }
 
@@ -176,8 +177,8 @@ public class ModeratorController {
 
     @PutMapping("/categories/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable(name = "id") Long id,
-                                            @RequestBody Optional<CategoryRequest> categoryRequest) {
-        return categoryRequest.map(request -> new ResponseEntity<>(new MessageResponse(categoryService.update(id, request)), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(new MessageResponse(categoryService.update(id)), HttpStatus.OK));
+                                            @RequestBody CategoryRequest categoryRequest) {
+        return new ResponseEntity<>(new MessageResponse(categoryService.update(id, categoryRequest)), HttpStatus.OK);
     }
 
     @GetMapping("/categories")
@@ -204,12 +205,6 @@ public class ModeratorController {
         return new ResponseEntity<>(carResponse, HttpStatus.OK);
     }
 
-//    @PutMapping("/cars/{id}")
-//    public ResponseEntity<?> updateCar(@PathVariable(name = "id") Long id,
-//                                       @RequestBody CarRequest carRequest) {
-//        return new ResponseEntity<>(new MessageResponse(carService.update(id, carRequest)), HttpStatus.OK);
-//    }
-
     @PutMapping("/cars/{id}")
     public ResponseEntity<?> updateCar(@PathVariable(name = "id") Long id,
                                        @RequestPart(name = "car") CarRequest carRequest,
@@ -235,21 +230,16 @@ public class ModeratorController {
         return new ResponseEntity<>(new MessageResponse(courseService.save(courseRequest)), HttpStatus.OK);
     }
 
-    @GetMapping("/courses/{var}")
-    public ResponseEntity<?> getCourseByIdOrSlug(@PathVariable(name = "var") String var) {
-        CourseResponse courseResponse;
-        try {
-            courseResponse = courseMapper.toResponse(courseService.findById(Long.valueOf(var)));
-        } catch (NumberFormatException e) {
-            courseResponse = courseMapper.toResponse(courseService.findBySlug(var));
-        }
+    @GetMapping("/courses/{id}")
+    public ResponseEntity<?> getCourseByIdOrSlug(@PathVariable(name = "id") Long id) {
+        CourseResponse courseResponse = courseMapper.toResponse(courseService.findById(id));
         return new ResponseEntity<>(courseResponse, HttpStatus.OK);
     }
 
     @PutMapping("/courses/{id}")
     public ResponseEntity<?> updateCourse(@PathVariable(name = "id") Long id,
-                                          @RequestBody CourseRequest courseRequest) {
-        return new ResponseEntity<>(new MessageResponse(courseService.update(id, courseRequest)), HttpStatus.OK);
+                                          @RequestBody Optional<CourseRequest> courseRequest) {
+        return courseRequest.map(request -> new ResponseEntity<>(new MessageResponse(courseService.update(id, request)), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(new MessageResponse(courseService.update(id)), HttpStatus.OK));
     }
 
     @GetMapping("/courses")
@@ -272,7 +262,7 @@ public class ModeratorController {
     }
 
     @GetMapping("/bills")
-    public ResponseEntity<?> getBillPaginated(@RequestParam(name = "pageNo", defaultValue = "1am") int pageNo) {
+    public ResponseEntity<?> getBillPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
         Page<BillResponse> pageBillResponse = billService.findAllPaginated(pageNo)
                 .map(billMapper::toResponse);
         PageResponse<BillResponse> pageResult = new PageResponse<>(pageBillResponse.getContent(),

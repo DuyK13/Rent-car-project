@@ -4,6 +4,7 @@ import com.iuh.rencar_project.dto.request.BillRequest;
 import com.iuh.rencar_project.entity.Bill;
 import com.iuh.rencar_project.repository.BillRepository;
 import com.iuh.rencar_project.service.template.IBillService;
+import com.iuh.rencar_project.service.template.IEmailService;
 import com.iuh.rencar_project.utils.enums.BillState;
 import com.iuh.rencar_project.utils.exception.bind.EntityException;
 import com.iuh.rencar_project.utils.exception.bind.NotFoundException;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -32,37 +34,45 @@ public class BillServiceImpl implements IBillService {
     private final BillRepository billRepository;
     private final IBillMapper billMapper;
     private final PasswordEncoder passwordEncoder;
+    private final IEmailService emailService;
 
     @Autowired
-    public BillServiceImpl(BillRepository billRepository, IBillMapper billMapper, PasswordEncoder passwordEncoder) {
+    public BillServiceImpl(BillRepository billRepository, IBillMapper billMapper, PasswordEncoder passwordEncoder, IEmailService emailService) {
         this.billRepository = billRepository;
         this.billMapper = billMapper;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
 
     @Override
     public String save(BillRequest billRequest) {
+        Bill bill = billMapper.toEntity(billRequest);
+        bill.setSlug(passwordEncoder.encode(this.getCurrentId() + "").replace("/", ""));
         try {
-            Bill bill = billMapper.toEntity(billRequest);
-            bill.setSlug(passwordEncoder.encode(this.getCurrentId() + "").replace("//", ""));
             billRepository.saveAndFlush(bill);
         } catch (Exception e) {
             logger.error("Bill Exception: ", e);
             throw new EntityException("Bill save fail");
+        }
+        if (emailService.sendBillEmail(bill)) {
+            return "Bill save success and email sent";
         }
         return "Bill save success";
     }
 
     @Override
     public String saveByStaff(BillRequest billRequest) {
+        Bill bill = billMapper.toEntity(billRequest);
+        bill.setSlug(passwordEncoder.encode(this.getCurrentId() + "").replace("/", ""));
+        bill.setState(BillState.Pending_Payment);
         try {
-            Bill bill = billMapper.toEntity(billRequest);
-            bill.setSlug(passwordEncoder.encode(this.getCurrentId() + "").replace("//", ""));
-            bill.setState(BillState.Pending_Payment);
             billRepository.saveAndFlush(bill);
         } catch (Exception e) {
             logger.error("Bill Exception: ", e);
             throw new EntityException("Bill save fail");
+        }
+        if (emailService.sendBillEmail(bill)) {
+            return "Bill save success and email sent";
         }
         return "Bill save success";
     }
@@ -70,54 +80,64 @@ public class BillServiceImpl implements IBillService {
     @Override
     public String updateBillPreOrder(Long id) {
         Bill bill = this.findById(id);
-        String billId = "#" + bill.getId();
+        if (bill.getState().compareTo(BillState.Pre_Order) == 0)
+            bill.setState(BillState.Pending_Payment);
         try {
-            if (bill.getState().compareTo(BillState.Pre_Order) == 0)
-                bill.setState(BillState.Pending_Payment);
             billRepository.saveAndFlush(bill);
         } catch (Exception e) {
             logger.error("Bill Exception: ", e);
-            throw new EntityException("Bill " + billId + " confirm pre order failed");
+            throw new EntityException("Bill confirm pre order failed");
         }
-        return "Bill " + billId + " confirm pre order successful";
+        return "Bill confirm pre order successful";
     }
 
     @Override
     public String updateBillPendingPayment(Long id) {
         Bill bill = this.findById(id);
-        String billId = "#" + bill.getId();
+        if (bill.getState().compareTo(BillState.Pending_Payment) == 0)
+            bill.setState(BillState.Payed);
         try {
-            if (bill.getState().compareTo(BillState.Pending_Payment) == 0)
-                bill.setState(BillState.Payed);
             billRepository.saveAndFlush(bill);
         } catch (Exception e) {
             logger.error("Bill Exception: ", e);
-            throw new EntityException("Bill " + billId + " confirm pay failed");
+            throw new EntityException("Bill confirm payment failed");
         }
-        return "Bill " + billId + " confirm pay successful";
+        return "Bill confirm payment successful";
     }
 
     @Override
     public String delete(Long id) {
-        Bill bill = this.findById(id);
-        String billId = "#" + bill.getId();
         try {
             billRepository.deleteById(id);
         } catch (Exception e) {
             logger.error("Bill Exception: ", e);
-            throw new EntityException("Bill " + billId + " delete fail");
+            throw new EntityException("Bill delete fail");
         }
-        return "Bill " + billId + " delete success";
+        return "Bill delete success";
+    }
+
+    @Transactional
+    @Override
+    public String deletePreOrder(Long id) {
+        if (!billRepository.existsByIdAndState(id, BillState.Pre_Order))
+            throw new NotFoundException("Bill not found");
+        try {
+            billRepository.deleteByIdAndStateIs(id, BillState.Pre_Order);
+        } catch (Exception e) {
+            logger.error("Bill Exception: ", e);
+            throw new EntityException("Bill delete fail");
+        }
+        return "Bill delete success";
     }
 
     @Override
     public Bill findById(Long id) {
-        return billRepository.findById(id).orElseThrow(() -> new NotFoundException("Bill #" + id + " not found"));
+        return billRepository.findById(id).orElseThrow(() -> new NotFoundException("Bill not found"));
     }
 
     @Override
     public Bill findBySlug(String var) {
-        return billRepository.findBySlug(var).orElseThrow(() -> new NotFoundException("Bill with slug" + var + " not found"));
+        return billRepository.findBySlug(var).orElseThrow(() -> new NotFoundException("Bill not found"));
     }
 
     @Override
@@ -126,12 +146,21 @@ public class BillServiceImpl implements IBillService {
         return billRepository.findAll(pageable);
     }
 
+    @Override
+    public List<Bill> findAllPreOrder() {
+        return billRepository.findAllByState(BillState.Pre_Order);
+    }
+
+    @Override
+    public List<Bill> findAllPendingPayment() {
+        return billRepository.findAllByState(BillState.Pending_Payment);
+    }
+
     private Long getCurrentId() {
         List<Bill> bills = billRepository.findAll();
         if (bills.isEmpty())
             return 1L;
         else
             return bills.get(bills.size() - 1).getId() + 1;
-
     }
 }

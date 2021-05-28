@@ -14,7 +14,7 @@ public class CourseResponse {
     private String title;
     private Long price;
     private String slug;
-    private Long timeCourse;
+    private Float timeCourse;
     private String createdBy;
     private Date createdDate;
     private String modifiedBy;
@@ -24,7 +24,7 @@ public class CourseResponse {
     public CourseResponse() {
     }
 
-    public CourseResponse(Long id, String title, Long price, String slug, Long timeCourse, String createdBy, Date createdDate, String modifiedBy, Date modifiedDate, String status) {
+    public CourseResponse(Long id, String title, Long price, String slug, Float timeCourse, String createdBy, Date createdDate, String modifiedBy, Date modifiedDate, String status) {
         this.id = id;
         this.title = title;
         this.price = price;
@@ -69,11 +69,11 @@ public class CourseResponse {
         this.slug = slug;
     }
 
-    public Long getTimeCourse() {
+    public Float getTimeCourse() {
         return timeCourse;
     }
 
-    public void setTimeCourse(Long timeCourse) {
+    public void setTimeCourse(Float timeCourse) {
         this.timeCourse = timeCourse;
     }
 

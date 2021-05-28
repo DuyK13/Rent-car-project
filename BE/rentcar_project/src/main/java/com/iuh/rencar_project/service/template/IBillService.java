@@ -4,6 +4,8 @@ import com.iuh.rencar_project.dto.request.BillRequest;
 import com.iuh.rencar_project.entity.Bill;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 /**
  * @author Duy Trần Thế
  * @version 1.0
@@ -20,10 +22,15 @@ public interface IBillService {
 
     String delete(Long id);
 
+    String deletePreOrder(Long id);
 
     Bill findById(Long id);
 
     Bill findBySlug(String var);
 
     Page<Bill> findAllPaginated(int pageNo);
+
+    List<Bill> findAllPreOrder();
+
+    List<Bill> findAllPendingPayment();
 }

@@ -49,7 +49,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         String message;
         ErrorResponse errorResponse;
-
+        
         /*
          * Handle exception in request
          */

@@ -1,12 +1,11 @@
 package com.iuh.rencar_project.service;
 
 import com.iuh.rencar_project.dto.request.PostRequest;
-import com.iuh.rencar_project.entity.Comment;
 import com.iuh.rencar_project.entity.Post;
 import com.iuh.rencar_project.entity.Tag;
 import com.iuh.rencar_project.repository.PostRepository;
+import com.iuh.rencar_project.service.template.IFileService;
 import com.iuh.rencar_project.service.template.IPostService;
-import com.iuh.rencar_project.service.template.ITagService;
 import com.iuh.rencar_project.utils.enums.Status;
 import com.iuh.rencar_project.utils.exception.bind.EntityException;
 import com.iuh.rencar_project.utils.exception.bind.NotFoundException;
@@ -19,11 +18,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Duy Trần Thế
@@ -39,40 +36,46 @@ public class PostServiceImpl implements IPostService {
 
     private final IPostMapper postMapper;
 
+    private final IFileService fileService;
+
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, IPostMapper postMapper) {
+    public PostServiceImpl(PostRepository postRepository, IPostMapper postMapper, IFileService fileService) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
+        this.fileService = fileService;
     }
 
     @Override
-    public String save(PostRequest postRequest) {
+    public String save(PostRequest postRequest, MultipartFile multipartFile) {
         String title = postRequest.getTitle();
         if (this.existsByTitle(title))
-            throw new EntityException("Post " + title + " exists");
+            throw new EntityException("Post exists");
+        String fileUrl = fileService.uploadPostImage(multipartFile, title);
+        Post post = postMapper.toEntity(postRequest);
+        post.setImage(fileUrl);
         try {
-            postRepository.saveAndFlush(postMapper.toEntity(postRequest));
+            postRepository.saveAndFlush(post);
         } catch (Exception e) {
             logger.error("Post Exception: ", e);
-            throw new EntityException("Post " + title + " save fail", e);
+            throw new EntityException("Post save fail", e);
         }
-        return "Post " + title + " save success ";
+        return "Post save success";
     }
 
     @Override
-    public String update(Long id, PostRequest postRequest) {
+    public String update(Long id, PostRequest postRequest, MultipartFile multipartFile) {
         Post currentPost = this.findById(id);
-        String currentTitle = currentPost.getTitle();
-        if (this.existsByTitle(postRequest.getTitle()) && !currentTitle.equals(postRequest.getTitle()))
-            throw new EntityException("Post " + postRequest.getTitle() + " exists");
+        if (this.existsByTitle(postRequest.getTitle()) && !currentPost.getTitle().equals(postRequest.getTitle()))
+            throw new EntityException("Post exists");
+        postMapper.updateEntity(postRequest, currentPost);
+        currentPost.setImage(fileService.updatePostImage(multipartFile, currentPost));
         try {
-            postMapper.updateEntity(postRequest, currentPost);
             postRepository.saveAndFlush(currentPost);
         } catch (Exception e) {
             logger.error("Post Exception: ", e);
-            throw new EntityException("Post " + currentTitle + " update fail");
+            throw new EntityException("Post update fail", e);
         }
-        return "Post " + currentTitle + " update success";
+        return "Post update success";
     }
 
 //    @Override
@@ -99,15 +102,15 @@ public class PostServiceImpl implements IPostService {
             if (status == Status.ACTIVE) {
                 currentPost.setStatus(Status.INACTIVE);
                 postRepository.saveAndFlush(currentPost);
-                message = "Post " + title + " inactive success";
+                message = "Post deactivate success";
             } else {
                 currentPost.setStatus(Status.ACTIVE);
                 postRepository.saveAndFlush(currentPost);
-                message = "Post " + title + " active success";
+                message = "Post activate success";
             }
         } catch (Exception e) {
             logger.error("Post Exception: ", e);
-            throw new EntityException("Post " + title + " change status fail");
+            throw new EntityException("Post change status fail");
         }
         return message;
     }
@@ -120,41 +123,41 @@ public class PostServiceImpl implements IPostService {
             postRepository.deleteById(id);
         } catch (Exception e) {
             logger.error("Post Exception: ", e);
-            throw new EntityException("Post " + title + " delete fail");
+            throw new EntityException("Post delete fail");
         }
-        return "Post " + title + " delete success";
+        return "Post delete success";
     }
 
     @Override
     public Post findById(Long id) {
-        return postRepository.findById(id).orElseThrow(() -> new NotFoundException("Post with id " + id + " not found"));
+        return postRepository.findById(id).orElseThrow(() -> new NotFoundException("Post not found"));
     }
 
     @Override
     public Post findBySlug(String slug) {
-        return postRepository.findBySlug(slug).orElseThrow(() -> new NotFoundException("Post with slug: " + slug + " not found"));
+        return postRepository.findBySlug(slug).orElseThrow(() -> new NotFoundException("Post not found"));
     }
 
     @Override
     public Post findBySlugForGuest(String slug) {
-        return postRepository.findBySlugAndStatusIs(slug, Status.ACTIVE).orElseThrow(() -> new NotFoundException("Post with slug: " + slug + " not found"));
+        return postRepository.findBySlugAndStatusIs(slug, Status.ACTIVE).orElseThrow(() -> new NotFoundException("Post not found"));
     }
 
     @Override
     public Page<Post> findAllPaginated(int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo-1, 5, Sort.by(Sort.Order.asc("id")));
+        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
         return postRepository.findAll(pageable);
     }
 
     @Override
     public Page<Post> findAllPaginatedForGuest(int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo-1, 5, Sort.by(Sort.Order.asc("id")));
+        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
         return postRepository.findAllByStatusIs(Status.ACTIVE, pageable);
     }
 
     @Override
     public Page<Post> findAllPaginatedByTagForGuest(Tag tag, int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo -1 , 5, Sort.by(Sort.Order.asc("id")));
+        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
         return postRepository.findByTagsIsContainingAndStatusIs(tag, Status.ACTIVE, pageable);
     }
 
