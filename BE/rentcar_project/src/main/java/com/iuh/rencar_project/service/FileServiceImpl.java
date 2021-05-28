@@ -1,13 +1,13 @@
 package com.iuh.rencar_project.service;
 
-import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.iuh.rencar_project.entity.Car;
+import com.iuh.rencar_project.entity.Post;
 import com.iuh.rencar_project.service.template.IFileService;
-import com.iuh.rencar_project.utils.exception.bind.EntityException;
+import com.iuh.rencar_project.utils.exception.bind.FileUploadException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,49 +41,20 @@ public class FileServiceImpl implements IFileService {
     @Value("${aws.s3.carFolder}")
     private String carFolder;
 
+    @Value("${aws.s3.postFolder}")
+    private String postFolder;
+
+    @Value("${aws.s3.contentFolder}")
+    private String contentFolder;
+
     @Autowired
     public FileServiceImpl(AmazonS3 amazonS3) {
         this.amazonS3 = amazonS3;
     }
 
     @Override
-    public String uploadFile(MultipartFile multipartFile, Long id) {
-        String fileName = new SimpleDateFormat("yyyyMMddHHmm").format(new Date());
-        fileName += "_" + id;
-        String key = "";
-        try {
-            // Chuyển multipartFile sang file
-            File file = convertMultiPartFileToFile(multipartFile);
-            String folderName = "images";
-            // upload file vào bucket, folder với data là file và tên file
-            fileName += file.getName();
-            key = uploadFileToS3Bucket(bucketName, folderName, fileName, file);
-            // Xoá tiết kiệm data
-            file.delete();
-        } catch (final AmazonServiceException ignore) {
-        }
-        if (fileName.isEmpty())
-            throw new EntityException("Can not upload file");
-        AmazonS3Client s3Client = (AmazonS3Client) amazonS3;
-        return s3Client.getResourceUrl(bucketName, key);
-    }
-
-    @Override
     public String uploadCarImage(MultipartFile multipartFile, String carName) {
-//        String fileName = new SimpleDateFormat("ddMMyyyyHHmm").format(new Date());
-//        fileName += "-" + carName;
-//        String key = "";
-//        try {
-//            File file = this.convertMultiPartFileToFile(multipartFile);
-//            fileName += "-" + file.getName();
-//            key = this.uploadFileToS3Bucket(bucketName, carFolder, fileName, file);
-//            file.delete();
-//        } catch (AmazonServiceException ex) {
-//            logger.error("Amazon Service Error: ", ex);
-//        }
-//        AmazonS3Client s3Client = (AmazonS3Client) amazonS3;
-//        return s3Client.getResourceUrl(bucketName, key);
-        return this.uploadCarFile(multipartFile, carFolder, carName);
+        return this.uploadFile(multipartFile, carFolder, carName);
     }
 
     @Override
@@ -91,36 +62,50 @@ public class FileServiceImpl implements IFileService {
         String oldFileName = car.getImageLink().split("/")[5];
         this.removeFileFromS3Bucket(bucketName, carFolder, oldFileName);
         String carName = car.getName();
-        return this.uploadCarFile(multipartFile, carFolder, carName);
-//        String fileName = new SimpleDateFormat("ddMMyyyyHHmm").format(new Date());
-//        fileName += "-" + carName;
-//        String key = "";
-//        try {
-//            File file = this.convertMultiPartFileToFile(multipartFile);
-//            fileName += "-" + file.getName();
-//            key = this.uploadFileToS3Bucket(bucketName, carFolder, fileName, file);
-//            file.delete();
-//        } catch (AmazonServiceException ex) {
-//            logger.error("Amazon Service Error: ", ex);
-//        }
-//        AmazonS3Client s3Client = (AmazonS3Client) amazonS3;
-//        return s3Client.getResourceUrl(bucketName, key);
+        return this.uploadFile(multipartFile, carFolder, carName);
     }
 
-    private String uploadCarFile(MultipartFile multipartFile, String folderName, String carName) {
+    @Override
+    public String uploadPostImage(MultipartFile multipartFile, String title) {
+        return this.uploadFile(multipartFile, postFolder, title);
+    }
+
+    @Override
+    public String updatePostImage(MultipartFile multipartFile, Post currentPost) {
+        String oldFileName = currentPost.getImage().split("/")[5];
+        this.removeFileFromS3Bucket(bucketName, postFolder, oldFileName);
+        String title = currentPost.getTitle();
+        return this.uploadFile(multipartFile, postFolder, title);
+    }
+
+    @Override
+    public String uploadFileS3(MultipartFile multipartFile) {
+        this.uploadFile(multipartFile, contentFolder, multipartFile.getOriginalFilename());
+        return "Upload file to content folder success";
+    }
+
+    @Override
+    public String uploadMultiFileS3(MultipartFile[] multipartFiles) {
+        for (MultipartFile file : multipartFiles) {
+            this.uploadFile(file, contentFolder, file.getOriginalFilename());
+        }
+        return "Upload file to content folder success";
+    }
+
+    private String uploadFile(MultipartFile multipartFile, String folderName, String name) {
         String fileName = new SimpleDateFormat("ddMMyyyyHHmm").format(new Date());
-        fileName += "-" + carName;
-        String key = "";
+        fileName += "-" + name;
         try {
             File file = this.convertMultiPartFileToFile(multipartFile);
             fileName += "-" + file.getName();
-            key = this.uploadFileToS3Bucket(bucketName, carFolder, fileName, file);
+            this.uploadFileToS3Bucket(bucketName, folderName, fileName, file);
             file.delete();
-        } catch (AmazonServiceException ex) {
-            logger.error("Amazon Service Error: ", ex);
+        } catch (Exception ex) {
+            logger.error("File upload exception: ", ex);
+            throw new FileUploadException("Upload file fail");
         }
         AmazonS3Client s3Client = (AmazonS3Client) amazonS3;
-        return s3Client.getResourceUrl(bucketName, key);
+        return s3Client.getResourceUrl(bucketName, folderName + "/" + fileName);
     }
 
     private File convertMultiPartFileToFile(MultipartFile multipartFile) {
@@ -134,10 +119,9 @@ public class FileServiceImpl implements IFileService {
     }
 
     @Async
-    String uploadFileToS3Bucket(String bucketName, String folderName, String fileName, File file) {
+    void uploadFileToS3Bucket(String bucketName, String folderName, String fileName, File file) {
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, folderName + "/" + fileName, file).withCannedAcl(CannedAccessControlList.PublicRead);
         amazonS3.putObject(putObjectRequest);
-        return folderName + "/" + fileName;
     }
 
     @Async

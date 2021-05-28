@@ -2,7 +2,6 @@ package com.iuh.rencar_project.service;
 
 import com.iuh.rencar_project.dto.request.CourseRequest;
 import com.iuh.rencar_project.entity.Course;
-import com.iuh.rencar_project.entity.User;
 import com.iuh.rencar_project.repository.CourseRepository;
 import com.iuh.rencar_project.service.template.ICourseService;
 import com.iuh.rencar_project.utils.enums.Status;
@@ -43,51 +42,47 @@ public class CourseServiceImpl implements ICourseService {
     public String save(CourseRequest courseRequest) {
         String title = courseRequest.getTitle();
         if (this.existsByTitle(title))
-            throw new EntityException("Course " + title + " exists");
+            throw new EntityException("Course exists");
         try {
             courseRepository.saveAndFlush(courseMapper.toEntity(courseRequest));
         } catch (Exception e) {
             logger.error("Course Exception: ", e);
-            throw new EntityException("Course " + title + " save fail", e);
+            throw new EntityException("Course save fail", e);
         }
-        return "Course " + title + " save success";
+        return "Course save success";
     }
 
     @Override
     public String update(Long id, CourseRequest courseRequest) {
         Course currentCourse = this.findById(id);
-        String currentTitle = currentCourse.getTitle();
-        if (this.existsByTitle(courseRequest.getTitle()) && !currentTitle.equals(courseRequest.getTitle()))
-            throw new EntityException("Course " + courseRequest.getTitle() + " exists");
+        if (this.existsByTitle(courseRequest.getTitle()) && !currentCourse.getTitle().equals(courseRequest.getTitle()))
+            throw new EntityException("Course exists");
         try {
             courseMapper.updateEntity(courseRequest, currentCourse);
             courseRepository.saveAndFlush(currentCourse);
         } catch (Exception e) {
             logger.error("Course Exception: ", e);
-            throw new EntityException("Course " + currentTitle + " update fail");
+            throw new EntityException("Course update fail");
         }
-        return "Course " + currentTitle + " update success";
+        return "Course update success";
     }
 
     @Override
     public String update(Long id) {
         Course currentCourse = this.findById(id);
-        String title = currentCourse.getTitle();
         String message;
+        if (currentCourse.getStatus() == Status.ACTIVE) {
+            currentCourse.setStatus(Status.INACTIVE);
+            message = "Course deactivate success";
+        } else {
+            currentCourse.setStatus(Status.ACTIVE);
+            message = "Course activate success";
+        }
         try {
-            Status status = currentCourse.getStatus();
-            if (status == Status.ACTIVE) {
-                currentCourse.setStatus(Status.INACTIVE);
-                courseRepository.saveAndFlush(currentCourse);
-                message = "Course " + title + " inactive success";
-            } else {
-                currentCourse.setStatus(Status.ACTIVE);
-                courseRepository.saveAndFlush(currentCourse);
-                message = "Course " + title + " active success";
-            }
+            courseRepository.saveAndFlush(currentCourse);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            throw new EntityException("Course " + title + " change status fail");
+            throw new EntityException("Course change status fail");
         }
         return message;
     }
@@ -95,15 +90,13 @@ public class CourseServiceImpl implements ICourseService {
 
     @Override
     public String delete(Long id) {
-        Course course = this.findById(id);
-        String title = course.getTitle();
         try {
             courseRepository.deleteById(id);
         } catch (Exception e) {
             logger.error("Course Exception: ", e);
-            throw new EntityException("Course " + title + " delete fail");
+            throw new EntityException("Course delete fail");
         }
-        return "Course " + title + " delete success";
+        return "Course delete success";
     }
 
     @Override
@@ -113,17 +106,17 @@ public class CourseServiceImpl implements ICourseService {
 
     @Override
     public Course findBySlug(String slug) {
-        return courseRepository.findBySlug(slug).orElseThrow(() -> new NotFoundException("Course with slug " + slug + " not found"));
+        return courseRepository.findBySlug(slug).orElseThrow(() -> new NotFoundException("Course not found"));
     }
 
     @Override
     public Course findByTitle(String title) {
-        return courseRepository.findByTitle(title).orElseThrow(() -> new NotFoundException("Course with title " + title + " not found"));
+        return courseRepository.findByTitle(title).orElseThrow(() -> new NotFoundException("Course not found"));
     }
 
     @Override
     public Course findById(Long id) {
-        return courseRepository.findById(id).orElseThrow(() -> new NotFoundException("Course with id " + id + " not found"));
+        return courseRepository.findById(id).orElseThrow(() -> new NotFoundException("Not found"));
     }
 
     @Override

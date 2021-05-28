@@ -44,14 +44,14 @@ public class TagServiceImpl implements ITagService {
     public String save(TagRequest tagRequest) {
         String name = tagRequest.getName();
         if (this.existsByName(name))
-            throw new EntityException("Tag " + name + " exists");
+            throw new EntityException("Tag exists");
         try {
             tagRepository.saveAndFlush(tagMapper.toEntity(tagRequest));
         } catch (Exception e) {
             logger.error("Tag Exception: ", e);
-            throw new EntityException("Tag " + name + " save fail", e);
+            throw new EntityException("Tag save fail", e);
         }
-        return "Tag " + name + " save success";
+        return "Tag save success";
     }
 
     @Override
@@ -59,15 +59,15 @@ public class TagServiceImpl implements ITagService {
         Tag currentTag = this.findById(id);
         String name = currentTag.getName();
         if (this.existsByName(tagRequest.getName()) && !name.equals(tagRequest.getName()))
-            throw new EntityException("Tag " + name + " exists");
+            throw new EntityException("Tag exists");
+        tagMapper.updateEntity(tagRequest, currentTag);
         try {
-            tagMapper.updateEntity(tagRequest, currentTag);
             tagRepository.saveAndFlush(currentTag);
         } catch (Exception e) {
             logger.error(e.getMessage(), e.getCause());
-            return "Tag " + name + " update fail";
+            return "Tag update fail";
         }
-        return "Tag " + name + " update success";
+        return "Tag update success";
     }
 
     @Override
@@ -79,36 +79,36 @@ public class TagServiceImpl implements ITagService {
     @Override
     public String delete(Long id) {
         Tag tag = this.findById(id);
+        List<Post> posts = postService.findPostsByTag(tag);
+        for (Post post : posts) {
+            Set<Tag> tags = post.getTags();
+            tags.remove(tag);
+            post.setTags(tags);
+        }
         try {
-            List<Post> posts = postService.findPostsByTag(tag);
-            for (Post post : posts) {
-                Set<Tag> tags = post.getTags();
-                tags.remove(tag);
-                post.setTags(tags);
-            }
             tagRepository.deleteById(id);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            throw new EntityException("Tag " + tag.getName() + " delete fail");
+            throw new EntityException("Tag delete fail");
         }
-        return "Tag " + tag.getName() + " delete success";
+        return "Tag delete success";
     }
 
     @Override
     public Tag findById(Long id) {
-        return tagRepository.findById(id).orElseThrow(() -> new NotFoundException("Tag with id " + id + " not found"));
+        return tagRepository.findById(id).orElseThrow(() -> new NotFoundException("Tag not found"));
     }
 
     @Override
     public Tag findBySlug(String slug) {
         return tagRepository.findBySlug(slug)
-                .orElseThrow(() -> new NotFoundException("Tag with slug " + slug + " not found"));
+                .orElseThrow(() -> new NotFoundException("Tag not found"));
     }
 
     @Override
     public Tag findByName(String name) {
         return tagRepository.findByName(name)
-                .orElseThrow(() -> new NotFoundException("Tag with name " + name + " not found"));
+                .orElseThrow(() -> new NotFoundException("Tag not found"));
     }
 
     @Override

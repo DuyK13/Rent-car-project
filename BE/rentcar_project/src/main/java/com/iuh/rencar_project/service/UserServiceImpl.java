@@ -55,53 +55,47 @@ public class UserServiceImpl implements IUserService {
     public String save(UserRequest userRequest) {
         String username = userRequest.getUsername();
         if (this.existsByUsername(username))
-            throw new EntityException("User " + username + " exists");
+            throw new EntityException("User exists");
         try {
             userRepository.saveAndFlush(userMapper.toEntity(userRequest));
         } catch (Exception e) {
             logger.error("User Exception: ", e);
-            throw new EntityException("User " + username + " save fail", e);
+            throw new EntityException("User save fail", e);
         }
-        return "User " + username + " save success";
+        return "User save success";
     }
 
     @Override
     public String update(Long id, UserRequest userRequest) {
         User currentUser = this.findById(id);
-        String currentUsername = currentUser.getUsername();
-        if (this.existsByUsername(userRequest.getUsername()) && !currentUsername.equals(userRequest.getUsername()))
-            throw new EntityException("User " + userRequest.getUsername() + " exists");
-        if(this.existsByEmail(userRequest.getEmail()) && !currentUser.getEmail().equals(userRequest.getEmail()))
-            throw new EntityException("User email " + userRequest.getEmail() + " exists");
+        if ((this.existsByUsername(userRequest.getUsername()) && !currentUser.getUsername().equals(userRequest.getUsername())) || (this.existsByEmail(userRequest.getEmail()) && !currentUser.getEmail().equals(userRequest.getEmail())))
+            throw new EntityException("User exists");
+        userMapper.updateUserInformation(userRequest, currentUser);
         try {
-            userMapper.updateUserInformation(userRequest, currentUser);
             userRepository.saveAndFlush(currentUser);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            throw new EntityException(e.getMessage(), e);
+            throw new EntityException("User update fail", e);
         }
-        return "User " + currentUsername + " update success";
+        return "User update success";
     }
 
     @Override
     public String update(Long id) {
         User currentUser = this.findById(id);
-        String username = currentUser.getUsername();
         String message;
+        if (currentUser.getStatus() == Status.ACTIVE) {
+            currentUser.setStatus(Status.INACTIVE);
+            message = "User deactivate success";
+        } else {
+            currentUser.setStatus(Status.ACTIVE);
+            message = "User activate success";
+        }
         try {
-            Status status = currentUser.getStatus();
-            if (status == Status.ACTIVE) {
-                currentUser.setStatus(Status.INACTIVE);
-                userRepository.saveAndFlush(currentUser);
-                message = "User " + username + " inactive success";
-            } else {
-                currentUser.setStatus(Status.ACTIVE);
-                userRepository.saveAndFlush(currentUser);
-                message = "User " + username + " active success";
-            }
+            userRepository.saveAndFlush(currentUser);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            throw new EntityException("User " + username + " change status fail");
+            throw new EntityException("User change status fail");
         }
         return message;
     }
@@ -119,13 +113,13 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User findById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User with id: " + id + " not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new NotFoundException("User " + username + " not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     @Override
@@ -138,16 +132,16 @@ public class UserServiceImpl implements IUserService {
     public String changePassword(Long id, PasswordRequest passwordRequest) {
         User currentUser = this.findById(id);
         if (!passwordEncoder.matches(passwordRequest.getOldPassword(), currentUser.getPassword())) {
-            throw new EntityException("User " + currentUser.getUsername() + " wrong old password");
+            throw new EntityException("User wrong old password");
         }
+        currentUser.setPassword(passwordEncoder.encode(passwordRequest.getNewPassword()));
         try {
-            currentUser.setPassword(passwordEncoder.encode(passwordRequest.getNewPassword()));
             userRepository.saveAndFlush(currentUser);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            throw new EntityException("User " + currentUser.getUsername() + " change password fail");
+            throw new EntityException("User change password fail");
         }
-        return "User " + currentUser.getUsername() + " change password success";
+        return "User change password success";
     }
 
     @Override
@@ -157,9 +151,9 @@ public class UserServiceImpl implements IUserService {
             userRepository.deleteById(id);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            throw new EntityException("User " + user.getUsername() + " delete fail");
+            throw new EntityException("User delete fail");
         }
-        return "User " + user.getUsername() + " delete success";
+        return "User delete success";
     }
 
     @Override

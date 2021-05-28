@@ -5,6 +5,7 @@ import com.iuh.rencar_project.service.template.*;
 import com.iuh.rencar_project.utils.StringUtils;
 import com.iuh.rencar_project.utils.enums.CarType;
 import com.iuh.rencar_project.utils.mapper.annotation.*;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -109,7 +110,7 @@ public class HelperMapper {
 
     @StringToCategoryMapping
     public Category toCategory(String name) {
-        if(name.isEmpty())
+        if(Strings.isEmpty(name))
             return null;
         return categoryService.findByName(name);
     }

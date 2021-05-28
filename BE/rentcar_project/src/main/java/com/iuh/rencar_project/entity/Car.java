@@ -1,6 +1,7 @@
 package com.iuh.rencar_project.entity;
 
 import com.iuh.rencar_project.utils.enums.CarType;
+import com.iuh.rencar_project.utils.enums.Status;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -56,7 +57,10 @@ public class Car {
     @Column(name = "image_link", unique = true)
     private String imageLink;
 
-    public Car(Long id, String name, int year, Long price, CarType type, String slug, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate, String imageLink) {
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    public Car(Long id, String name, int year, Long price, CarType type, String slug, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate, String imageLink, Status status) {
         this.id = id;
         this.name = name;
         this.year = year;
@@ -68,10 +72,20 @@ public class Car {
         this.modifiedBy = modifiedBy;
         this.modifiedDate = modifiedDate;
         this.imageLink = imageLink;
+        this.status = status;
     }
 
     public Car() {
         super();
+        this.status = Status.ACTIVE;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public Long getId() {

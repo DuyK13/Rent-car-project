@@ -45,50 +45,45 @@ public class CategoryServiceImpl implements ICategoryService {
     public String save(CategoryRequest categoryRequest) {
         String name = categoryRequest.getName();
         if (this.existsByName(name))
-            throw new EntityException("Category " + name + " exists");
+            throw new EntityException("Category exists");
         try {
             categoryReposity.saveAndFlush(categoryMapper.toEntity(categoryRequest));
         } catch (Exception e) {
             logger.error("Category Exception: ", e);
-            throw new EntityException("Category " + name + " save fail", e);
+            throw new EntityException("Category save fail", e);
         }
-        return "Category " + name + " save success";
+        return "Category save success";
     }
 
     @Override
     public String update(Long id, CategoryRequest categoryRequest) {
         Category currentCategory = this.findById(id);
-        String currentName = currentCategory.getName();
-        if (this.existsByName(categoryRequest.getName()) && !currentName.equals(categoryRequest.getName()))
-            throw new EntityException("Category " + categoryRequest.getName() + " exists");
+        if (this.existsByName(categoryRequest.getName()) && !currentCategory.getName().equals(categoryRequest.getName()))
+            throw new EntityException("Category exists");
+        categoryMapper.updateEntity(categoryRequest, currentCategory);
         try {
-            categoryMapper.updateEntity(categoryRequest, currentCategory);
             categoryReposity.saveAndFlush(currentCategory);
         } catch (Exception e) {
             logger.error("Category Exception: ", e);
-            throw new EntityException("Category " + currentName + " update fail");
+            throw new EntityException("Category update fail");
         }
-        return "Category " + currentName
-                + " update success";
+        return "Category update success";
     }
 
     @Override
     public String update(Long id) {
         Category currentCategory = this.findById(id);
-        String name = currentCategory.getName();
         String message;
+        if (Status.ACTIVE.equals(currentCategory.getStatus())) {
+            currentCategory.setStatus(Status.INACTIVE);
+            message = "Category deactivate success";
+        } else {
+            currentCategory.setStatus(Status.ACTIVE);
+            message = "Category activate success";
+        }
         try {
-            Status status = currentCategory.getStatus();
-            if (Status.ACTIVE.equals(status)) {
-                currentCategory.setStatus(Status.INACTIVE);
-                categoryReposity.saveAndFlush(currentCategory);
-                message = "Inactive success";
-            } else {
-                currentCategory.setStatus(Status.ACTIVE);
-                categoryReposity.saveAndFlush(currentCategory);
-                message = "Active success";
-            }
-        }catch (Exception e){
+            categoryReposity.saveAndFlush(currentCategory);
+        } catch (Exception e) {
             logger.error("Category Exception: ", e);
             throw new EntityException("Change status fail");
         }
@@ -98,59 +93,58 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     public String addCarToCategory(String name, Car car) {
         Category category = this.findByName(name);
+        Set<Car> cars = category.getCars();
+        if (!cars.add(car))
+            throw new EntityException("Car save fail");
+        category.setCars(cars);
         try {
-            Set<Car> cars = category.getCars();
-            if (!cars.add(car))
-                throw new EntityException("Car " + car.getName() + " save fail");
-            category.setCars(cars);
             categoryReposity.saveAndFlush(category);
         } catch (Exception e) {
             logger.error("Car Exception: ", e);
         }
-        return "Car " + car.getName() + " save success";
+        return "Car save success";
     }
 
     @Override
     public String updateCarToCategory(String name, Car oldCar, Car newCar) {
         Category category = this.findByName(name);
+        Set<Car> cars = category.getCars();
+        if(!cars.remove(oldCar) || !cars.add(newCar)){
+            throw new EntityException("Car update fail");
+        }
+        category.setCars(cars);
         try {
-            Set<Car> cars = category.getCars();
-            cars.remove(oldCar);
-            cars.add(newCar);
-            category.setCars(cars);
             categoryReposity.saveAndFlush(category);
         } catch (Exception e) {
             logger.error("Car Exception: ", e);
         }
-        return "Car " + newCar.getName() + " save success";
+        return "Car update success";
     }
 
     @Override
     public String delete(Long id) {
-        Category category = this.findById(id);
-        String name = category.getName();
         try {
             categoryReposity.deleteById(id);
         } catch (Exception e) {
             logger.error("Category Exception: ", e);
-            throw new EntityException("Category " + name + " delete fail");
+            throw new EntityException("Category delete fail");
         }
-        return "Category " + name + " delete success";
+        return "Category delete success";
     }
 
     @Override
     public Category findById(Long id) {
-        return categoryReposity.findById(id).orElseThrow(() -> new NotFoundException("Category with id " + id + " not found"));
+        return categoryReposity.findById(id).orElseThrow(() -> new NotFoundException("Category not found"));
     }
 
     @Override
     public Category findBySlug(String slug) {
-        return categoryReposity.findBySlug(slug).orElseThrow(() -> new NotFoundException("Category with slug " + slug + " not found"));
+        return categoryReposity.findBySlug(slug).orElseThrow(() -> new NotFoundException("Category not found"));
     }
 
     @Override
     public Category findBySlugForGuest(String slug) {
-        return  categoryReposity.findBySlugAndStatusIs(slug, Status.ACTIVE).orElseThrow(() -> new NotFoundException("Not found"));
+        return categoryReposity.findBySlugAndStatusIs(slug, Status.ACTIVE).orElseThrow(() -> new NotFoundException("Category Not found"));
     }
 
     @Override
@@ -172,11 +166,11 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public Category findByName(String name) {
-        return categoryReposity.findByName(name).orElseThrow(() -> new NotFoundException("Category with name " + name + " not found"));
+        return categoryReposity.findByName(name).orElseThrow(() -> new NotFoundException("Category not found"));
     }
 
     @Override
     public Category findByCar(Car car) {
-        return categoryReposity.findByCarsIsContaining(car).orElseThrow(() -> new NotFoundException("Category with car name " + car.getName() + " not found"));
+        return categoryReposity.findByCarsIsContaining(car).orElseThrow(() -> new NotFoundException("Category not found"));
     }
 }

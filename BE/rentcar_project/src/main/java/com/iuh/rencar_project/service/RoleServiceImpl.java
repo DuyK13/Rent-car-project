@@ -40,26 +40,26 @@ public class RoleServiceImpl implements IRoleService {
     @Override
     public String save(RoleRequest roleRequest) {
         if (this.existsByName(roleRequest.getName()))
-            throw new EntityException("Role " + roleRequest.getName() + " exists");
+            throw new EntityException("Role exists");
         try {
             roleRepository.saveAndFlush(roleMapper.toEntity(roleRequest));
         } catch (Exception e) {
             logger.error("Role Exception: ", e);
-            throw new EntityException("Role " + roleRequest.getName() + " save fail", e);
+            throw new EntityException("Role save fail", e);
         }
-        return "Role " + roleRequest.getName() + " save success";
+        return "Role save success";
     }
 
     @Override
     public Role findById(Long id) {
         return roleRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Role with id: " + id + " not found"));
+                .orElseThrow(() -> new NotFoundException("Role not found"));
     }
 
     @Override
     public Role findByName(String name) {
         return roleRepository.findByName(EnumType.valueOf(ERole.class, name))
-                .orElseThrow(() -> new NotFoundException("Role " + name + " not found"));
+                .orElseThrow(() -> new NotFoundException("Role not found"));
     }
 
     @Override

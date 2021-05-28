@@ -43,14 +43,12 @@ public class AdminController {
 
     private final ICourseService courseService;
 
-    private final IBillService billService;
-
     private final IRoleMapper roleMapper;
 
     private final IUserMapper userMapper;
 
     @Autowired
-    public AdminController(IRoleService roleService, IUserService userService, ITagService tagService, ICommentService commentService, IPostService postService, ICategoryService categoryService, ICarService carService, ICourseService courseService, IBillService billService, IRoleMapper roleMapper, IUserMapper userMapper) {
+    public AdminController(IRoleService roleService, IUserService userService, ITagService tagService, ICommentService commentService, IPostService postService, ICategoryService categoryService, ICarService carService, ICourseService courseService, IRoleMapper roleMapper, IUserMapper userMapper) {
         this.roleService = roleService;
         this.userService = userService;
         this.tagService = tagService;
@@ -59,7 +57,6 @@ public class AdminController {
         this.categoryService = categoryService;
         this.carService = carService;
         this.courseService = courseService;
-        this.billService = billService;
         this.roleMapper = roleMapper;
         this.userMapper = userMapper;
     }
@@ -133,6 +130,11 @@ public class AdminController {
         return new ResponseEntity<>(new MessageResponse(categoryService.delete(id)), HttpStatus.OK);
     }
 
+    @PutMapping("/categories/{id}")
+    public ResponseEntity<?> changeCategoryStatus(@PathVariable(name = "id") Long id) {
+        return new ResponseEntity<>(new MessageResponse(categoryService.update(id)), HttpStatus.OK);
+    }
+
     // ======================================
     // ================ CAR =================
     // ======================================
@@ -141,21 +143,18 @@ public class AdminController {
         return new ResponseEntity<>(new MessageResponse(carService.delete(id)), HttpStatus.OK);
     }
 
+    @PutMapping("/cars/{id}")
+    public ResponseEntity<?> changeCarStatus(@PathVariable(name = "id") Long id) {
+        return new ResponseEntity<>(new MessageResponse(carService.changeStatus(id)), HttpStatus.OK);
+    }
+
     // ======================================
     // ============== COURSE ================
     // ======================================
 
     @PutMapping("/courses/{id}")
-    public ResponseEntity<?> changeCourseStatus(@PathVariable(name = "id") Long id){
+    public ResponseEntity<?> changeCourseStatus(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(new MessageResponse(courseService.update(id)), HttpStatus.OK);
-    }
-
-    // ======================================
-    // ============== BILL ==================
-    // ======================================
-    @DeleteMapping("/bills/{id}")
-    public ResponseEntity<?> deleteBill(@PathVariable(name = "id") Long id) {
-        return new ResponseEntity<>(new MessageResponse(billService.delete(id)), HttpStatus.OK);
     }
 
     // ======================================

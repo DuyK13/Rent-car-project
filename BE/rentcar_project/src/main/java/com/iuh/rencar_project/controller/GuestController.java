@@ -84,7 +84,7 @@ public class GuestController {
     // =============== POST =================
     // ======================================
 
-    @GetMapping("/{tagSlug}/posts")
+    @GetMapping("/tags/{tagSlug}/posts")
     public ResponseEntity<?> getPagePostByTagSLug(@PathVariable(name = "tagSlug") String tagSlug, @RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
         Tag tag = tagService.findBySlug(tagSlug);
         Page<PostResponse> postResponsePage = postService.findAllPaginatedByTagForGuest(tag, pageNo).map(postMapper::toResponse);
