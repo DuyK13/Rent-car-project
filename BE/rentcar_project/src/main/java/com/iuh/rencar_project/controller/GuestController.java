@@ -159,9 +159,9 @@ public class GuestController {
     // ================ Car =================
     // ======================================
 
-    @GetMapping("categories/{categorySlug}/cars/{carSlug}")
-    public ResponseEntity<?> getCar(@PathVariable(name = "categorySlug") String categorySlug, @PathVariable(name = "carSlug") String carSlug) {
-        CarResponse carResponse = carMapper.toResponse(carService.findByCategorySlugAndCarSlugForGuest(categorySlug, carSlug));
+    @GetMapping("cars/{slug}")
+    public ResponseEntity<?> getCar(@PathVariable(name = "slug") String slug) {
+        CarResponse carResponse = carMapper.toResponse(carService.findBySlugForGuest(slug));
         return new ResponseEntity<>(carResponse, HttpStatus.OK);
     }
 

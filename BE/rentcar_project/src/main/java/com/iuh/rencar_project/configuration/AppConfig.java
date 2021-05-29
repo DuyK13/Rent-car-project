@@ -18,6 +18,8 @@ import java.time.ZoneId;
 import java.util.Optional;
 
 /**
+ * The type App config.
+ *
  * @author Trần Thế Duy
  * @version 0.1
  * @datetime May 1, 2021 3:03:02 PM
@@ -25,11 +27,23 @@ import java.util.Optional;
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider", dateTimeProviderRef = "auditingDateTimeProvider")
 @Configuration
 public class AppConfig {
-    @Bean // Makes ZonedDateTime compatible with auditing fields
+
+
+    /**
+     * Auditing date time provider date time provider.
+     *
+     * @return the date time provider
+     */
+    @Bean
     public DateTimeProvider auditingDateTimeProvider() {
         return () -> Optional.of(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
     }
 
+    /**
+     * Object mapper object mapper.
+     *
+     * @return the object mapper
+     */
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -38,11 +52,21 @@ public class AppConfig {
         return objectMapper;
     }
 
+    /**
+     * Auditor provider auditor aware.
+     *
+     * @return the auditor aware
+     */
     @Bean
     public AuditorAware<User> auditorProvider() {
         return new AuditorAwareImpl();
     }
 
+    /**
+     * Web mvc configurer web mvc configurer.
+     *
+     * @return the web mvc configurer
+     */
     @Bean
     public WebMvcConfigurer webMvcConfigurer() {
         return new WebMvcConfigurer() {

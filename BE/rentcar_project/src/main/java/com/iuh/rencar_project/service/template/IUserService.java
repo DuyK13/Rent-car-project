@@ -14,90 +14,25 @@ import org.springframework.data.domain.Page;
  * The interface User service.
  */
 public interface IUserService {
-    /**
-     * Save string.
-     *
-     * @param userRequest the user request
-     * @return the string
-     */
     String save(UserRequest userRequest);
 
-    /**
-     * Update string.
-     *
-     * @param id          the id
-     * @param userRequest the user request
-     * @return the string
-     */
-    String update(Long id, UserRequest userRequest);
+    String updateUserEmail(Long id, UserRequest userRequest);
 
-    /**
-     * Update string.
-     *
-     * @param id the id
-     * @return the string
-     */
-    String update(Long id);
+    String setAvailability(Long id);
 
-    /**
-     * Exists by username boolean.
-     *
-     * @param username the username
-     * @return the boolean
-     */
     Boolean existsByUsername(String username);
 
-    /**
-     * Find by id user.
-     *
-     * @param id the id
-     * @return the user
-     */
     User findById(Long id);
 
-    /**
-     * Find by username user.
-     *
-     * @param username the username
-     * @return the user
-     */
     User findByUsername(String username);
 
-    /**
-     * Find all paginated page.
-     *
-     * @param pageNo the page no
-     * @return the page
-     */
-    Page<User> findAllPaginated(int pageNo);
-
-    /**
-     * Delete string.
-     *
-     * @param id the id
-     * @return the string
-     */
     String delete(Long id);
 
-    /**
-     * Change password string.
-     *
-     * @param id              the id
-     * @param passwordRequest the password request
-     * @return the string
-     */
     String changePassword(Long id, PasswordRequest passwordRequest);
 
-    /**
-     * Is right password boolean.
-     *
-     * @param username the username
-     * @param password the password
-     * @return the boolean
-     */
-    Boolean isRightPassword(String username, String password);
+    Boolean isCorrectPassword(String username, String password);
 
-    Boolean isUserActive(String username);
+    Boolean isUserEnable(String username);
 
-    boolean existsByEmail(String email);
+    Page<User> findAllPaginated(int pageNo);
 }

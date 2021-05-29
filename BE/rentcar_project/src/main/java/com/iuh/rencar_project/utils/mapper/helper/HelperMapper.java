@@ -3,14 +3,11 @@ package com.iuh.rencar_project.utils.mapper.helper;
 import com.iuh.rencar_project.entity.*;
 import com.iuh.rencar_project.service.template.*;
 import com.iuh.rencar_project.utils.StringUtils;
-import com.iuh.rencar_project.utils.enums.CarType;
+import com.iuh.rencar_project.utils.enums.ERole;
 import com.iuh.rencar_project.utils.mapper.annotation.*;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author Trần Thế Duy
@@ -71,7 +68,7 @@ public class HelperMapper {
 
     @StringToRoleMapping
     public Role toRole(String value) {
-        return roleService.findByName(value);
+        return roleService.findByName(Enum.valueOf(ERole.class, value));
     }
 
     @RoleToStringMapping
@@ -103,28 +100,16 @@ public class HelperMapper {
 
     @LongToCommentMapping
     public Comment toComment(Long id) {
-        if(id == null)
+        if (id == null)
             return null;
         return commentService.findById(id);
     }
 
     @StringToCategoryMapping
     public Category toCategory(String name) {
-        if(Strings.isEmpty(name))
+        if (Strings.isEmpty(name))
             return null;
         return categoryService.findByName(name);
-    }
-
-    @StringToCarTypeMapping
-    public CarType toCarType(String name) {
-        if (name.equals(CarType.AUTO.getDisplayName()))
-            return CarType.AUTO;
-        else return CarType.MANUAL;
-    }
-
-    @CarTypeToStringMapping
-    public String toString(CarType carType) {
-        return carType.getDisplayName();
     }
 
     @StringToCourseMapping
@@ -137,10 +122,10 @@ public class HelperMapper {
         return carService.findByName(name);
     }
 
-    @CarIdToCarCategoryNameMapping
-    public String addCategoryNameToCar(Long carId){
-        Car car = carService.findById(carId);
-        Category category = categoryService.findByCar(car);
-        return category.getName();
-    }
+//    @CarIdToCarCategoryNameMapping
+//    public String addCategoryNameToCar(Long carId) {
+//        Car car = carService.findById(carId);
+//        Category category = categoryService.findByCar(car);
+//        return category.getName();
+//    }
 }

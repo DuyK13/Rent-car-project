@@ -1,9 +1,13 @@
 package com.iuh.rencar_project.service.template;
 
+import com.iuh.rencar_project.dto.request.BillRequest;
 import com.iuh.rencar_project.dto.request.CarRequest;
+import com.iuh.rencar_project.entity.Bill;
 import com.iuh.rencar_project.entity.Car;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * @author Duy Trần Thế
@@ -16,7 +20,7 @@ public interface ICarService {
 
     String update(Long id, CarRequest carRequest, MultipartFile multipartFile);
 
-    String changeStatus(Long id);
+    String setAvailability(Long id);
 
     String delete(Long id);
 
@@ -30,5 +34,5 @@ public interface ICarService {
 
     Page<Car> findAllPaginated(int pageNo);
 
-    Car findByCategorySlugAndCarSlugForGuest(String categorySlug, String carSlug);
+    Car findBySlugForGuest(String slug);
 }

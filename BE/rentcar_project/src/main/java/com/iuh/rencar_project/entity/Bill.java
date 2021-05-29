@@ -1,16 +1,15 @@
 package com.iuh.rencar_project.entity;
 
 import com.iuh.rencar_project.utils.enums.BillState;
-import org.springframework.data.annotation.CreatedBy;
+import com.iuh.rencar_project.utils.enums.BillType;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -36,23 +35,35 @@ public class Bill {
     @LastModifiedBy
     @ManyToOne
     @JoinColumn(name = "staff_id", referencedColumnName = "id")
-    private User staff;
+    private User createdBy;
 
     @CreatedDate
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
+    @LastModifiedBy
+    @ManyToOne
+    @JoinColumn(name = "modified_by", referencedColumnName = "id")
+    private User modifiedBy;
+
+    @LastModifiedDate
+    @Column(name = "modified_date")
+    private LocalDateTime modifiedDate;
+
+    @Enumerated(EnumType.STRING)
+    private BillType type;
+
     @DateTimeFormat(pattern = "dd-MM-yyyy hh:mm tt")
-    @Column(name = "time_start")
-    private LocalDateTime timeStart;
+    @Column(name = "start_time")
+    private LocalDateTime startTime;
 
-    @Column(name = "extra_time")
-    private Long extraTime;
+    @DateTimeFormat(pattern = "dd-MM-yyyy hh:mm tt")
+    @Column(name = "end_time")
+    private LocalDateTime endTime;
 
-    @ManyToMany
-    @JoinTable(name = "bills_courses", joinColumns = {@JoinColumn(name = "bill_id")}, inverseJoinColumns = {
-            @JoinColumn(name = "course_id")})
-    private Set<Course> courses = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "course_id", referencedColumnName = "id")
+    private Course course;
 
     @ManyToOne
     @JoinColumn(name = "car_id", referencedColumnName = "id")
@@ -62,24 +73,33 @@ public class Bill {
     @Column(nullable = false)
     private BillState state;
 
-    public Bill() {
-        super();
-        this.state = BillState.Pre_Order;
-    }
+    @Column(name = "bill_amount")
+    private Long billAmount;
 
-    public Bill(Long id, String fullname, String slug, String phoneNumber, String email, User staff, LocalDateTime createdDate, LocalDateTime timeStart, Long extraTime, Set<Course> courses, Car car, BillState state) {
+    @Column(name = "late_charge")
+    private Long lateCharge;
+
+    public Bill(Long id, String fullname, String slug, String phoneNumber, String email, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate, BillType type, LocalDateTime startTime, LocalDateTime endTime, Course course, Car car, BillState state, Long billAmount, Long lateCharge) {
         this.id = id;
         this.fullname = fullname;
         this.slug = slug;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.staff = staff;
+        this.createdBy = createdBy;
         this.createdDate = createdDate;
-        this.timeStart = timeStart;
-        this.extraTime = extraTime;
-        this.courses = courses;
+        this.modifiedBy = modifiedBy;
+        this.modifiedDate = modifiedDate;
+        this.type = type;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.course = course;
         this.car = car;
         this.state = state;
+        this.billAmount = billAmount;
+        this.lateCharge = lateCharge;
+    }
+
+    public Bill() {
     }
 
     public Long getId() {
@@ -122,6 +142,14 @@ public class Bill {
         this.email = email;
     }
 
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
+
     public LocalDateTime getCreatedDate() {
         return createdDate;
     }
@@ -130,20 +158,52 @@ public class Bill {
         this.createdDate = createdDate;
     }
 
-    public LocalDateTime getTimeStart() {
-        return timeStart;
+    public User getModifiedBy() {
+        return modifiedBy;
     }
 
-    public void setTimeStart(LocalDateTime timeStart) {
-        this.timeStart = timeStart;
+    public void setModifiedBy(User modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 
-    public Set<Course> getCourses() {
-        return courses;
+    public LocalDateTime getModifiedDate() {
+        return modifiedDate;
     }
 
-    public void setCourses(Set<Course> courses) {
-        this.courses = courses;
+    public void setModifiedDate(LocalDateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    public BillType getType() {
+        return type;
+    }
+
+    public void setType(BillType type) {
+        this.type = type;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     public Car getCar() {
@@ -154,27 +214,50 @@ public class Bill {
         this.car = car;
     }
 
-    public Long getExtraTime() {
-        return extraTime;
-    }
-
-    public void setExtraTime(Long extraTime) {
-        this.extraTime = extraTime;
-    }
-
-    public User getStaff() {
-        return staff;
-    }
-
-    public void setStaff(User staff) {
-        this.staff = staff;
-    }
-
     public BillState getState() {
         return state;
     }
 
     public void setState(BillState state) {
         this.state = state;
+    }
+
+    public Long getBillAmount() {
+        return billAmount;
+    }
+
+    public void setBillAmount(Long billAmount) {
+        this.billAmount = billAmount;
+    }
+
+    public Long getLateCharge() {
+        return lateCharge;
+    }
+
+    public void setLateCharge(Long lateCharge) {
+        this.lateCharge = lateCharge;
+    }
+
+    @Override
+    public String toString() {
+        return "Bill{" +
+                "id=" + id +
+                ", fullname='" + fullname + '\'' +
+                ", slug='" + slug + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", createdBy=" + createdBy +
+                ", createdDate=" + createdDate +
+                ", modifiedBy=" + modifiedBy +
+                ", modifiedDate=" + modifiedDate +
+                ", type=" + type +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", course=" + course +
+                ", car=" + car +
+                ", state=" + state +
+                ", billAmount=" + billAmount +
+                ", lateCharge=" + lateCharge +
+                '}';
     }
 }

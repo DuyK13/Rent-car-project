@@ -1,6 +1,5 @@
 package com.iuh.rencar_project.controller;
 
-import com.iuh.rencar_project.dto.request.RoleRequest;
 import com.iuh.rencar_project.dto.request.UserRequest;
 import com.iuh.rencar_project.dto.response.MessageResponse;
 import com.iuh.rencar_project.dto.response.PageResponse;
@@ -65,11 +64,6 @@ public class AdminController {
     // =============== ROLE =================
     // ======================================
 
-    @PostMapping("/roles")
-    public ResponseEntity<?> saveRole(@RequestBody RoleRequest roleRequest) {
-        return new ResponseEntity<>(new MessageResponse(roleService.save(roleRequest)), HttpStatus.OK);
-    }
-
     @GetMapping("/roles")
     public ResponseEntity<?> getRoles() {
         List<RoleResponse> roleResponses = roleService.findAll().stream().map(roleMapper::toResponse).collect(Collectors.toList());
@@ -86,8 +80,8 @@ public class AdminController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<?> changeUserStatus(@PathVariable(name = "id") Long id) {
-        return new ResponseEntity<>(new MessageResponse(userService.update(id)), HttpStatus.OK);
+    public ResponseEntity<?> setUserAvailability(@PathVariable(name = "id") Long id) {
+        return new ResponseEntity<>(new MessageResponse(userService.setAvailability(id)), HttpStatus.OK);
     }
 
     @DeleteMapping("/users/{id}")
@@ -96,7 +90,7 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<?> getUserPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
+    public ResponseEntity<?> getAllUserPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
         Page<UserResponse> pageUserResponse = userService.findAllPaginated(pageNo)
                 .map(userMapper::toResponse);
         PageResponse<UserResponse> pageResult = new PageResponse<>(pageUserResponse.getContent(),
@@ -122,6 +116,11 @@ public class AdminController {
         return new ResponseEntity<>(new MessageResponse(postService.delete(id)), HttpStatus.OK);
     }
 
+    @PutMapping("/posts/{id}")
+    public ResponseEntity<?> setPostAvailability(@PathVariable(name = "id") Long id) {
+        return new ResponseEntity<>(new MessageResponse(postService.setAvailability(id)), HttpStatus.OK);
+    }
+
     // ======================================
     // ============= CATEGORY ===============
     // ======================================
@@ -131,8 +130,8 @@ public class AdminController {
     }
 
     @PutMapping("/categories/{id}")
-    public ResponseEntity<?> changeCategoryStatus(@PathVariable(name = "id") Long id) {
-        return new ResponseEntity<>(new MessageResponse(categoryService.update(id)), HttpStatus.OK);
+    public ResponseEntity<?> setCategoryAvailability(@PathVariable(name = "id") Long id) {
+        return new ResponseEntity<>(new MessageResponse(categoryService.setAvailability(id)), HttpStatus.OK);
     }
 
     // ======================================
@@ -144,8 +143,8 @@ public class AdminController {
     }
 
     @PutMapping("/cars/{id}")
-    public ResponseEntity<?> changeCarStatus(@PathVariable(name = "id") Long id) {
-        return new ResponseEntity<>(new MessageResponse(carService.changeStatus(id)), HttpStatus.OK);
+    public ResponseEntity<?> setCarAvailability(@PathVariable(name = "id") Long id) {
+        return new ResponseEntity<>(new MessageResponse(carService.setAvailability(id)), HttpStatus.OK);
     }
 
     // ======================================

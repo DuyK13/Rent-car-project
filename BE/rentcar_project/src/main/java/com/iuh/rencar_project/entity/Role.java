@@ -17,13 +17,11 @@ public class Role {
 	private ERole name;
 
 	public Role(Long id, ERole name) {
-		super();
 		this.id = id;
 		this.name = name;
 	}
 
 	public Role() {
-		super();
 	}
 
 	public Long getId() {
@@ -40,5 +38,13 @@ public class Role {
 
 	public void setName(ERole name) {
 		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return "Role{" +
+				"id=" + id +
+				", name=" + name +
+				'}';
 	}
 }

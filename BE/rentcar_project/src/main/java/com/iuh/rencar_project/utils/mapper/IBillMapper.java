@@ -3,6 +3,7 @@ package com.iuh.rencar_project.utils.mapper;
 import com.iuh.rencar_project.dto.request.BillRequest;
 import com.iuh.rencar_project.dto.response.BillResponse;
 import com.iuh.rencar_project.entity.Bill;
+import com.iuh.rencar_project.entity.Car;
 import com.iuh.rencar_project.entity.Course;
 import com.iuh.rencar_project.utils.mapper.annotation.StringToCarMapping;
 import com.iuh.rencar_project.utils.mapper.annotation.StringToCourseMapping;
@@ -24,7 +25,7 @@ public interface IBillMapper {
             @Mapping(target = "state", ignore = true),
             @Mapping(target = "createdDate", ignore = true),
             @Mapping(target = "courses", source = "courses", qualifiedBy = StringToCourseMapping.class),
-            @Mapping(target = "car", source = "car", qualifiedBy = StringToCarMapping.class)
+//            @Mapping(target = "car", source = "car", qualifiedBy = StringToCarMapping.class)
     })
     Bill toEntity(BillRequest billRequest);
 
@@ -37,16 +38,16 @@ public interface IBillMapper {
     })
     BillResponse toResponse(Bill bill);
 
-    @AfterMapping
-    public default void calculateTotalPrice(Bill bill, @MappingTarget BillResponse billResponse) {
-        Long totalMoney = 0L;
-        for (Course course : bill.getCourses()) {
-            totalMoney += course.getPrice();
-        }
-        totalMoney += bill.getCar().getPrice();
-
-        totalMoney += bill.getExtraTime() * bill.getCar().getPrice();
-
-        billResponse.setTotalMoney(totalMoney);
-    }
+//    @AfterMapping
+//    public default void calculateTotalPrice(Bill bill, @MappingTarget BillResponse billResponse) {
+//        double totalMoney = 0;
+//        for (Course course : bill.getCourses()) {
+//            totalMoney += course.getPrice();
+//        }
+//        totalMoney += bill.getCar().getPrice();
+//
+//        totalMoney += bill.getExtraTime() * bill.getCar().getPrice();
+//
+//        billResponse.setTotalMoney(totalMoney);
+//    }
 }

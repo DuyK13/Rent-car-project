@@ -19,13 +19,13 @@ public class BillResponse {
     private String staff;
     private Date createdDate;
     private LocalDateTime timeStart;
-    private Long extraTime;
+    private double extraTime;
     private List<CourseResponse> courses;
     private CarResponse car;
     private String state;
-    private Long totalMoney;
+    private double totalMoney;
 
-    public BillResponse(Long id, String fullname, String slug, String phoneNumber, String staff, String email, Date createdDate, LocalDateTime timeStart, Long extraTime, List<CourseResponse> courses, CarResponse car, String state, Long totalMoney) {
+    public BillResponse(Long id, String fullname, String slug, String phoneNumber, String staff, String email, Date createdDate, LocalDateTime timeStart, double extraTime, List<CourseResponse> courses, CarResponse car, String state, double totalMoney) {
         this.id = id;
         this.fullname = fullname;
         this.slug = slug;
@@ -108,11 +108,11 @@ public class BillResponse {
         this.timeStart = timeStart;
     }
 
-    public Long getExtraTime() {
+    public double getExtraTime() {
         return extraTime;
     }
 
-    public void setExtraTime(Long extraTime) {
+    public void setExtraTime(double extraTime) {
         this.extraTime = extraTime;
     }
 
@@ -132,11 +132,11 @@ public class BillResponse {
         this.car = car;
     }
 
-    public Long getTotalMoney() {
+    public double getTotalMoney() {
         return totalMoney;
     }
 
-    public void setTotalMoney(Long totalMoney) {
+    public void setTotalMoney(double totalMoney) {
         this.totalMoney = totalMoney;
     }
 

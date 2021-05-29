@@ -42,7 +42,7 @@ public class AuthController {
         UserResponse userResponse;
         try {
             userResponse = userMapper.toResponse(userService.findById(Long.valueOf(var)));
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             userResponse = userMapper.toResponse(userService.findByUsername(var));
         }
         if (!principal.getName().equals(userResponse.getUsername()) && !principal.getName().equals("admin")) {
@@ -58,7 +58,7 @@ public class AuthController {
         if (!principal.getName().equals(user.getUsername())) {
             throw new AccessDeniedException("Access Denied!");
         }
-        return new ResponseEntity<>(new MessageResponse(userService.update(id, userRequest)), HttpStatus.OK);
+        return new ResponseEntity<>(new MessageResponse(userService.updateUserEmail(id, userRequest)), HttpStatus.OK);
 
     }
 

@@ -1,6 +1,6 @@
 package com.iuh.rencar_project.dto.response;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author Duy Trần Thế
@@ -10,31 +10,15 @@ import java.util.Date;
 public class CarResponse {
     private Long id;
     private String name;
-    private int year;
-    private Long price;
-    private String type;
+    private int manufacturingYear;
+    private int costPerHour;
     private String slug;
+    private String image;
+    private int availableQuantity;
     private String createdBy;
-    private Date createdDate;
+    private LocalDateTime createdDate;
     private String modifiedBy;
-    private Date modifiedDate;
-    private String imageLink;
-    private String categoryName;
-
-    public CarResponse(Long id, String name, int year, Long price, String type, String slug, String createdBy, Date createdDate, String modifiedBy, Date modifiedDate, String imageLink, String categoryName) {
-        this.id = id;
-        this.name = name;
-        this.year = year;
-        this.price = price;
-        this.type = type;
-        this.slug = slug;
-        this.createdBy = createdBy;
-        this.createdDate = createdDate;
-        this.modifiedBy = modifiedBy;
-        this.modifiedDate = modifiedDate;
-        this.imageLink = imageLink;
-        this.categoryName = categoryName;
-    }
+    private LocalDateTime modifiedDate;
 
     public CarResponse() {
     }
@@ -55,28 +39,44 @@ public class CarResponse {
         this.name = name;
     }
 
-    public int getYear() {
-        return year;
+    public int getManufacturingYear() {
+        return manufacturingYear;
     }
 
-    public void setYear(int year) {
-        this.year = year;
+    public void setManufacturingYear(int manufacturingYear) {
+        this.manufacturingYear = manufacturingYear;
     }
 
-    public Long getPrice() {
-        return price;
+    public int getCostPerHour() {
+        return costPerHour;
     }
 
-    public void setPrice(Long price) {
-        this.price = price;
+    public void setCostPerHour(int costPerHour) {
+        this.costPerHour = costPerHour;
     }
 
-    public String getType() {
-        return type;
+    public String getSlug() {
+        return slug;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public int getAvailableQuantity() {
+        return availableQuantity;
+    }
+
+    public void setAvailableQuantity(int availableQuantity) {
+        this.availableQuantity = availableQuantity;
     }
 
     public String getCreatedBy() {
@@ -87,11 +87,11 @@ public class CarResponse {
         this.createdBy = createdBy;
     }
 
-    public Date getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -103,35 +103,11 @@ public class CarResponse {
         this.modifiedBy = modifiedBy;
     }
 
-    public Date getModifiedDate() {
+    public LocalDateTime getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(Date modifiedDate) {
+    public void setModifiedDate(LocalDateTime modifiedDate) {
         this.modifiedDate = modifiedDate;
-    }
-
-    public String getImageLink() {
-        return imageLink;
-    }
-
-    public void setImageLink(String imageLink) {
-        this.imageLink = imageLink;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public String getSlug() {
-        return slug;
-    }
-
-    public void setSlug(String slug) {
-        this.slug = slug;
     }
 }

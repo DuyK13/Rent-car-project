@@ -3,7 +3,9 @@ package com.iuh.rencar_project.utils.mapper;
 import com.iuh.rencar_project.dto.request.CarRequest;
 import com.iuh.rencar_project.dto.response.CarResponse;
 import com.iuh.rencar_project.entity.Car;
-import com.iuh.rencar_project.utils.mapper.annotation.*;
+import com.iuh.rencar_project.utils.enums.Status;
+import com.iuh.rencar_project.utils.mapper.annotation.StringToSlugMapping;
+import com.iuh.rencar_project.utils.mapper.annotation.UserToStringMapping;
 import com.iuh.rencar_project.utils.mapper.helper.HelperMapper;
 import org.mapstruct.*;
 
@@ -18,26 +20,25 @@ public interface ICarMapper {
     @Mappings({
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "name", source = "name"),
-            @Mapping(target = "year", source = "year"),
+            @Mapping(target = "manufacturingYear", source = "manufacturingYear"),
+            @Mapping(target = "costPerHour", source = "costPerHour"),
             @Mapping(target = "slug", source = "name", qualifiedBy = StringToSlugMapping.class),
-            @Mapping(target = "price", source = "price"),
-            @Mapping(target = "type", source = "carType", qualifiedBy = StringToCarTypeMapping.class),
+            @Mapping(target = "image", ignore = true),
+            @Mapping(target = "availableQuantity", source = "availableQuantity"),
             @Mapping(target = "createdBy", ignore = true),
             @Mapping(target = "createdDate", ignore = true),
             @Mapping(target = "modifiedBy", ignore = true),
             @Mapping(target = "modifiedDate", ignore = true),
-            @Mapping(target = "imageLink", ignore = true)
+            @Mapping(target = "status", ignore = true)
     })
     Car toEntity(CarRequest carRequest);
 
-    @InheritConfiguration(name = "toEntity")
+    @InheritConfiguration
     void updateEntity(CarRequest carRequest, @MappingTarget Car car);
 
     @Mappings({
             @Mapping(target = "createdBy", source = "createdBy", qualifiedBy = UserToStringMapping.class),
-            @Mapping(target = "modifiedBy", source = "modifiedBy", qualifiedBy = UserToStringMapping.class),
-            @Mapping(target = "type", source = "type", qualifiedBy = CarTypeToStringMapping.class),
-            @Mapping(target = "categoryName", source = "id", qualifiedBy = CarIdToCarCategoryNameMapping.class)
+            @Mapping(target = "modifiedBy", source = "modifiedBy", qualifiedBy = UserToStringMapping.class)
     })
     CarResponse toResponse(Car car);
 }

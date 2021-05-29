@@ -10,11 +10,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.Optional;
 
 /**
+ * The type Auditor aware.
+ *
  * @author Trần Thế Duy
- * @datetime May 1, 2021 3:03:02 PM
  * @version 0.1
+ * @datetime May 1, 2021 3:03:02 PM
  */
-
 public class AuditorAwareImpl implements AuditorAware<User> {
 
 	@Autowired

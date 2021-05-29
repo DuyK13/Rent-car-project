@@ -12,7 +12,8 @@
     <groupId>com.iuh</groupId>
     <artifactId>rentcar_project</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>rencar_project</name>
+    <name>rentcar_project</name>
+    <packaging>jar</packaging>
     <description>Rent car project</description>
     <properties>
         <aws.s3.version>1.11.1009</aws.s3.version>

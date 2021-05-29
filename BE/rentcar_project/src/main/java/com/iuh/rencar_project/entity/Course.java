@@ -12,144 +12,168 @@ import java.time.LocalDateTime;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "courses", uniqueConstraints = { @UniqueConstraint(columnNames = "title"),
-		@UniqueConstraint(columnNames = "slug") })
+@Table(name = "courses", uniqueConstraints = {@UniqueConstraint(columnNames = {"title", "slug"})})
 public class Course {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Column(nullable = false)
-	private String title;
+    @Column(nullable = false)
+    private String title;
 
-	@Column(nullable = false)
-	private Long price;
+    @Column(nullable = false)
+    private Long price;
 
-	@Column(nullable = false)
-	private String slug;
+    @Column(nullable = false)
+    private String slug;
 
-	@Column(name = "time_course", nullable = false)
-	private Float timeCourse;
+    @Column(name = "time_course", nullable = false)
+    private float timeCourse;
 
-	@CreatedBy
-	@ManyToOne
-	@JoinColumn(name = "created_by", referencedColumnName = "id")
-	private User createdBy;
+    private float discount;
 
-	@CreatedDate
-	@Column(name = "created_date")
-	private LocalDateTime createdDate;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Status status;
 
-	@LastModifiedBy
-	@ManyToOne
-	@JoinColumn(name = "modified_by", referencedColumnName = "id")
-	private User modifiedBy;
+    @CreatedBy
+    @ManyToOne
+    @JoinColumn(name = "created_by", referencedColumnName = "id")
+    private User createdBy;
 
-	@LastModifiedDate
-	@Column(name = "modified_date")
-	private LocalDateTime modifiedDate;
+    @CreatedDate
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
 
-	@Column(nullable = false)
-	private Status status;
+    @LastModifiedBy
+    @ManyToOne
+    @JoinColumn(name = "modified_by", referencedColumnName = "id")
+    private User modifiedBy;
 
-	public Course(Long id, String title, Long price, String slug, Float timeCourse, User createdBy, LocalDateTime createdDate,
-				  User modifiedBy, LocalDateTime modifiedDate, Status status) {
-		super();
-		this.id = id;
-		this.title = title;
-		this.price = price;
-		this.slug = slug;
-		this.timeCourse = timeCourse;
-		this.createdBy = createdBy;
-		this.createdDate = createdDate;
-		this.modifiedBy = modifiedBy;
-		this.modifiedDate = modifiedDate;
-		this.status = status;
-	}
+    @LastModifiedDate
+    @Column(name = "modified_date")
+    private LocalDateTime modifiedDate;
 
-	public Course() {
-		super();
-		this.status = Status.ACTIVE;
-	}
+    public Course(Long id, String title, Long price, String slug, float timeCourse, float discount, Status status, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate) {
+        this.id = id;
+        this.title = title;
+        this.price = price;
+        this.slug = slug;
+        this.timeCourse = timeCourse;
+        this.discount = discount;
+        this.status = status;
+        this.createdBy = createdBy;
+        this.createdDate = createdDate;
+        this.modifiedBy = modifiedBy;
+        this.modifiedDate = modifiedDate;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Course() {
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public Long getPrice() {
-		return price;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setPrice(Long price) {
-		this.price = price;
-	}
+    public Long getPrice() {
+        return price;
+    }
 
-	public String getSlug() {
-		return slug;
-	}
+    public void setPrice(Long price) {
+        this.price = price;
+    }
 
-	public void setSlug(String slug) {
-		this.slug = slug;
-	}
+    public String getSlug() {
+        return slug;
+    }
 
-	public Float getTimeCourse() {
-		return timeCourse;
-	}
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
 
-	public void setTimeCourse(Float timeCourse) {
-		this.timeCourse = timeCourse;
-	}
+    public float getTimeCourse() {
+        return timeCourse;
+    }
 
-	public User getCreatedBy() {
-		return createdBy;
-	}
+    public void setTimeCourse(float timeCourse) {
+        this.timeCourse = timeCourse;
+    }
 
-	public void setCreatedBy(User createdBy) {
-		this.createdBy = createdBy;
-	}
+    public float getDiscount() {
+        return discount;
+    }
 
-	public LocalDateTime getCreatedDate() {
-		return createdDate;
-	}
+    public void setDiscount(float discount) {
+        this.discount = discount;
+    }
 
-	public void setCreatedDate(LocalDateTime createdDate) {
-		this.createdDate = createdDate;
-	}
+    public Status getStatus() {
+        return status;
+    }
 
-	public User getModifiedBy() {
-		return modifiedBy;
-	}
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
-	public void setModifiedBy(User modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
+    public User getCreatedBy() {
+        return createdBy;
+    }
 
-	public LocalDateTime getModifiedDate() {
-		return modifiedDate;
-	}
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
 
-	public void setModifiedDate(LocalDateTime modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
 
-	public Status getStatus() {
-		return status;
-	}
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
 
-	public void setStatus(Status status) {
-		this.status = status;
-	}
+    public User getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(User modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    public LocalDateTime getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(LocalDateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", price=" + price +
+                ", slug='" + slug + '\'' +
+                ", timeCourse=" + timeCourse +
+                ", discount=" + discount +
+                ", status=" + status +
+                ", createdBy=" + createdBy +
+                ", createdDate=" + createdDate +
+                ", modifiedBy=" + modifiedBy +
+                ", modifiedDate=" + modifiedDate +
+                '}';
+    }
 }

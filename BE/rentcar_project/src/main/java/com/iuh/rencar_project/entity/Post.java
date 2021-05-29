@@ -14,8 +14,7 @@ import java.util.Set;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "posts", uniqueConstraints = {@UniqueConstraint(columnNames = "title"),
-        @UniqueConstraint(columnNames = "slug")})
+@Table(name = "posts", uniqueConstraints = {@UniqueConstraint(columnNames = {"title", "slug"})})
 public class Post {
 
     @Id
@@ -27,6 +26,17 @@ public class Post {
 
     @Column(nullable = false)
     private String slug;
+
+    @Lob
+    @Column(nullable = false)
+    private String content;
+
+    @Column(nullable = false)
+    private String image;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @CreatedBy
     @ManyToOne
@@ -46,40 +56,27 @@ public class Post {
     @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Status status;
-
-    @Lob
-    @Column(nullable = false)
-    private String content;
-
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "posts_tags", joinColumns = {@JoinColumn(name = "post_id")}, inverseJoinColumns = {
             @JoinColumn(name = "tag_id")})
     private Set<Tag> tags = new HashSet<>();
 
-    private String image;
-
-    public Post(Long id, String title, String slug, User createdBy, LocalDateTime createdDate, User modifiedBy,
-                LocalDateTime modifiedDate, Status status, String content, Set<Tag> tags, String image) {
-        super();
+    public Post(Long id, String title, String slug, String content, String image, Status status, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate, Set<Tag> tags) {
         this.id = id;
         this.title = title;
         this.slug = slug;
+        this.content = content;
+        this.image = image;
+        this.status = status;
         this.createdBy = createdBy;
         this.createdDate = createdDate;
         this.modifiedBy = modifiedBy;
         this.modifiedDate = modifiedDate;
-        this.status = status;
-        this.content = content;
         this.tags = tags;
-        this.image = image;
     }
 
     public Post() {
-        super();
-        this.status = Status.ACTIVE;
+        this.status = Status.ENABLE;
     }
 
     public Long getId() {
@@ -104,6 +101,30 @@ public class Post {
 
     public void setSlug(String slug) {
         this.slug = slug;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public User getCreatedBy() {
@@ -138,22 +159,6 @@ public class Post {
         this.modifiedDate = modifiedDate;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public Set<Tag> getTags() {
         return tags;
     }
@@ -162,11 +167,20 @@ public class Post {
         this.tags = tags;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", slug='" + slug + '\'' +
+                ", content='" + content + '\'' +
+                ", image='" + image + '\'' +
+                ", status=" + status +
+                ", createdBy=" + createdBy +
+                ", createdDate=" + createdDate +
+                ", modifiedBy=" + modifiedBy +
+                ", modifiedDate=" + modifiedDate +
+                ", tags=" + tags +
+                '}';
     }
 }

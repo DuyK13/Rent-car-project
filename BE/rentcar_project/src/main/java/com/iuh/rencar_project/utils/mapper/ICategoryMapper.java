@@ -27,7 +27,7 @@ public interface ICategoryMapper {
             @Mapping(target = "modifiedBy", ignore = true),
             @Mapping(target = "modifiedDate", ignore = true),
             @Mapping(target = "status", ignore = true),
-            @Mapping(target = "category", source = "parentCategory", qualifiedBy = StringToCategoryMapping.class),
+            @Mapping(target = "parent", source = "parent", qualifiedBy = StringToCategoryMapping.class),
             @Mapping(target = "cars", ignore = true)
     })
     Category toEntity(CategoryRequest categoryRequest);

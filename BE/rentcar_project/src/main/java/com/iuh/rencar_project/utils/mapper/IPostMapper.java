@@ -24,6 +24,7 @@ public interface IPostMapper {
             @Mapping(target = "slug", source = "title", qualifiedBy = StringToSlugMapping.class),
             @Mapping(target = "status", ignore = true),
             @Mapping(target = "content", source = "content"),
+            @Mapping(target = "image", ignore = true),
             @Mapping(target = "createdBy", ignore = true),
             @Mapping(target = "createdDate", ignore = true),
             @Mapping(target = "modifiedBy", ignore = true),

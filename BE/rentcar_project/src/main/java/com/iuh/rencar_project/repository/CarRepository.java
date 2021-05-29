@@ -1,6 +1,7 @@
 package com.iuh.rencar_project.repository;
 
 import com.iuh.rencar_project.entity.Car;
+import com.iuh.rencar_project.utils.enums.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +15,6 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     Boolean existsByName(String name);
 
     Optional<Car> findByName(String name);
+
+    Optional<Car> findBySlugAndStatus(String slug, Status enable);
 }

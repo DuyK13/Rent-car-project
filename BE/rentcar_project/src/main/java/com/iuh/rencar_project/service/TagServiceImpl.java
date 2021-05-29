@@ -49,9 +49,9 @@ public class TagServiceImpl implements ITagService {
             tagRepository.saveAndFlush(tagMapper.toEntity(tagRequest));
         } catch (Exception e) {
             logger.error("Tag Exception: ", e);
-            throw new EntityException("Tag save fail", e);
+            throw new EntityException("Tag save failed", e);
         }
-        return "Tag save success";
+        return "Tag save successful";
     }
 
     @Override
@@ -65,9 +65,9 @@ public class TagServiceImpl implements ITagService {
             tagRepository.saveAndFlush(currentTag);
         } catch (Exception e) {
             logger.error(e.getMessage(), e.getCause());
-            return "Tag update fail";
+            return "Tag update failed";
         }
-        return "Tag update success";
+        return "Tag update successful";
     }
 
     @Override
@@ -79,7 +79,7 @@ public class TagServiceImpl implements ITagService {
     @Override
     public String delete(Long id) {
         Tag tag = this.findById(id);
-        List<Post> posts = postService.findPostsByTag(tag);
+        List<Post> posts = postService.findByTag(tag);
         for (Post post : posts) {
             Set<Tag> tags = post.getTags();
             tags.remove(tag);
@@ -89,9 +89,9 @@ public class TagServiceImpl implements ITagService {
             tagRepository.deleteById(id);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            throw new EntityException("Tag delete fail");
+            throw new EntityException("Tag delete failed");
         }
-        return "Tag delete success";
+        return "Tag delete successful";
     }
 
     @Override

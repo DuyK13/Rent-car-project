@@ -13,11 +13,11 @@ public class BillRequest {
     private String phoneNumber;
     private String email;
     private LocalDateTime timeStart;
-    private Long extraTime;
+    private double extraTime;
     private List<String> courses;
     private String car;
 
-    public BillRequest(String fullname, String phoneNumber, String email, LocalDateTime timeStart, Long extraTime, List<String> courses, String car) {
+    public BillRequest(String fullname, String phoneNumber, String email, LocalDateTime timeStart, double extraTime, List<String> courses, String car) {
         this.fullname = fullname;
         this.phoneNumber = phoneNumber;
         this.email = email;
@@ -62,11 +62,11 @@ public class BillRequest {
         this.timeStart = timeStart;
     }
 
-    public Long getExtraTime() {
+    public double getExtraTime() {
         return extraTime;
     }
 
-    public void setExtraTime(Long extraTime) {
+    public void setExtraTime(double extraTime) {
         this.extraTime = extraTime;
     }
 

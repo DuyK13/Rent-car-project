@@ -9,6 +9,7 @@ import com.iuh.rencar_project.service.template.IFileService;
 import com.iuh.rencar_project.utils.enums.Status;
 import com.iuh.rencar_project.utils.exception.bind.EntityException;
 import com.iuh.rencar_project.utils.exception.bind.NotFoundException;
+import com.iuh.rencar_project.utils.mapper.IBillMapper;
 import com.iuh.rencar_project.utils.mapper.ICarMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,7 +35,7 @@ public class CarServiceImpl implements ICarService {
     private final IFileService fileService;
 
     @Autowired
-    public CarServiceImpl(CarRepository carRepository, ICarMapper carMapper, ICategoryService categoryService, IFileService fileService) {
+    public CarServiceImpl(CarRepository carRepository, ICarMapper carMapper, ICategoryService categoryService, IFileService fileService, IBillMapper billMapper) {
         this.carRepository = carRepository;
         this.carMapper = carMapper;
         this.categoryService = categoryService;
@@ -45,10 +46,10 @@ public class CarServiceImpl implements ICarService {
     public String save(CarRequest carRequest, MultipartFile multipartFile) {
         String name = carRequest.getName();
         if (this.existsByName(name))
-            throw new EntityException("Car Exist");
+            throw new EntityException("Car Exists");
         String fileUrl = fileService.uploadCarImage(multipartFile, name);
         Car car = carMapper.toEntity(carRequest);
-        car.setImageLink(fileUrl);
+        car.setImage(fileUrl);
         return categoryService.addCarToCategory(carRequest.getCategoryName(), car);
     }
 
@@ -56,33 +57,46 @@ public class CarServiceImpl implements ICarService {
     public String update(Long id, CarRequest carRequest, MultipartFile multipartFile) {
         Car currentCar = this.findById(id);
         if (this.existsByName(carRequest.getName()) && !currentCar.getName().equals(carRequest.getName()))
-            throw new EntityException("Car Exist");
+            throw new EntityException("Car Exists");
         carMapper.updateEntity(carRequest, currentCar);
-        currentCar.setImageLink(fileService.updateCarImage(multipartFile, currentCar));
+        currentCar.setImage(fileService.updateCarImage(multipartFile, currentCar));
         return categoryService.updateCarToCategory(carRequest.getCategoryName(), currentCar, currentCar);
     }
 
+//    @Override
+//    public Boolean saveBillToCar(Bill bill, String carName) {
+//        Car car = this.findByName(carName);
+//        Set<Bill> bills = car.getBills();
+//        if(bills.add(bill))
+//            return false;
+//        car.setBills(bills);
+//        try{
+//            carRepository.saveAndFlush(car);
+//        }catch(Exception e){
+//            logger.error("Bill Exception: ", e);
+//            return false;
+//        }
+//        return true;
+//    }
+
     @Override
-    public String changeStatus(Long id) {
+    public String setAvailability(Long id) {
         Car currentCar = this.findById(id);
-        String message = this.statusChange(currentCar, currentCar.getStatus());
-        try{
+        String message;
+        if (currentCar.getStatus() == Status.ENABLE) {
+            currentCar.setStatus(Status.DISABLE);
+            message = "Disable car successful";
+        } else {
+            currentCar.setStatus(Status.ENABLE);
+            message = "Enable car successful";
+        }
+        try {
             carRepository.saveAndFlush(currentCar);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("Car Exception: ", e);
-            throw new EntityException("Change status fail");
+            throw new EntityException("Car status change failed");
         }
         return message;
-    }
-
-    private String statusChange(Car car, Status status){
-        if(Status.ACTIVE == status){
-            car.setStatus(Status.INACTIVE);
-            return "Car deactivate success";
-        }else{
-            car.setStatus(Status.ACTIVE);
-            return "Car activate success";
-        }
     }
 
     @Override
@@ -91,9 +105,9 @@ public class CarServiceImpl implements ICarService {
             carRepository.deleteById(id);
         } catch (Exception e) {
             logger.error("Car Exception: ", e);
-            throw new EntityException("Car delete fail");
+            throw new EntityException("Car delete failed");
         }
-        return "Car delete success";
+        return "Car delete successful";
     }
 
     @Override
@@ -102,13 +116,8 @@ public class CarServiceImpl implements ICarService {
     }
 
     @Override
-    public Car findByCategorySlugAndCarSlugForGuest(String categorySlug, String carSlug) {
-        try{
-            categoryService.findBySlugForGuest(categorySlug);
-        }catch (Exception e){
-            throw new NotFoundException("Car not found");
-        }
-        return this.findBySlug(carSlug);
+    public Car findBySlugForGuest(String slug) {
+        return carRepository.findBySlugAndStatus(slug, Status.ENABLE).orElseThrow(() -> new NotFoundException("Car not found"));
     }
 
     @Override

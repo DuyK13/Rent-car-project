@@ -8,12 +8,9 @@ package com.iuh.rencar_project.dto.request;
 public class CategoryRequest {
     private String name;
     private String description;
-    private String parentCategory;
+    private String parent;
 
-    public CategoryRequest(String name, String description, String parentCategory) {
-        this.name = name;
-        this.description = description;
-        this.parentCategory = parentCategory;
+    public CategoryRequest() {
     }
 
     public String getName() {
@@ -32,14 +29,11 @@ public class CategoryRequest {
         this.description = description;
     }
 
-    public String getParentCategory() {
-        return parentCategory;
+    public String getParent() {
+        return parent;
     }
 
-    public void setParentCategory(String parentCategory) {
-        this.parentCategory = parentCategory;
-    }
-
-    public CategoryRequest() {
+    public void setParent(String parent) {
+        this.parent = parent;
     }
 }
