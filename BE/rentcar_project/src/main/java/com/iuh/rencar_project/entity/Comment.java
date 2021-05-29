@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "comments")
 public class Comment {
+    private final int MAX_LEVEL = 5;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +22,8 @@ public class Comment {
     private String email;
 
     @CreationTimestamp
-    @Column(name = "created_date")
-    private LocalDateTime createdDate;
+    @Column(name = "date_created", nullable = false)
+    private LocalDateTime dateCreated;
 
     @Column(nullable = false)
     private String content;
@@ -31,117 +32,35 @@ public class Comment {
 
     private int dislike;
 
+    private int level;
+
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private Status status;
 
     @OneToOne
-    @JoinColumn(name = "comment_id", referencedColumnName = "id")
-    private Comment comment;
+    @JoinColumn(name = "parent_id", referencedColumnName = "id")
+    private Comment parent;
 
     @ManyToOne
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
 
-    public Comment(Long id, String name, String email, LocalDateTime createdDate, String content, int likes, int dislike,
-                   Status status, Comment comment, Post post) {
-        super();
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.createdDate = createdDate;
-        this.content = content;
-        this.likes = likes;
-        this.dislike = dislike;
-        this.status = status;
-        this.comment = comment;
-        this.post = post;
-    }
-
-    public Comment() {
-        super();
-        this.likes = 0;
-        this.dislike = 0;
-        this.status = Status.INACTIVE;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public int getLikes() {
-        return likes;
-    }
-
-    public void setLikes(int likes) {
-        this.likes = likes;
-    }
-
-    public int getDislike() {
-        return dislike;
-    }
-
-    public void setDislike(int dislike) {
-        this.dislike = dislike;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public Comment getComment() {
-        return comment;
-    }
-
-    public void setComment(Comment comment) {
-        this.comment = comment;
-    }
-
-    public Post getPost() {
-        return post;
-    }
-
-    public void setPost(Post post) {
-        this.post = post;
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "MAX_LEVEL=" + MAX_LEVEL +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", dateCreated=" + dateCreated +
+                ", content='" + content + '\'' +
+                ", likes=" + likes +
+                ", dislike=" + dislike +
+                ", level=" + level +
+                ", status=" + status +
+                ", parent=" + parent +
+                ", post=" + post +
+                '}';
     }
 }

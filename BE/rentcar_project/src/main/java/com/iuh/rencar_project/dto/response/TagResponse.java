@@ -1,7 +1,5 @@
 package com.iuh.rencar_project.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.time.LocalDateTime;
 
 public class TagResponse {
@@ -11,12 +9,10 @@ public class TagResponse {
 
     private String slug;
 
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime createdDate;
 
     private String createdBy;
 
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime modifiedDate;
 
     private String modifiedBy;

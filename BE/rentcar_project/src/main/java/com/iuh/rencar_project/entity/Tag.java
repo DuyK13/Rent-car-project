@@ -11,8 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "tags", uniqueConstraints = {@UniqueConstraint(columnNames = "slug"),
-        @UniqueConstraint(columnNames = "name")})
+@Table(name = "tags", uniqueConstraints = {@UniqueConstraint(columnNames = "slug")})
 public class Tag {
 
     @Id
@@ -41,13 +40,7 @@ public class Tag {
     @Column(name = "modefied_date")
     private LocalDateTime modifiedDate;
 
-    public Tag() {
-        super();
-    }
-
-    public Tag(Long id, String name, String slug, User createdBy, LocalDateTime createdDate, User modifiedBy,
-               LocalDateTime modifiedDate) {
-        super();
+    public Tag(Long id, String name, String slug, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate) {
         this.id = id;
         this.name = name;
         this.slug = slug;
@@ -55,6 +48,33 @@ public class Tag {
         this.createdDate = createdDate;
         this.modifiedBy = modifiedBy;
         this.modifiedDate = modifiedDate;
+    }
+
+    public Tag() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
     }
 
     public User getCreatedBy() {
@@ -89,27 +109,16 @@ public class Tag {
         this.modifiedDate = modifiedDate;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSlug() {
-        return slug;
-    }
-
-    public void setSlug(String slug) {
-        this.slug = slug;
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", slug='" + slug + '\'' +
+                ", createdBy=" + createdBy +
+                ", createdDate=" + createdDate +
+                ", modifiedBy=" + modifiedBy +
+                ", modifiedDate=" + modifiedDate +
+                '}';
     }
 }

@@ -59,7 +59,7 @@ public class FileServiceImpl implements IFileService {
 
     @Override
     public String updateCarImage(MultipartFile multipartFile, Car car) {
-        String oldFileName = car.getImageLink().split("/")[5];
+        String oldFileName = car.getImage().split("/")[5];
         this.removeFileFromS3Bucket(bucketName, carFolder, oldFileName);
         String carName = car.getName();
         return this.uploadFile(multipartFile, carFolder, carName);

@@ -7,17 +7,12 @@ package com.iuh.rencar_project.dto.request;
  */
 public class CarRequest {
     private String name;
-    private int year;
-    private Long price;
-    private String carType;
+    private int manufacturingYear;
+    private int costPerHour;
+    private int availableQuantity;
     private String categoryName;
 
-    public CarRequest(String name, int year, Long price, String carType, String categoryName) {
-        this.name = name;
-        this.year = year;
-        this.price = price;
-        this.carType = carType;
-        this.categoryName = categoryName;
+    public CarRequest() {
     }
 
     public String getName() {
@@ -28,28 +23,28 @@ public class CarRequest {
         this.name = name;
     }
 
-    public int getYear() {
-        return year;
+    public int getManufacturingYear() {
+        return manufacturingYear;
     }
 
-    public void setYear(int year) {
-        this.year = year;
+    public void setManufacturingYear(int manufacturingYear) {
+        this.manufacturingYear = manufacturingYear;
     }
 
-    public Long getPrice() {
-        return price;
+    public int getCostPerHour() {
+        return costPerHour;
     }
 
-    public void setPrice(Long price) {
-        this.price = price;
+    public void setCostPerHour(int costPerHour) {
+        this.costPerHour = costPerHour;
     }
 
-    public String getCarType() {
-        return carType;
+    public int getAvailableQuantity() {
+        return availableQuantity;
     }
 
-    public void setCarType(String carType) {
-        this.carType = carType;
+    public void setAvailableQuantity(int availableQuantity) {
+        this.availableQuantity = availableQuantity;
     }
 
     public String getCategoryName() {
@@ -58,8 +53,5 @@ public class CarRequest {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
-    }
-
-    public CarRequest() {
     }
 }

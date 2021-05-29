@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author Duy Trần Thế
  * @version 1.0
- * @date 5/28/2021 10:47 AM
+ * @datetime 5/28/2021 10:47 AM
  */
 @Service
 public class BillNotificationServiceImpl implements INotificationService {

@@ -121,9 +121,8 @@ public class ModeratorController {
 
     @PutMapping("/posts/{id}")
     public ResponseEntity<?> updatePost(@PathVariable(name = "id") Long id,
-                                        @RequestPart(name = "post", required = false) Optional<PostRequest> postRequest, @RequestPart(name = "file", required = false) MultipartFile multipartFile) {
-        System.out.println(multipartFile.getOriginalFilename());
-        return postRequest.map(request -> new ResponseEntity<>(new MessageResponse(postService.update(id, request, multipartFile)), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(new MessageResponse(postService.update(id)), HttpStatus.OK));
+                                        @RequestPart(name = "post") PostRequest postRequest, @RequestPart(name = "file") MultipartFile multipartFile) {
+        return new ResponseEntity<>(new MessageResponse(postService.update(id, postRequest, multipartFile)), HttpStatus.OK);
 
     }
 

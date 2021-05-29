@@ -1,6 +1,5 @@
 package com.iuh.rencar_project.entity;
 
-import com.iuh.rencar_project.utils.enums.CarType;
 import com.iuh.rencar_project.utils.enums.Status;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -13,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "cars", uniqueConstraints = {@UniqueConstraint(columnNames = "name")})
+@Table(name = "cars", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "slug"})})
 public class Car {
 
     @Id
@@ -23,18 +22,22 @@ public class Car {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private int year;
+    @Column(name = "manufacturing_year", nullable = false)
+    private int manufacturingYear;
 
-    @Column(nullable = false)
-    private Long price;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private CarType type;
+    @Column(name = "cost_per_hour", nullable = false)
+    private int costPerHour;
 
     @Column(nullable = false)
     private String slug;
+
+    @Column(nullable = false)
+    private String image;
+
+    @Column(name = "available_quantity", nullable = false)
+    private int availableQuantity;
+
+    private Status status;
 
     @CreatedBy
     @ManyToOne
@@ -54,38 +57,23 @@ public class Car {
     @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
 
-    @Column(name = "image_link", unique = true)
-    private String imageLink;
-
-    @Enumerated(EnumType.STRING)
-    private Status status;
-
-    public Car(Long id, String name, int year, Long price, CarType type, String slug, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate, String imageLink, Status status) {
+    public Car(Long id, String name, int manufacturingYear, int costPerHour, String slug, String image, int availableQuantity, Status status, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate) {
         this.id = id;
         this.name = name;
-        this.year = year;
-        this.price = price;
-        this.type = type;
+        this.manufacturingYear = manufacturingYear;
+        this.costPerHour = costPerHour;
         this.slug = slug;
+        this.image = image;
+        this.availableQuantity = availableQuantity;
+        this.status = status;
         this.createdBy = createdBy;
         this.createdDate = createdDate;
         this.modifiedBy = modifiedBy;
         this.modifiedDate = modifiedDate;
-        this.imageLink = imageLink;
-        this.status = status;
     }
 
     public Car() {
-        super();
-        this.status = Status.ACTIVE;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
+        this.status = Status.ENABLE;
     }
 
     public Long getId() {
@@ -104,28 +92,44 @@ public class Car {
         this.name = name;
     }
 
-    public int getYear() {
-        return year;
+    public int getManufacturingYear() {
+        return manufacturingYear;
     }
 
-    public void setYear(int year) {
-        this.year = year;
+    public void setManufacturingYear(int manufacturingYear) {
+        this.manufacturingYear = manufacturingYear;
     }
 
-    public Long getPrice() {
-        return price;
+    public int getCostPerHour() {
+        return costPerHour;
     }
 
-    public void setPrice(Long price) {
-        this.price = price;
+    public void setCostPerHour(int costPerHour) {
+        this.costPerHour = costPerHour;
     }
 
-    public CarType getType() {
-        return type;
+    public String getSlug() {
+        return slug;
     }
 
-    public void setType(CarType type) {
-        this.type = type;
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public int getAvailableQuantity() {
+        return availableQuantity;
+    }
+
+    public void setAvailableQuantity(int availableQuantity) {
+        this.availableQuantity = availableQuantity;
     }
 
     public User getCreatedBy() {
@@ -160,19 +164,29 @@ public class Car {
         this.modifiedDate = modifiedDate;
     }
 
-    public String getImageLink() {
-        return imageLink;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setImageLink(String imageLink) {
-        this.imageLink = imageLink;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
-    public String getSlug() {
-        return slug;
-    }
-
-    public void setSlug(String slug) {
-        this.slug = slug;
+    @Override
+    public String toString() {
+        return "Car{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", manufacturingYear=" + manufacturingYear +
+                ", costPerHour=" + costPerHour +
+                ", slug='" + slug + '\'' +
+                ", image='" + image + '\'' +
+                ", availableQuantity=" + availableQuantity +
+                ", status=" + status +
+                ", createdBy=" + createdBy +
+                ", createdDate=" + createdDate +
+                ", modifiedBy=" + modifiedBy +
+                ", modifiedDate=" + modifiedDate +
+                '}';
     }
 }

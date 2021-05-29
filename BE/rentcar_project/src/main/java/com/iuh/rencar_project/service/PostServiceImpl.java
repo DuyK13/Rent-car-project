@@ -57,9 +57,9 @@ public class PostServiceImpl implements IPostService {
             postRepository.saveAndFlush(post);
         } catch (Exception e) {
             logger.error("Post Exception: ", e);
-            throw new EntityException("Post save fail", e);
+            throw new EntityException("Post save failed", e);
         }
-        return "Post save success";
+        return "Post save successful";
     }
 
     @Override
@@ -73,9 +73,9 @@ public class PostServiceImpl implements IPostService {
             postRepository.saveAndFlush(currentPost);
         } catch (Exception e) {
             logger.error("Post Exception: ", e);
-            throw new EntityException("Post update fail", e);
+            throw new EntityException("Post update failed", e);
         }
-        return "Post update success";
+        return "Post update successful";
     }
 
 //    @Override
@@ -84,7 +84,7 @@ public class PostServiceImpl implements IPostService {
 //        try{
 //            Set<Comment> comments = post.getComments();
 //            if(!comments.add(comment))
-//                throw new EntityException("Comment fail");
+//                throw new EntityException("Comment failed");
 //            post.setComments(comments);
 //            postRepository.saveAndFlush(post);
 //        }catch (Exception e){
@@ -93,39 +93,34 @@ public class PostServiceImpl implements IPostService {
 //    }
 
     @Override
-    public String update(Long id) {
+    public String setAvailability(Long id) {
         Post currentPost = this.findById(id);
-        String title = currentPost.getTitle();
         String message;
+        if (currentPost.getStatus() == Status.ENABLE) {
+            currentPost.setStatus(Status.DISABLE);
+            message = "Disable post successful";
+        } else {
+            currentPost.setStatus(Status.ENABLE);
+            message = "Enable post successful";
+        }
         try {
-            Status status = currentPost.getStatus();
-            if (status == Status.ACTIVE) {
-                currentPost.setStatus(Status.INACTIVE);
-                postRepository.saveAndFlush(currentPost);
-                message = "Post deactivate success";
-            } else {
-                currentPost.setStatus(Status.ACTIVE);
-                postRepository.saveAndFlush(currentPost);
-                message = "Post activate success";
-            }
+            postRepository.saveAndFlush(currentPost);
         } catch (Exception e) {
             logger.error("Post Exception: ", e);
-            throw new EntityException("Post change status fail");
+            throw new EntityException("Post status change failed");
         }
         return message;
     }
 
     @Override
     public String delete(Long id) {
-        Post post = this.findById(id);
-        String title = post.getTitle();
         try {
             postRepository.deleteById(id);
         } catch (Exception e) {
             logger.error("Post Exception: ", e);
-            throw new EntityException("Post delete fail");
+            throw new EntityException("Post delete failed");
         }
-        return "Post delete success";
+        return "Post delete successful";
     }
 
     @Override
@@ -140,7 +135,7 @@ public class PostServiceImpl implements IPostService {
 
     @Override
     public Post findBySlugForGuest(String slug) {
-        return postRepository.findBySlugAndStatusIs(slug, Status.ACTIVE).orElseThrow(() -> new NotFoundException("Post not found"));
+        return postRepository.findBySlugAndStatusIs(slug, Status.ENABLE).orElseThrow(() -> new NotFoundException("Post not found"));
     }
 
     @Override
@@ -152,13 +147,13 @@ public class PostServiceImpl implements IPostService {
     @Override
     public Page<Post> findAllPaginatedForGuest(int pageNo) {
         Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
-        return postRepository.findAllByStatusIs(Status.ACTIVE, pageable);
+        return postRepository.findAllByStatusIs(Status.ENABLE, pageable);
     }
 
     @Override
     public Page<Post> findAllPaginatedByTagForGuest(Tag tag, int pageNo) {
         Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
-        return postRepository.findByTagsIsContainingAndStatusIs(tag, Status.ACTIVE, pageable);
+        return postRepository.findByTagsIsContainingAndStatusIs(tag, Status.ENABLE, pageable);
     }
 
     @Override
@@ -167,7 +162,7 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    public List<Post> findPostsByTag(Tag tag) {
+    public List<Post> findByTag(Tag tag) {
         return postRepository.findByTagsIsContaining(tag);
     }
 }

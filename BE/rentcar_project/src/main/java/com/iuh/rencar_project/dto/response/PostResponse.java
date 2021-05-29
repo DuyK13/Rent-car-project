@@ -1,6 +1,6 @@
 package com.iuh.rencar_project.dto.response;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -14,27 +14,13 @@ public class PostResponse {
     private String title;
     private String slug;
     private String createdBy;
-    private Date createdDate;
+    private LocalDateTime createdDate;
     private String modifiedBy;
-    private Date modifiedDate;
+    private LocalDateTime modifiedDate;
     private String status;
     private String content;
     private List<String> tags;
     private String image;
-
-    public PostResponse(Long id, String title, String slug, String createdBy, Date createdDate, String modifiedBy, Date modefiedDate, String status, String content, List<String> tags, String image) {
-        this.id = id;
-        this.title = title;
-        this.slug = slug;
-        this.createdBy = createdBy;
-        this.createdDate = createdDate;
-        this.modifiedBy = modifiedBy;
-        this.modifiedDate = modifiedDate;
-        this.status = status;
-        this.content = content;
-        this.tags = tags;
-        this.image = image;
-    }
 
     public PostResponse() {
     }
@@ -71,11 +57,11 @@ public class PostResponse {
         this.createdBy = createdBy;
     }
 
-    public Date getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -87,11 +73,11 @@ public class PostResponse {
         this.modifiedBy = modifiedBy;
     }
 
-    public Date getModifiedDate() {
+    public LocalDateTime getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(Date modifiedDate) {
+    public void setModifiedDate(LocalDateTime modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 

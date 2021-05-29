@@ -14,160 +14,172 @@ import java.util.Set;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "categories", uniqueConstraints = { @UniqueConstraint(columnNames = "name"),
-		@UniqueConstraint(columnNames = "slug") })
+@Table(name = "categories", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
 public class Category {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Column(nullable = false)
-	private String name;
+    @Column(nullable = false)
+    private String name;
 
-	@Column(nullable = false)
-	private String slug;
+    @Column(nullable = false)
+    private String slug;
 
-	@Column(nullable = false)
-	private String description;
+    @Column(nullable = false)
+    private String description;
 
-	@CreatedBy
-	@ManyToOne
-	@JoinColumn(name = "created_by", referencedColumnName = "id")
-	private User createdBy;
+    @CreatedBy
+    @ManyToOne
+    @JoinColumn(name = "created_by", referencedColumnName = "id")
+    private User createdBy;
 
-	@CreatedDate
-	@Column(name = "created_date")
-	private LocalDateTime createdDate;
+    @CreatedDate
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
 
-	@LastModifiedBy
-	@ManyToOne
-	@JoinColumn(name = "modified_by", referencedColumnName = "id")
-	private User modifiedBy;
+    @LastModifiedBy
+    @ManyToOne
+    @JoinColumn(name = "modified_by", referencedColumnName = "id")
+    private User modifiedBy;
 
-	@LastModifiedDate
-	@Column(name = "modified_date")
-	private LocalDateTime modifiedDate;
+    @LastModifiedDate
+    @Column(name = "modified_date")
+    private LocalDateTime modifiedDate;
 
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Status status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Status status;
 
-	@OneToOne
-	@JoinColumn(name = "parent_id", referencedColumnName = "id")
-	private Category category;
+    @OneToOne
+    @JoinColumn(name = "parent_id", referencedColumnName = "id")
+    private Category parent;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "category_id")
-	private Set<Car> cars = new HashSet<>();
+    @OneToMany
+    @JoinColumn(name = "category_id")
+    private Set<Car> cars = new HashSet<>();
 
-	public Category(Long id, String name, String slug, String description, User createdBy, LocalDateTime createdDate,
-					User modifiedBy, LocalDateTime modifiedDate, Status status, Category category, Set<Car> cars) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.slug = slug;
-		this.description = description;
-		this.createdBy = createdBy;
-		this.createdDate = createdDate;
-		this.modifiedBy = modifiedBy;
-		this.modifiedDate = modifiedDate;
-		this.status = status;
-		this.category = category;
-		this.cars = cars;
-	}
+    public Category(Long id, String name, String slug, String description, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate, Status status, Category category, Set<Car> cars) {
+        this.id = id;
+        this.name = name;
+        this.slug = slug;
+        this.description = description;
+        this.createdBy = createdBy;
+        this.createdDate = createdDate;
+        this.modifiedBy = modifiedBy;
+        this.modifiedDate = modifiedDate;
+        this.status = status;
+        this.parent = category;
+        this.cars = cars;
+    }
 
-	public Category() {
-		super();
-		this.status = Status.ACTIVE;
-	}
+    public Category() {
+        this.status = Status.ENABLE;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getSlug() {
-		return slug;
-	}
+    public String getSlug() {
+        return slug;
+    }
 
-	public void setSlug(String slug) {
-		this.slug = slug;
-	}
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public User getCreatedBy() {
-		return createdBy;
-	}
+    public User getCreatedBy() {
+        return createdBy;
+    }
 
-	public void setCreatedBy(User createdBy) {
-		this.createdBy = createdBy;
-	}
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
 
-	public LocalDateTime getCreatedDate() {
-		return createdDate;
-	}
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
 
-	public void setCreatedDate(LocalDateTime createdDate) {
-		this.createdDate = createdDate;
-	}
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
 
-	public User getModifiedBy() {
-		return modifiedBy;
-	}
+    public User getModifiedBy() {
+        return modifiedBy;
+    }
 
-	public void setModifiedBy(User modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
+    public void setModifiedBy(User modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
 
-	public LocalDateTime getModifiedDate() {
-		return modifiedDate;
-	}
+    public LocalDateTime getModifiedDate() {
+        return modifiedDate;
+    }
 
-	public void setModifiedDate(LocalDateTime modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
+    public void setModifiedDate(LocalDateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
 
-	public Status getStatus() {
-		return status;
-	}
+    public Status getStatus() {
+        return status;
+    }
 
-	public void setStatus(Status status) {
-		this.status = status;
-	}
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
-	public Category getCategory() {
-		return category;
-	}
+    public Category getCategory() {
+        return parent;
+    }
 
-	public void setCategory(Category category) {
-		this.category = category;
-	}
+    public void setCategory(Category category) {
+        this.parent = category;
+    }
 
-	public void setCars(Set<Car> cars) {
-		this.cars = cars;
-	}
+    public Set<Car> getCars() {
+        return cars;
+    }
 
-	public Set<Car> getCars() {
-		return cars;
-	}
+    public void setCars(Set<Car> cars) {
+        this.cars = cars;
+    }
 
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", slug='" + slug + '\'' +
+                ", description='" + description + '\'' +
+                ", createdBy=" + createdBy +
+                ", createdDate=" + createdDate +
+                ", modifiedBy=" + modifiedBy +
+                ", modifiedDate=" + modifiedDate +
+                ", status=" + status +
+                ", category=" + parent +
+                ", cars=" + cars +
+                '}';
+    }
 }

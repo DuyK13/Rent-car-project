@@ -1,6 +1,6 @@
 package com.iuh.rencar_project.dto.response;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -14,12 +14,15 @@ public class CategoryResponse {
     private String slug;
     private String description;
     private String createdBy;
-    private Date createdDate;
+    private LocalDateTime createdDate;
     private String modifiedBy;
-    private String modifiedDate;
+    private LocalDateTime modifiedDate;
     private String status;
-    private CategoryResponse category;
+    private CategoryResponse parent;
     private List<CarResponse> cars;
+
+    public CategoryResponse() {
+    }
 
     public Long getId() {
         return id;
@@ -61,11 +64,11 @@ public class CategoryResponse {
         this.createdBy = createdBy;
     }
 
-    public Date getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -77,11 +80,11 @@ public class CategoryResponse {
         this.modifiedBy = modifiedBy;
     }
 
-    public String getModifiedDate() {
+    public LocalDateTime getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(String modifiedDate) {
+    public void setModifiedDate(LocalDateTime modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 
@@ -93,12 +96,12 @@ public class CategoryResponse {
         this.status = status;
     }
 
-    public CategoryResponse getCategory() {
-        return category;
+    public CategoryResponse getParent() {
+        return parent;
     }
 
-    public void setCategory(CategoryResponse category) {
-        this.category = category;
+    public void setParent(CategoryResponse parent) {
+        this.parent = parent;
     }
 
     public List<CarResponse> getCars() {
@@ -106,23 +109,6 @@ public class CategoryResponse {
     }
 
     public void setCars(List<CarResponse> cars) {
-        this.cars = cars;
-    }
-
-    public CategoryResponse() {
-    }
-
-    public CategoryResponse(Long id, String name, String slug, String description, String createdBy, Date createdDate, String modifiedBy, String modifiedDate, String status, CategoryResponse category, List<CarResponse> cars) {
-        this.id = id;
-        this.name = name;
-        this.slug = slug;
-        this.description = description;
-        this.createdBy = createdBy;
-        this.createdDate = createdDate;
-        this.modifiedBy = modifiedBy;
-        this.modifiedDate = modifiedDate;
-        this.status = status;
-        this.category = category;
         this.cars = cars;
     }
 }
