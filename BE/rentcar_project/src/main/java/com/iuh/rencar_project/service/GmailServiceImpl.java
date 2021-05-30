@@ -72,13 +72,13 @@ public class GmailServiceImpl implements IEmailService {
                     "        <img src='https://tran-the-duy-208.s3-ap-southeast-1.amazonaws.com/logo.png' width='250' height='250'" +
                     "            style='display: block; margin-left: auto; margin-right: auto;'>" +
                     "        <p>Thân mến " + bill.getFullname() + ",</p>" +
-                    "        <p>Bạn đã đặt đơn đăng ký thành công,</p>" +
+                    "        <p>Bạn đã đặt lịch hẹn thành công,</p>" +
                     "        <p>Cám ơn vì đã sử dụng dịch vụ của chúng tôi.</p>" +
                     "        <p>Nếu bạn có bất cứ câu hỏi nào, đừng ngần ngại liên lạc với chúng tôi tại: <b>thuexevynguyen@gmail.com</b></p>" +
                     "    </div>";
             message.setContent(htmlMsg, "text/html; charset=UTF-8");
             helper.setTo(bill.getEmail());
-            helper.setSubject("[Thuê Xe Vỹ Nguyên] - Đơn đặt trước #" + id  );
+            helper.setSubject("[Thuê Xe Vỹ Nguyên] - Thông báo đặt lịch hẹn thành công");
         } catch (MessagingException e) {
             logger.error("Email Exception: ", e);
             return false;
