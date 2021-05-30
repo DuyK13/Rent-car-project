@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.iuh.rencar_project.entity.Car;
 import com.iuh.rencar_project.entity.Post;
 import com.iuh.rencar_project.service.template.IFileService;
+import com.iuh.rencar_project.utils.StringUtils;
 import com.iuh.rencar_project.utils.exception.bind.FileUploadException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -94,7 +95,7 @@ public class FileServiceImpl implements IFileService {
 
     private String uploadFile(MultipartFile multipartFile, String folderName, String name) {
         String fileName = new SimpleDateFormat("ddMMyyyyHHmm").format(new Date());
-        fileName += "-" + name;
+        fileName += "-" + StringUtils.unAccent(name);
         try {
             File file = this.convertMultiPartFileToFile(multipartFile);
             fileName += "-" + file.getName();

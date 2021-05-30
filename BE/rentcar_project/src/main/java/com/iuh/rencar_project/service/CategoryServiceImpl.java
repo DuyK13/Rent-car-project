@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -98,9 +99,10 @@ public class CategoryServiceImpl implements ICategoryService {
             throw new EntityException("Car save failed");
         category.setCars(cars);
         try {
-            categoryReposity.saveAndFlush(category);
+            categoryReposity.save(category);
         } catch (Exception e) {
             logger.error("Car Exception: ", e);
+            throw new EntityException("Car save failed");
         }
         return "Car save successful";
     }
@@ -169,8 +171,8 @@ public class CategoryServiceImpl implements ICategoryService {
         return categoryReposity.findByName(name).orElseThrow(() -> new NotFoundException("Category not found"));
     }
 
-//    @Override
-//    public Category findByCar(Car car) {
-//        return categoryReposity.findByCarsIsContaining(car).orElseThrow(() -> new NotFoundException("Category not found"));
-//    }
+    @Override
+    public List<Category> findAllEnable() {
+        return categoryReposity.findALlByStatusAndParentIsNotNull(Status.ENABLE);
+    }
 }

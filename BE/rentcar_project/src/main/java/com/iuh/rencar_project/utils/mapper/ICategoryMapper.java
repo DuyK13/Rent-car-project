@@ -3,6 +3,7 @@ package com.iuh.rencar_project.utils.mapper;
 import com.iuh.rencar_project.dto.request.CategoryRequest;
 import com.iuh.rencar_project.dto.response.CategoryResponse;
 import com.iuh.rencar_project.entity.Category;
+import com.iuh.rencar_project.utils.enums.Status;
 import com.iuh.rencar_project.utils.mapper.annotation.StringToCategoryMapping;
 import com.iuh.rencar_project.utils.mapper.annotation.StringToSlugMapping;
 import com.iuh.rencar_project.utils.mapper.annotation.UserToStringMapping;
@@ -26,7 +27,7 @@ public interface ICategoryMapper {
             @Mapping(target = "createdDate", ignore = true),
             @Mapping(target = "modifiedBy", ignore = true),
             @Mapping(target = "modifiedDate", ignore = true),
-            @Mapping(target = "status", ignore = true),
+            @Mapping(target = "status", expression = "java(com.iuh.rencar_project.utils.enums.Status.ENABLE)"),
             @Mapping(target = "parent", source = "parent", qualifiedBy = StringToCategoryMapping.class),
             @Mapping(target = "cars", ignore = true)
     })

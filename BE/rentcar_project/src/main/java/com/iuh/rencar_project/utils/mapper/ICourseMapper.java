@@ -3,6 +3,7 @@ package com.iuh.rencar_project.utils.mapper;
 import com.iuh.rencar_project.dto.request.CourseRequest;
 import com.iuh.rencar_project.dto.response.CourseResponse;
 import com.iuh.rencar_project.entity.Course;
+import com.iuh.rencar_project.utils.enums.Status;
 import com.iuh.rencar_project.utils.mapper.annotation.StringToSlugMapping;
 import com.iuh.rencar_project.utils.mapper.annotation.UserToStringMapping;
 import com.iuh.rencar_project.utils.mapper.helper.HelperMapper;
@@ -18,10 +19,9 @@ public interface ICourseMapper {
 
     @Mappings({
             @Mapping(target = "id", ignore = true),
-            @Mapping(target = "title", source = "title"),
-            @Mapping(target = "price", source = "price"),
             @Mapping(target = "slug", source = "title", qualifiedBy = StringToSlugMapping.class),
             @Mapping(target = "timeCourse", source = "timeCourse"),
+            @Mapping(target = "status", expression = "java(com.iuh.rencar_project.utils.enums.Status.ENABLE)"),
             @Mapping(target = "createdBy", ignore = true),
             @Mapping(target = "createdDate", ignore = true),
             @Mapping(target = "modifiedBy", ignore = true),
@@ -29,7 +29,7 @@ public interface ICourseMapper {
     })
     Course toEntity(CourseRequest courseRequest);
 
-    @InheritConfiguration(name = "toEntity")
+    @InheritConfiguration
     void updateEntity(CourseRequest courseRequest, @MappingTarget Course course);
 
     @Mappings({

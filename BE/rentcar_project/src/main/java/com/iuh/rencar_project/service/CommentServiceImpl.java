@@ -17,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Duy Trần Thế
@@ -39,48 +38,57 @@ public class CommentServiceImpl implements ICommentService {
     }
 
     @Override
-    @Transactional(rollbackFor = {Exception.class})
     public String save(String postSlug, CommentRequest commentRequest) {
+        Comment comment = commentMapper.toEntity(commentRequest);
         try {
-            Comment comment = commentMapper.toEntity(commentRequest);
             commentRepository.saveAndFlush(comment);
-//            postService.updatePostComment(postSlug, comment);
         } catch (Exception e) {
             logger.error("Comment Exception: ", e);
-            throw new EntityException("Comment save fail");
+            throw new EntityException("Comment save failed");
         }
-        return "Comment save success";
+        return "Comment save successful and waiting for approved";
     }
 
     @Override
-    public String update(Long id) {
+    public String setAvailability(Long id) {
         Comment currentComment = this.findById(id);
         String message;
+        currentComment.setStatus(Status.ENABLE);
         try {
-            currentComment.setStatus(Status.ACTIVE);
-            message = "Comment " + currentComment.getId() + " active success";
+            commentRepository.saveAndFlush(currentComment);
         } catch (Exception e) {
             logger.error("Comment Exception: ", e);
-            throw new EntityException("Comment " + currentComment.getId() + " change status fail");
+            throw new EntityException("Comment status change failed");
         }
-        return message;
+        return "Enable comment successful";
     }
 
     @Override
     public String delete(Long id) {
-        Comment comment = this.findById(id);
         try {
             commentRepository.deleteById(id);
         } catch (Exception e) {
             logger.error("Comment Exception: ", e);
-            throw new EntityException("Commnet " + id + " delete fail");
+            throw new EntityException("Comment delete failed");
         }
-        return "Comment " + id + "delete success";
+        return "Comment delete successful";
     }
 
     @Override
     public Comment findById(Long id) {
-        return commentRepository.findById(id).orElseThrow(() -> new NotFoundException("Comment with id: " + id + " not found"));
+        return commentRepository.findById(id).orElseThrow(() -> new NotFoundException("Comment not found"));
+    }
+
+    @Override
+    public Page<Comment> findAllPaginatedDisable(int pageNo) {
+        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
+        return commentRepository.findAllByStatus(pageable, Status.DISABLE);
+    }
+
+    @Override
+    public Page<Comment> findAllPaginatedEnable(int pageNo) {
+        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
+        return commentRepository.findAllByStatus(pageable, Status.ENABLE);
     }
 
     @Override
@@ -88,5 +96,4 @@ public class CommentServiceImpl implements ICommentService {
         Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
         return commentRepository.findAll(pageable);
     }
-
 }

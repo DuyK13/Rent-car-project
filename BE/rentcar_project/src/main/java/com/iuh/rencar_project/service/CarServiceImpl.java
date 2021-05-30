@@ -9,7 +9,6 @@ import com.iuh.rencar_project.service.template.IFileService;
 import com.iuh.rencar_project.utils.enums.Status;
 import com.iuh.rencar_project.utils.exception.bind.EntityException;
 import com.iuh.rencar_project.utils.exception.bind.NotFoundException;
-import com.iuh.rencar_project.utils.mapper.IBillMapper;
 import com.iuh.rencar_project.utils.mapper.ICarMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,7 +34,7 @@ public class CarServiceImpl implements ICarService {
     private final IFileService fileService;
 
     @Autowired
-    public CarServiceImpl(CarRepository carRepository, ICarMapper carMapper, ICategoryService categoryService, IFileService fileService, IBillMapper billMapper) {
+    public CarServiceImpl(CarRepository carRepository, ICarMapper carMapper, ICategoryService categoryService, IFileService fileService) {
         this.carRepository = carRepository;
         this.carMapper = carMapper;
         this.categoryService = categoryService;
@@ -55,29 +54,54 @@ public class CarServiceImpl implements ICarService {
 
     @Override
     public String update(Long id, CarRequest carRequest, MultipartFile multipartFile) {
-        Car currentCar = this.findById(id);
-        if (this.existsByName(carRequest.getName()) && !currentCar.getName().equals(carRequest.getName()))
+        Car newCar = this.findById(id);
+        Car oldCar = this.findById(id);
+        if (this.existsByName(carRequest.getName()) && !oldCar.getName().equals(carRequest.getName()))
             throw new EntityException("Car Exists");
-        carMapper.updateEntity(carRequest, currentCar);
-        currentCar.setImage(fileService.updateCarImage(multipartFile, currentCar));
-        return categoryService.updateCarToCategory(carRequest.getCategoryName(), currentCar, currentCar);
+        carMapper.updateEntity(carRequest, newCar);
+        newCar.setImage(fileService.updateCarImage(multipartFile, newCar));
+        return categoryService.updateCarToCategory(carRequest.getCategoryName(), oldCar, newCar);
     }
 
-//    @Override
-//    public Boolean saveBillToCar(Bill bill, String carName) {
-//        Car car = this.findByName(carName);
-//        Set<Bill> bills = car.getBills();
-//        if(bills.add(bill))
-//            return false;
-//        car.setBills(bills);
-//        try{
-//            carRepository.saveAndFlush(car);
-//        }catch(Exception e){
-//            logger.error("Bill Exception: ", e);
-//            return false;
-//        }
-//        return true;
-//    }
+    @Override
+    public String update(Long id, CarRequest carRequest) {
+        Car newCar = this.findById(id);
+        Car oldCar = this.findById(id);
+        if (this.existsByName(carRequest.getName()) && !oldCar.getName().equals(carRequest.getName()))
+            throw new EntityException("Car Exists");
+        carMapper.updateEntity(carRequest, newCar);
+        return categoryService.updateCarToCategory(carRequest.getCategoryName(), oldCar, newCar);
+    }
+
+    @Override
+    public Car updateCarForBillRented(Car car) {
+        int quantity = car.getAvailableQuantity();
+        if (quantity > 0 && car.getStatus() == Status.ENABLE) {
+            car.setAvailableQuantity(quantity - 1);
+            try {
+                car = carRepository.saveAndFlush(car);
+            } catch (Exception e) {
+                logger.error("Car Exception: ", e);
+                throw new EntityException("Car can't rent");
+            }
+        } else {
+            throw new EntityException("Car not available for rent");
+        }
+        return car;
+    }
+
+    @Override
+    public Car updateCarForBillPaid(Car car) {
+        int quantity = car.getAvailableQuantity();
+        car.setAvailableQuantity(quantity + 1);
+        try {
+            car = carRepository.saveAndFlush(car);
+        } catch (Exception e) {
+            logger.error("Car Exception: ", e);
+            throw new EntityException("Car not returned");
+        }
+        return car;
+    }
 
     @Override
     public String setAvailability(Long id) {

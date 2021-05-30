@@ -56,11 +56,11 @@ public class Category {
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
     private Category parent;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id")
     private Set<Car> cars = new HashSet<>();
 
-    public Category(Long id, String name, String slug, String description, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate, Status status, Category category, Set<Car> cars) {
+    public Category(Long id, String name, String slug, String description, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate, Status status, Category parent, Set<Car> cars) {
         this.id = id;
         this.name = name;
         this.slug = slug;
@@ -70,12 +70,11 @@ public class Category {
         this.modifiedBy = modifiedBy;
         this.modifiedDate = modifiedDate;
         this.status = status;
-        this.parent = category;
+        this.parent = parent;
         this.cars = cars;
     }
 
     public Category() {
-        this.status = Status.ENABLE;
     }
 
     public Long getId() {
@@ -150,12 +149,12 @@ public class Category {
         this.status = status;
     }
 
-    public Category getCategory() {
+    public Category getParent() {
         return parent;
     }
 
-    public void setCategory(Category category) {
-        this.parent = category;
+    public void setParent(Category parent) {
+        this.parent = parent;
     }
 
     public Set<Car> getCars() {

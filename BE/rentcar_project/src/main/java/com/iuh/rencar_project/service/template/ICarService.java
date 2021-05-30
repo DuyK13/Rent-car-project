@@ -20,6 +20,8 @@ public interface ICarService {
 
     String update(Long id, CarRequest carRequest, MultipartFile multipartFile);
 
+    String update(Long id, CarRequest carRequest);
+
     String setAvailability(Long id);
 
     String delete(Long id);
@@ -35,4 +37,8 @@ public interface ICarService {
     Page<Car> findAllPaginated(int pageNo);
 
     Car findBySlugForGuest(String slug);
+
+    Car updateCarForBillRented(Car car);
+
+    Car updateCarForBillPaid(Car car);
 }

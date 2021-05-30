@@ -3,6 +3,7 @@ package com.iuh.rencar_project.utils.mapper;
 import com.iuh.rencar_project.dto.request.PostRequest;
 import com.iuh.rencar_project.dto.response.PostResponse;
 import com.iuh.rencar_project.entity.Post;
+import com.iuh.rencar_project.utils.enums.Status;
 import com.iuh.rencar_project.utils.mapper.annotation.StringToSlugMapping;
 import com.iuh.rencar_project.utils.mapper.annotation.StringToTagMapping;
 import com.iuh.rencar_project.utils.mapper.annotation.TagToStringMapping;
@@ -22,7 +23,7 @@ public interface IPostMapper {
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "title", source = "title"),
             @Mapping(target = "slug", source = "title", qualifiedBy = StringToSlugMapping.class),
-            @Mapping(target = "status", ignore = true),
+            @Mapping(target = "status", expression = "java(com.iuh.rencar_project.utils.enums.Status.ENABLE)"),
             @Mapping(target = "content", source = "content"),
             @Mapping(target = "image", ignore = true),
             @Mapping(target = "createdBy", ignore = true),

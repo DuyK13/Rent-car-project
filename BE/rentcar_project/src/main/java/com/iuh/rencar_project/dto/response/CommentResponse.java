@@ -1,5 +1,6 @@
 package com.iuh.rencar_project.dto.response;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -11,26 +12,15 @@ public class CommentResponse {
     private Long id;
     private String name;
     private String email;
-    private Date createdDate;
+    private LocalDateTime dateCreated;
     private String content;
     private int likes;
     private int dislike;
+    private int level;
     private String status;
-    private CommentResponse comment;
+    private CommentResponse parent;
 
     public CommentResponse() {
-    }
-
-    public CommentResponse(Long id, String name, String email, Date createdDate, String content, int likes, int dislike, String status, CommentResponse comment) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.createdDate = createdDate;
-        this.content = content;
-        this.likes = likes;
-        this.dislike = dislike;
-        this.status = status;
-        this.comment = comment;
     }
 
     public Long getId() {
@@ -57,12 +47,12 @@ public class CommentResponse {
         this.email = email;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public LocalDateTime getDateCreated() {
+        return dateCreated;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setDateCreated(LocalDateTime dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     public String getContent() {
@@ -89,6 +79,14 @@ public class CommentResponse {
         this.dislike = dislike;
     }
 
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -97,11 +95,11 @@ public class CommentResponse {
         this.status = status;
     }
 
-    public CommentResponse getComment() {
-        return comment;
+    public CommentResponse getParent() {
+        return parent;
     }
 
-    public void setComment(CommentResponse comment) {
-        this.comment = comment;
+    public void setParent(CommentResponse parent) {
+        this.parent = parent;
     }
 }

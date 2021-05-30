@@ -41,7 +41,6 @@ public class User {
     }
 
     public User() {
-        this.status = Status.ENABLE;
     }
 
     public Long getId() {

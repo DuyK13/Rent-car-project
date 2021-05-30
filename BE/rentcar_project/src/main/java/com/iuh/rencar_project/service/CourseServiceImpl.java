@@ -47,9 +47,9 @@ public class CourseServiceImpl implements ICourseService {
             courseRepository.saveAndFlush(courseMapper.toEntity(courseRequest));
         } catch (Exception e) {
             logger.error("Course Exception: ", e);
-            throw new EntityException("Course save fail", e);
+            throw new EntityException("Course save failed", e);
         }
-        return "Course save success";
+        return "Course save successful";
     }
 
     @Override
@@ -57,32 +57,32 @@ public class CourseServiceImpl implements ICourseService {
         Course currentCourse = this.findById(id);
         if (this.existsByTitle(courseRequest.getTitle()) && !currentCourse.getTitle().equals(courseRequest.getTitle()))
             throw new EntityException("Course exists");
+        courseMapper.updateEntity(courseRequest, currentCourse);
         try {
-            courseMapper.updateEntity(courseRequest, currentCourse);
             courseRepository.saveAndFlush(currentCourse);
         } catch (Exception e) {
             logger.error("Course Exception: ", e);
-            throw new EntityException("Course update fail");
+            throw new EntityException("Course update failed");
         }
-        return "Course update success";
+        return "Course update successful";
     }
 
     @Override
-    public String update(Long id) {
+    public String setAvailability(Long id) {
         Course currentCourse = this.findById(id);
         String message;
-        if (currentCourse.getStatus() == Status.ACTIVE) {
-            currentCourse.setStatus(Status.INACTIVE);
-            message = "Course deactivate success";
+        if (currentCourse.getStatus() == Status.ENABLE) {
+            currentCourse.setStatus(Status.DISABLE);
+            message = "Disable course successful";
         } else {
-            currentCourse.setStatus(Status.ACTIVE);
-            message = "Course activate success";
+            currentCourse.setStatus(Status.ENABLE);
+            message = "Enable course successful";
         }
         try {
             courseRepository.saveAndFlush(currentCourse);
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            throw new EntityException("Course change status fail");
+            logger.error("Course Exception: ", e);
+            throw new EntityException("Course status change failed");
         }
         return message;
     }
@@ -94,9 +94,9 @@ public class CourseServiceImpl implements ICourseService {
             courseRepository.deleteById(id);
         } catch (Exception e) {
             logger.error("Course Exception: ", e);
-            throw new EntityException("Course delete fail");
+            throw new EntityException("Course delete failed");
         }
-        return "Course delete success";
+        return "Course delete successful";
     }
 
     @Override
@@ -126,7 +126,23 @@ public class CourseServiceImpl implements ICourseService {
     }
 
     @Override
+    public Page<Course> findAllPaginatedForGuest(int pageNo) {
+        Pageable pageable = PageRequest.of(pageNo, 4, Sort.by(Sort.Order.asc("id")));
+        return courseRepository.findAllByStatus(Status.ENABLE, pageable);
+    }
+
+    @Override
+    public List<Course> findAllForGuest(int pageNo) {
+        return courseRepository.findAllByStatus(Status.ENABLE);
+    }
+
+    @Override
     public List<Course> findAll() {
         return courseRepository.findAll();
+    }
+
+    @Override
+    public List<Course> findAllEnable() {
+        return courseRepository.findAllByStatus(Status.ENABLE);
     }
 }

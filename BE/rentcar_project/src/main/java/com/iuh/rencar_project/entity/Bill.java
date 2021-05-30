@@ -6,7 +6,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,6 +14,9 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "bills", uniqueConstraints = {@UniqueConstraint(columnNames = "slug")})
 public class Bill {
+
+    @Transient
+    public static final Long LATE_CHARGE = 50000L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,13 +55,11 @@ public class Bill {
     @Enumerated(EnumType.STRING)
     private BillType type;
 
-    @DateTimeFormat(pattern = "dd-MM-yyyy hh:mm tt")
     @Column(name = "start_time")
     private LocalDateTime startTime;
 
-    @DateTimeFormat(pattern = "dd-MM-yyyy hh:mm tt")
-    @Column(name = "end_time")
-    private LocalDateTime endTime;
+    @Column(name = "rent_time")
+    private Long rentTime;
 
     @ManyToOne
     @JoinColumn(name = "course_id", referencedColumnName = "id")
@@ -79,7 +79,7 @@ public class Bill {
     @Column(name = "late_charge")
     private Long lateCharge;
 
-    public Bill(Long id, String fullname, String slug, String phoneNumber, String email, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate, BillType type, LocalDateTime startTime, LocalDateTime endTime, Course course, Car car, BillState state, Long billAmount, Long lateCharge) {
+    public Bill(Long id, String fullname, String slug, String phoneNumber, String email, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate, BillType type, LocalDateTime startTime, Long rentTime, Course course, Car car, BillState state, Long billAmount, Long lateCharge) {
         this.id = id;
         this.fullname = fullname;
         this.slug = slug;
@@ -91,7 +91,7 @@ public class Bill {
         this.modifiedDate = modifiedDate;
         this.type = type;
         this.startTime = startTime;
-        this.endTime = endTime;
+        this.rentTime = rentTime;
         this.course = course;
         this.car = car;
         this.state = state;
@@ -190,12 +190,12 @@ public class Bill {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
-        return endTime;
+    public Long getRentTime() {
+        return rentTime;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
+    public void setRentTime(Long rentTime) {
+        this.rentTime = rentTime;
     }
 
     public Course getCourse() {
@@ -252,7 +252,7 @@ public class Bill {
                 ", modifiedDate=" + modifiedDate +
                 ", type=" + type +
                 ", startTime=" + startTime +
-                ", endTime=" + endTime +
+                ", rentTime=" + rentTime +
                 ", course=" + course +
                 ", car=" + car +
                 ", state=" + state +

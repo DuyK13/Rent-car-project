@@ -29,7 +29,7 @@ public interface ICarMapper {
             @Mapping(target = "createdDate", ignore = true),
             @Mapping(target = "modifiedBy", ignore = true),
             @Mapping(target = "modifiedDate", ignore = true),
-            @Mapping(target = "status", ignore = true)
+            @Mapping(target = "status", expression = "java(com.iuh.rencar_project.utils.enums.Status.ENABLE)")
     })
     Car toEntity(CarRequest carRequest);
 

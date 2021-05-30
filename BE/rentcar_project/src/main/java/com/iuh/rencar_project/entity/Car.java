@@ -73,7 +73,6 @@ public class Car {
     }
 
     public Car() {
-        this.status = Status.ENABLE;
     }
 
     public Long getId() {

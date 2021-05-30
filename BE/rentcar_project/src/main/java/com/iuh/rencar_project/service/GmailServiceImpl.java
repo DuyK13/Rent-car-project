@@ -35,7 +35,7 @@ public class GmailServiceImpl implements IEmailService {
     }
 
     @Override
-    public Boolean sendBillEmail(Bill bill) {
+    public Boolean sendBillEmailByStaff(Bill bill) {
         Long id = bill.getId();
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = null;
@@ -48,6 +48,32 @@ public class GmailServiceImpl implements IEmailService {
                     "        <p>Thân mến " + bill.getFullname() + ",</p>" +
                     "        <p>Cám ơn vì đã sử dụng dịch vụ của chúng tôi.</p>" +
                     "        <p>Đây là đường dẫn tới đơn đặt trước của bạn: <a href='" + URL + PATH + bill.getSlug() + "'>Bill #" + id + "</a></p>" +
+                    "        <p>Nếu bạn có bất cứ câu hỏi nào, đừng ngần ngại liên lạc với chúng tôi tại: <b>thuexevynguyen@gmail.com</b></p>" +
+                    "    </div>";
+            message.setContent(htmlMsg, "text/html; charset=UTF-8");
+            helper.setTo(bill.getEmail());
+            helper.setSubject("[Thuê Xe Vỹ Nguyên] - Đơn đặt trước #" + id  );
+        } catch (MessagingException e) {
+            logger.error("Email Exception: ", e);
+            return false;
+        }
+        this.mailSender.send(message);
+        return true;
+    }
+
+    @Override
+    public Boolean sendBillEmailByGuest(Bill bill) {
+        Long id = bill.getId();
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = null;
+        try {
+            helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+            String htmlMsg = "<div style=\"width: 500px;\">" +
+                    "        <img src='https://tran-the-duy-208.s3-ap-southeast-1.amazonaws.com/logo.png' width='250' height='250'" +
+                    "            style='display: block; margin-left: auto; margin-right: auto;'>" +
+                    "        <p>Thân mến " + bill.getFullname() + ",</p>" +
+                    "        <p>Bạn đã đặt đơn đăng ký thành công,</p>" +
+                    "        <p>Cám ơn vì đã sử dụng dịch vụ của chúng tôi.</p>" +
                     "        <p>Nếu bạn có bất cứ câu hỏi nào, đừng ngần ngại liên lạc với chúng tôi tại: <b>thuexevynguyen@gmail.com</b></p>" +
                     "    </div>";
             message.setContent(htmlMsg, "text/html; charset=UTF-8");

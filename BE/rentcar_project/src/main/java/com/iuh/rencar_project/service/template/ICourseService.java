@@ -1,7 +1,9 @@
 package com.iuh.rencar_project.service.template;
 
 import com.iuh.rencar_project.dto.request.CourseRequest;
+import com.iuh.rencar_project.dto.response.CourseResponse;
 import com.iuh.rencar_project.entity.Course;
+import com.iuh.rencar_project.entity.Post;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -16,13 +18,17 @@ public interface ICourseService {
 
     String update(Long id, CourseRequest courseRequest);
 
-    String update(Long id);
+    String setAvailability(Long id);
 
     String delete(Long id);
 
     Boolean existsByTitle(String title);
 
     Page<Course> findAllPaginated(int pageNo);
+
+    Page<Course> findAllPaginatedForGuest(int pageNo);
+
+    List<Course> findAllForGuest(int pageNo);
 
     List<Course> findAll();
 
@@ -31,4 +37,6 @@ public interface ICourseService {
     Course findByTitle(String title);
 
     Course findById(Long id);
+
+    List<Course> findAllEnable();
 }

@@ -2,8 +2,6 @@ package com.iuh.rencar_project.service.template;
 
 import com.iuh.rencar_project.entity.Bill;
 
-import javax.mail.MessagingException;
-
 /**
  * @author Duy Trần Thế
  * @version 1.0
@@ -11,5 +9,7 @@ import javax.mail.MessagingException;
  */
 public interface IEmailService {
 
-    Boolean sendBillEmail(Bill bill);
+    Boolean sendBillEmailByGuest(Bill bill);
+
+    Boolean sendBillEmailByStaff(Bill bill);
 }

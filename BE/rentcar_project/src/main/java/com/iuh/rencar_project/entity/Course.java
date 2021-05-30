@@ -29,7 +29,7 @@ public class Course {
     private String slug;
 
     @Column(name = "time_course", nullable = false)
-    private float timeCourse;
+    private Long timeCourse;
 
     private float discount;
 
@@ -55,7 +55,7 @@ public class Course {
     @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
 
-    public Course(Long id, String title, Long price, String slug, float timeCourse, float discount, Status status, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate) {
+    public Course(Long id, String title, Long price, String slug, Long timeCourse, float discount, Status status, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate) {
         this.id = id;
         this.title = title;
         this.price = price;
@@ -104,11 +104,11 @@ public class Course {
         this.slug = slug;
     }
 
-    public float getTimeCourse() {
+    public Long getTimeCourse() {
         return timeCourse;
     }
 
-    public void setTimeCourse(float timeCourse) {
+    public void setTimeCourse(Long timeCourse) {
         this.timeCourse = timeCourse;
     }
 

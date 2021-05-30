@@ -76,7 +76,6 @@ public class Post {
     }
 
     public Post() {
-        this.status = Status.ENABLE;
     }
 
     public Long getId() {

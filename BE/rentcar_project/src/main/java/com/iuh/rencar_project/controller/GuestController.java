@@ -101,7 +101,7 @@ public class GuestController {
 
     @GetMapping("/posts/{slug}")
     public ResponseEntity<?> getPostBySlug(@PathVariable(name = "slug") String slug) {
-        PostResponse postResponse = postMapper.toResponse(postService.findBySlug(slug));
+        PostResponse postResponse = postMapper.toResponse(postService.findBySlugForGuest(slug));
         return new ResponseEntity<>(postResponse, HttpStatus.OK);
     }
 

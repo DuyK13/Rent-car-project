@@ -1,6 +1,7 @@
 package com.iuh.rencar_project.service;
 
 import com.iuh.rencar_project.service.template.INotificationService;
+import com.iuh.rencar_project.utils.enums.BillState;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -35,7 +36,7 @@ public class BillNotificationServiceImpl implements INotificationService {
         List<SseEmitter> deadEmitters = new ArrayList<>();
         emitters.forEach(emitter -> {
             try {
-                emitter.send(SseEmitter.event().name("Pre-order").data("Pre-orders just placed"));
+                emitter.send(SseEmitter.event().name(BillState.PENDING.name()).data("A register form has just been registered"));
             } catch (IOException e) {
                 deadEmitters.add(emitter);
             }

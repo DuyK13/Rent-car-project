@@ -1,8 +1,6 @@
 package com.iuh.rencar_project.dto.response;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 
 /**
  * @author Duy Trần Thế
@@ -16,30 +14,18 @@ public class BillResponse {
     private String slug;
     private String phoneNumber;
     private String email;
-    private String staff;
-    private Date createdDate;
-    private LocalDateTime timeStart;
-    private double extraTime;
-    private List<CourseResponse> courses;
+    private String createdBy;
+    private LocalDateTime createdDate;
+    private String modifiedBy;
+    private LocalDateTime modifiedDate;
+    private String type;
+    private LocalDateTime startTime;
+    private Long rentTime;
+    private CourseResponse course;
     private CarResponse car;
     private String state;
-    private double totalMoney;
-
-    public BillResponse(Long id, String fullname, String slug, String phoneNumber, String staff, String email, Date createdDate, LocalDateTime timeStart, double extraTime, List<CourseResponse> courses, CarResponse car, String state, double totalMoney) {
-        this.id = id;
-        this.fullname = fullname;
-        this.slug = slug;
-        this.phoneNumber = phoneNumber;
-        this.staff = staff;
-        this.email = email;
-        this.createdDate = createdDate;
-        this.timeStart = timeStart;
-        this.extraTime = extraTime;
-        this.courses = courses;
-        this.car = car;
-        this.state = state;
-        this.totalMoney = totalMoney;
-    }
+    private Long billAmount;
+    private Long lateCharge;
 
     public BillResponse() {
     }
@@ -50,14 +36,6 @@ public class BillResponse {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
     }
 
     public String getFullname() {
@@ -92,36 +70,68 @@ public class BillResponse {
         this.email = email;
     }
 
-    public Date getCreatedDate() {
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
-    public LocalDateTime getTimeStart() {
-        return timeStart;
+    public String getModifiedBy() {
+        return modifiedBy;
     }
 
-    public void setTimeStart(LocalDateTime timeStart) {
-        this.timeStart = timeStart;
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 
-    public double getExtraTime() {
-        return extraTime;
+    public LocalDateTime getModifiedDate() {
+        return modifiedDate;
     }
 
-    public void setExtraTime(double extraTime) {
-        this.extraTime = extraTime;
+    public void setModifiedDate(LocalDateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 
-    public List<CourseResponse> getCourses() {
-        return courses;
+    public String getType() {
+        return type;
     }
 
-    public void setCourses(List<CourseResponse> courses) {
-        this.courses = courses;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public Long getRentTime() {
+        return rentTime;
+    }
+
+    public void setRentTime(Long rentTime) {
+        this.rentTime = rentTime;
+    }
+
+    public CourseResponse getCourse() {
+        return course;
+    }
+
+    public void setCourse(CourseResponse course) {
+        this.course = course;
     }
 
     public CarResponse getCar() {
@@ -132,19 +142,27 @@ public class BillResponse {
         this.car = car;
     }
 
-    public double getTotalMoney() {
-        return totalMoney;
+    public String getState() {
+        return state;
     }
 
-    public void setTotalMoney(double totalMoney) {
-        this.totalMoney = totalMoney;
+    public void setState(String state) {
+        this.state = state;
     }
 
-    public String getStaff() {
-        return staff;
+    public Long getBillAmount() {
+        return billAmount;
     }
 
-    public void setStaff(String staff) {
-        this.staff = staff;
+    public void setBillAmount(Long billAmount) {
+        this.billAmount = billAmount;
+    }
+
+    public Long getLateCharge() {
+        return lateCharge;
+    }
+
+    public void setLateCharge(Long lateCharge) {
+        this.lateCharge = lateCharge;
     }
 }

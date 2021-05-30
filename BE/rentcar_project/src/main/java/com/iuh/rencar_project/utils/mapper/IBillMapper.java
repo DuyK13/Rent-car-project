@@ -3,13 +3,12 @@ package com.iuh.rencar_project.utils.mapper;
 import com.iuh.rencar_project.dto.request.BillRequest;
 import com.iuh.rencar_project.dto.response.BillResponse;
 import com.iuh.rencar_project.entity.Bill;
-import com.iuh.rencar_project.entity.Car;
-import com.iuh.rencar_project.entity.Course;
-import com.iuh.rencar_project.utils.mapper.annotation.StringToCarMapping;
-import com.iuh.rencar_project.utils.mapper.annotation.StringToCourseMapping;
-import com.iuh.rencar_project.utils.mapper.annotation.UserToStringMapping;
+import com.iuh.rencar_project.utils.mapper.annotation.*;
 import com.iuh.rencar_project.utils.mapper.helper.HelperMapper;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.Mappings;
 
 /**
  * @author Duy Trần Thế
@@ -20,34 +19,63 @@ import org.mapstruct.*;
 public interface IBillMapper {
     @Mappings({
             @Mapping(target = "id", ignore = true),
-            @Mapping(target = "slug", ignore = true),
-            @Mapping(target = "staff", ignore = true),
-            @Mapping(target = "state", ignore = true),
+            @Mapping(target = "slug", source = "fullname", qualifiedBy = BillSlugMapping.class),
+            @Mapping(target = "createdBy", ignore = true),
             @Mapping(target = "createdDate", ignore = true),
-            @Mapping(target = "courses", source = "courses", qualifiedBy = StringToCourseMapping.class),
-//            @Mapping(target = "car", source = "car", qualifiedBy = StringToCarMapping.class)
+            @Mapping(target = "modifiedBy", ignore = true),
+            @Mapping(target = "modifiedDate", ignore = true),
+            @Mapping(target = "type", ignore = true),
+            @Mapping(target = "startTime", ignore = true),
+            @Mapping(target = "rentTime", ignore = true),
+            @Mapping(target = "course", ignore = true),
+            @Mapping(target = "car", ignore = true),
+            @Mapping(target = "state", expression = "java(com.iuh.rencar_project.utils.enums.BillState.PENDING)"),
+            @Mapping(target = "billAmount", ignore = true),
+            @Mapping(target = "lateCharge", ignore = true),
     })
-    Bill toEntity(BillRequest billRequest);
-
-    @InheritConfiguration(name = "toEntity")
-    void updateEntity(BillRequest billRequest, @MappingTarget Bill bill);
+    Bill toEntityByGuest(BillRequest billRequest);
 
     @Mappings({
-            @Mapping(source = "staff", target = "staff", qualifiedBy = UserToStringMapping.class),
-            @Mapping(target = "totalMoney", ignore = true)
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "slug", source = "fullname", qualifiedBy = BillSlugMapping.class),
+            @Mapping(target = "createdBy", ignore = true),
+            @Mapping(target = "createdDate", ignore = true),
+            @Mapping(target = "modifiedBy", ignore = true),
+            @Mapping(target = "modifiedDate", ignore = true),
+            @Mapping(target = "type", source = "type", qualifiedBy = StringToTypeNameMapping.class),
+            @Mapping(target = "course", source = "course", qualifiedBy = StringToCourseMapping.class),
+            @Mapping(target = "car", source = "car", qualifiedBy = StringToCarMapping.class),
+            @Mapping(target = "state", expression = "java(java.util.Objects.isNull(billRequest.getCourse())?com.iuh.rencar_project.utils.enums.BillState.RENTED:com.iuh.rencar_project.utils.enums.BillState.PAID)"),
+            @Mapping(target = "billAmount", ignore = true),
+            @Mapping(target = "lateCharge", ignore = true),
+    })
+    Bill toEntityByStaff(BillRequest billRequest);
+
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "slug", ignore = true),
+            @Mapping(target = "fullname", ignore = true),
+            @Mapping(target = "phoneNumber", ignore = true),
+            @Mapping(target = "email", ignore = true),
+            @Mapping(target = "createdBy", ignore = true),
+            @Mapping(target = "createdDate", ignore = true),
+            @Mapping(target = "modifiedBy", ignore = true),
+            @Mapping(target = "modifiedDate", ignore = true),
+            @Mapping(target = "type", source = "type", qualifiedBy = StringToTypeNameMapping.class),
+            @Mapping(target = "course", source = "course", qualifiedBy = StringToCourseMapping.class),
+            @Mapping(target = "car", source = "car", qualifiedBy = StringToCarMapping.class),
+            @Mapping(target = "state", expression = "java(java.util.Objects.isNull(billRequest.getCourse())?com.iuh.rencar_project.utils.enums.BillState.RENTED:com.iuh.rencar_project.utils.enums.BillState.PAID)"),
+            @Mapping(target = "billAmount", ignore = true),
+            @Mapping(target = "lateCharge", ignore = true),
+    })
+    void updateEntityToRentedOrPaid(BillRequest billRequest, @MappingTarget Bill bill);
+
+    @Mappings({
+            @Mapping(target = "createdBy", source = "createdBy", qualifiedBy = UserToStringMapping.class),
+            @Mapping(target = "modifiedBy", source = "modifiedBy", qualifiedBy = UserToStringMapping.class),
+            @Mapping(target = "type", source = "type", qualifiedBy = BillTypeToStringMapping.class),
+            @Mapping(target = "billAmount", source = "billAmount", defaultValue = "0L"),
+            @Mapping(target = "lateCharge", source = "lateCharge", defaultValue = "0L"),
     })
     BillResponse toResponse(Bill bill);
-
-//    @AfterMapping
-//    public default void calculateTotalPrice(Bill bill, @MappingTarget BillResponse billResponse) {
-//        double totalMoney = 0;
-//        for (Course course : bill.getCourses()) {
-//            totalMoney += course.getPrice();
-//        }
-//        totalMoney += bill.getCar().getPrice();
-//
-//        totalMoney += bill.getExtraTime() * bill.getCar().getPrice();
-//
-//        billResponse.setTotalMoney(totalMoney);
-//    }
 }
