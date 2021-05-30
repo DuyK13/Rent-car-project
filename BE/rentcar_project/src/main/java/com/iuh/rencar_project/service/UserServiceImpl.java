@@ -70,7 +70,7 @@ public class UserServiceImpl implements IUserService {
         User currentUser = this.findById(id);
         if ((this.existsByUsername(userRequest.getUsername()) && !currentUser.getUsername().equals(userRequest.getUsername())) || (userRepository.existsByEmail(userRequest.getEmail()) && !currentUser.getEmail().equals(userRequest.getEmail())))
             throw new EntityException("User exists");
-        userMapper.updateUserEmail(userRequest, currentUser);
+        currentUser.setEmail(userRequest.getEmail());
         try {
             userRepository.saveAndFlush(currentUser);
         } catch (Exception e) {

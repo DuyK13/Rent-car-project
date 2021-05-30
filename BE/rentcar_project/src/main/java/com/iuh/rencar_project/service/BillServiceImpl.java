@@ -4,6 +4,7 @@ import com.iuh.rencar_project.dto.request.BillRequest;
 import com.iuh.rencar_project.entity.Bill;
 import com.iuh.rencar_project.repository.BillRepository;
 import com.iuh.rencar_project.service.template.IBillService;
+import com.iuh.rencar_project.service.template.ICarService;
 import com.iuh.rencar_project.service.template.IEmailService;
 import com.iuh.rencar_project.utils.enums.BillState;
 import com.iuh.rencar_project.utils.exception.bind.EntityException;
@@ -11,6 +12,7 @@ import com.iuh.rencar_project.utils.exception.bind.NotFoundException;
 import com.iuh.rencar_project.utils.mapper.IBillMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +22,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Duy Trần Thế
@@ -35,74 +41,109 @@ public class BillServiceImpl implements IBillService {
     private final IBillMapper billMapper;
     private final PasswordEncoder passwordEncoder;
     private final IEmailService emailService;
+    private final ICarService carService;
 
     @Autowired
-    public BillServiceImpl(BillRepository billRepository, IBillMapper billMapper, PasswordEncoder passwordEncoder, IEmailService emailService) {
+    public BillServiceImpl(BillRepository billRepository, IBillMapper billMapper, PasswordEncoder passwordEncoder, IEmailService emailService, ICarService carService) {
         this.billRepository = billRepository;
         this.billMapper = billMapper;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
+        this.carService = carService;
     }
 
     @Override
     public String save(BillRequest billRequest) {
-        Bill bill = billMapper.toEntity(billRequest);
-        bill.setSlug(passwordEncoder.encode(this.getCurrentId() + "").replace("/", ""));
+        Bill bill = billMapper.toEntityByGuest(billRequest);
         try {
             billRepository.saveAndFlush(bill);
         } catch (Exception e) {
             logger.error("Bill Exception: ", e);
-            throw new EntityException("Bill save fail");
+            throw new EntityException("Bill save failed");
         }
-        if (emailService.sendBillEmail(bill)) {
-            return "Bill save success and email sent";
+        if (emailService.sendBillEmailByGuest(bill)) {
+            return "Bill save successful and email sent";
         }
-        return "Bill save success";
+        return "Bill save successful";
     }
 
     @Override
     public String saveByStaff(BillRequest billRequest) {
-        Bill bill = billMapper.toEntity(billRequest);
-        bill.setSlug(passwordEncoder.encode(this.getCurrentId() + "").replace("/", ""));
-        bill.setState(BillState.Pending_Payment);
+        Bill bill = billMapper.toEntityByStaff(billRequest);
         try {
             billRepository.saveAndFlush(bill);
         } catch (Exception e) {
             logger.error("Bill Exception: ", e);
-            throw new EntityException("Bill save fail");
+            throw new EntityException("Bill save failed");
         }
-        if (emailService.sendBillEmail(bill)) {
-            return "Bill save success and email sent";
+        if (emailService.sendBillEmailByStaff(bill)) {
+            return "Bill save successful and email sent";
         }
-        return "Bill save success";
+        return "Bill save successful";
     }
 
     @Override
-    public String updateBillPreOrder(Long id) {
+    public String updateBillPending(Long id) {
         Bill bill = this.findById(id);
-        if (bill.getState().compareTo(BillState.Pre_Order) == 0)
-            bill.setState(BillState.Pending_Payment);
+        if (bill.getState() == BillState.PENDING)
+            bill.setState(BillState.APPROVED);
+        else
+            throw new EntityException("Bill approve failed");
         try {
             billRepository.saveAndFlush(bill);
         } catch (Exception e) {
             logger.error("Bill Exception: ", e);
-            throw new EntityException("Bill confirm pre order failed");
+            throw new EntityException("Bill approve failed");
         }
-        return "Bill confirm pre order successful";
+        return "Bill approve successful";
     }
 
     @Override
-    public String updateBillPendingPayment(Long id) {
+    public String updateBillRented(Long id) {
         Bill bill = this.findById(id);
-        if (bill.getState().compareTo(BillState.Pending_Payment) == 0)
-            bill.setState(BillState.Payed);
-        try {
-            billRepository.saveAndFlush(bill);
-        } catch (Exception e) {
-            logger.error("Bill Exception: ", e);
-            throw new EntityException("Bill confirm payment failed");
-        }
-        return "Bill confirm payment successful";
+        if (bill.getState() == BillState.RENTED) {
+            Long rentTime = bill.getRentTime();
+            Long lateCharge = this.calculateLateCharge(bill);
+            bill.setLateCharge(lateCharge);
+            bill.setBillAmount(rentTime * bill.getCar().getCostPerHour() + lateCharge);
+            bill.setCar(carService.updateCarForBillPaid(bill.getCar()));
+            bill.setState(BillState.PAID);
+            try {
+                billRepository.saveAndFlush(bill);
+            } catch (Exception e) {
+                logger.error("Bill Exception: ", e);
+                throw new EntityException("Pay for rental car failed");
+            }
+        } else throw new EntityException("Bill not rented");
+        return "Pay for rental car successful";
+    }
+
+    @Override
+    public String updateBillApproved(Long id, BillRequest billRequest) {
+        Bill bill = this.findById(id);
+        boolean isRented = Strings.isEmpty(billRequest.getCourse());
+        if (bill.getState() == BillState.APPROVED) {
+            billMapper.updateEntityToRentedOrPaid(billRequest, bill);
+            if (isRented)
+                bill.setCar(carService.updateCarForBillRented(bill.getCar()));
+            try {
+                billRepository.saveAndFlush(bill);
+            } catch (Exception e) {
+                logger.error("Bill Exception: ", e);
+                if (isRented)
+                    throw new EntityException("Rent car failed");
+                else
+                    throw new EntityException("Pay course failed");
+            }
+        } else
+            throw new EntityException("Bill not approved");
+        if (isRented) {
+            if (emailService.sendBillEmailByStaff(bill)) {
+                return "Rent car successful and email sent";
+            }
+            return "Rent car successful";
+        } else
+            return "Pay course successful";
     }
 
     @Override
@@ -118,16 +159,26 @@ public class BillServiceImpl implements IBillService {
 
     @Transactional
     @Override
-    public String deletePreOrder(Long id) {
-        if (!billRepository.existsByIdAndState(id, BillState.Pre_Order))
+    public String deleteBillPending(Long id) {
+        return this.deleteByIdAndState(id, BillState.PENDING);
+    }
+
+    @Transactional
+    @Override
+    public String deleteBillApproved(Long id) {
+        return this.deleteByIdAndState(id, BillState.APPROVED);
+    }
+
+    private String deleteByIdAndState(Long id, BillState state) {
+        if (!billRepository.existsByIdAndState(id, state))
             throw new NotFoundException("Bill not found");
         try {
-            billRepository.deleteByIdAndStateIs(id, BillState.Pre_Order);
+            billRepository.deleteByIdAndStateIs(id, state);
         } catch (Exception e) {
             logger.error("Bill Exception: ", e);
-            throw new EntityException("Bill delete fail");
+            throw new EntityException("Bill delete failed");
         }
-        return "Bill delete success";
+        return "Bill delete successful";
     }
 
     @Override
@@ -147,20 +198,43 @@ public class BillServiceImpl implements IBillService {
     }
 
     @Override
-    public List<Bill> findAllPreOrder() {
-        return billRepository.findAllByState(BillState.Pre_Order);
+    public Page<Bill> findAllPaginatedAndState(int pageNo, int pageSize, BillState state) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Order.asc("id")));
+        return billRepository.findAllByStateIs(pageable, state);
     }
 
     @Override
-    public List<Bill> findAllPendingPayment() {
-        return billRepository.findAllByState(BillState.Pending_Payment);
-    }
-
-    private Long getCurrentId() {
+    public Long getCurrentId() {
         List<Bill> bills = billRepository.findAll();
         if (bills.isEmpty())
             return 1L;
         else
             return bills.get(bills.size() - 1).getId() + 1;
+    }
+
+    private Long calculateLateCharge(Bill bill) {
+        Long rentTime = bill.getRentTime();
+        LocalDateTime endTime = bill.getStartTime().plusHours(rentTime);
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        System.out.println(bill.getStartTime());
+        System.out.println(endTime);
+        System.out.println(now);
+        Long minutes = Duration.between(endTime, now).toMinutes();
+        return minutes > 29 ? (minutes / 30) * Bill.LATE_CHARGE : 0L;
+    }
+
+    @Override
+    public Long getBillLateChargeById(Long id) {
+        return this.calculateLateCharge(this.findById(id));
+    }
+
+    @Override
+    public Long getBillAmountById(Long id) {
+        Bill bill = this.findById(id);
+        if (Objects.isNull(bill.getCourse())) {
+            return bill.getRentTime() * bill.getCar().getCostPerHour();
+        } else {
+            return bill.getCourse().getPrice();
+        }
     }
 }

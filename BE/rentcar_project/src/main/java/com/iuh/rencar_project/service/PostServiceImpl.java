@@ -78,19 +78,20 @@ public class PostServiceImpl implements IPostService {
         return "Post update successful";
     }
 
-//    @Override
-//    public void updatePostComment(String slug, Comment comment) {
-//        Post post = this.findBySlug(slug);
-//        try{
-//            Set<Comment> comments = post.getComments();
-//            if(!comments.add(comment))
-//                throw new EntityException("Comment failed");
-//            post.setComments(comments);
-//            postRepository.saveAndFlush(post);
-//        }catch (Exception e){
-//            logger.error("Post Exception: ", e);
-//        }
-//    }
+    @Override
+    public String update(Long id, PostRequest postRequest) {
+        Post currentPost = this.findById(id);
+        if (this.existsByTitle(postRequest.getTitle()) && !currentPost.getTitle().equals(postRequest.getTitle()))
+            throw new EntityException("Post exists");
+        postMapper.updateEntity(postRequest, currentPost);
+        try {
+            postRepository.saveAndFlush(currentPost);
+        } catch (Exception e) {
+            logger.error("Post Exception: ", e);
+            throw new EntityException("Post update failed", e);
+        }
+        return "Post update successful";
+    }
 
     @Override
     public String setAvailability(Long id) {
@@ -164,5 +165,10 @@ public class PostServiceImpl implements IPostService {
     @Override
     public List<Post> findByTag(Tag tag) {
         return postRepository.findByTagsIsContaining(tag);
+    }
+
+    @Override
+    public Post findByTitle(String title) {
+        return postRepository.findByTitle(title).orElseThrow(() -> new NotFoundException("Post not found"));
     }
 }

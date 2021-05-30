@@ -9,14 +9,9 @@ public class CommentRequest {
     private String name;
     private String email;
     private String content;
-    private Long commentId;
+    private Long parentId;
+    private String postTitle;
 
-    public CommentRequest(String name, String email, String content, Long commentId) {
-        this.name = name;
-        this.email = email;
-        this.content = content;
-        this.commentId = commentId;
-    }
 
     public CommentRequest() {
     }
@@ -45,11 +40,19 @@ public class CommentRequest {
         this.content = content;
     }
 
-    public Long getCommentId() {
-        return commentId;
+    public Long getParentId() {
+        return parentId;
     }
 
-    public void setCommentId(Long commentId) {
-        this.commentId = commentId;
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getPostTitle() {
+        return postTitle;
+    }
+
+    public void setPostTitle(String postTitle) {
+        this.postTitle = postTitle;
     }
 }

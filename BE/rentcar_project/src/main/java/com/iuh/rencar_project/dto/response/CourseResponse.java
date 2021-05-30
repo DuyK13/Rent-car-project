@@ -1,5 +1,6 @@
 package com.iuh.rencar_project.dto.response;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -15,26 +16,22 @@ public class CourseResponse {
     private Long price;
     private String slug;
     private Long timeCourse;
-    private String createdBy;
-    private Date createdDate;
-    private String modifiedBy;
-    private Date modifiedDate;
+    private float discount;
     private String status;
+    private String createdBy;
+    private LocalDateTime createdDate;
+    private String modifiedBy;
+    private LocalDateTime modifiedDate;
 
     public CourseResponse() {
     }
 
-    public CourseResponse(Long id, String title, Long price, String slug, Long timeCourse, String createdBy, Date createdDate, String modifiedBy, Date modifiedDate, String status) {
-        this.id = id;
-        this.title = title;
-        this.price = price;
-        this.slug = slug;
-        this.timeCourse = timeCourse;
-        this.createdBy = createdBy;
-        this.createdDate = createdDate;
-        this.modifiedBy = modifiedBy;
-        this.modifiedDate = modifiedDate;
-        this.status = status;
+    public float getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(float discount) {
+        this.discount = discount;
     }
 
     public Long getId() {
@@ -85,11 +82,11 @@ public class CourseResponse {
         this.createdBy = createdBy;
     }
 
-    public Date getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -101,11 +98,11 @@ public class CourseResponse {
         this.modifiedBy = modifiedBy;
     }
 
-    public Date getModifiedDate() {
+    public LocalDateTime getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(Date modifiedDate) {
+    public void setModifiedDate(LocalDateTime modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 

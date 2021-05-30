@@ -3,11 +3,16 @@ package com.iuh.rencar_project.utils.mapper.helper;
 import com.iuh.rencar_project.entity.*;
 import com.iuh.rencar_project.service.template.*;
 import com.iuh.rencar_project.utils.StringUtils;
+import com.iuh.rencar_project.utils.enums.BillType;
 import com.iuh.rencar_project.utils.enums.ERole;
+import com.iuh.rencar_project.utils.exception.bind.EntityException;
 import com.iuh.rencar_project.utils.mapper.annotation.*;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 /**
  * @author Trần Thế Duy
@@ -16,6 +21,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class HelperMapper {
+
+    private PasswordEncoder passwordEncoder;
 
     private IRoleService roleService;
 
@@ -30,6 +37,18 @@ public class HelperMapper {
     private IBillService billService;
 
     private ICarService carService;
+
+    private IPostService postService;
+
+    @Autowired
+    public void setPostService(IPostService postService) {
+        this.postService = postService;
+    }
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Autowired
     public void setCarService(ICarService carService) {
@@ -88,6 +107,11 @@ public class HelperMapper {
         return user.getUsername();
     }
 
+    @PasswordEncodedMapping
+    public String encode(String value) {
+        return passwordEncoder.encode(value);
+    }
+
     @StringToTagMapping
     public Tag toTag(String value) {
         return tagService.findByName(value);
@@ -114,18 +138,56 @@ public class HelperMapper {
 
     @StringToCourseMapping
     public Course toCourse(String title) {
+        if (Strings.isEmpty(title))
+            return null;
         return courseService.findByTitle(title);
     }
 
     @StringToCarMapping
     public Car toCar(String name) {
+        if (Strings.isEmpty(name))
+            return null;
         return carService.findByName(name);
     }
 
-//    @CarIdToCarCategoryNameMapping
-//    public String addCategoryNameToCar(Long carId) {
-//        Car car = carService.findById(carId);
-//        Category category = categoryService.findByCar(car);
-//        return category.getName();
-//    }
+    @BillSlugMapping
+    public String toBillSlug(String fullname) {
+        return passwordEncoder.encode(billService.getCurrentId() + "").replace("/", "");
+    }
+
+    @CommentLevelMapping
+    public int toLevel(Long id) {
+        if (Objects.isNull(id)) {
+            return 0;
+        } else {
+            Comment comment = commentService.findById(id);
+            if (comment.getLevel() == Comment.MAX_LEVEL)
+                throw new EntityException("Can not reply comment");
+            else
+                return comment.getLevel() + 1;
+        }
+    }
+
+    @StringToPostMapping
+    public Post toPost(String title){
+        return postService.findByTitle(title);
+    }
+
+    @StringToTypeNameMapping
+    public BillType toBillType(String type){
+        if(type.equalsIgnoreCase(BillType.SA_HINH.getName()))
+            return BillType.SA_HINH;
+        else if(type.equalsIgnoreCase(BillType.DUONG_TRUONG.getName()))
+            return BillType.DUONG_TRUONG;
+        else if(type.equalsIgnoreCase(BillType.LIEN_TINH.getName()))
+            return BillType.LIEN_TINH;
+        return null;
+    }
+
+    @BillTypeToStringMapping
+    public String toStringBillType(BillType type){
+        if(Objects.isNull(type))
+            return null;
+        return type.getName();
+    }
 }

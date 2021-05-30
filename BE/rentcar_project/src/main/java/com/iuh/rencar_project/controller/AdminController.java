@@ -151,9 +151,14 @@ public class AdminController {
     // ============== COURSE ================
     // ======================================
 
+    @DeleteMapping("/course/{id}")
+    public ResponseEntity<?> deleteCourse(@PathVariable(name = "id") Long id) {
+        return new ResponseEntity<>(new MessageResponse(courseService.delete(id)), HttpStatus.OK);
+    }
+
     @PutMapping("/courses/{id}")
-    public ResponseEntity<?> changeCourseStatus(@PathVariable(name = "id") Long id) {
-        return new ResponseEntity<>(new MessageResponse(courseService.update(id)), HttpStatus.OK);
+    public ResponseEntity<?> setCourseAvailability(@PathVariable(name = "id") Long id) {
+        return new ResponseEntity<>(new MessageResponse(courseService.setAvailability(id)), HttpStatus.OK);
     }
 
     // ======================================

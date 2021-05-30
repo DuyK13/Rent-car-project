@@ -10,6 +10,7 @@ package com.iuh.rencar_project.controller;
 import com.iuh.rencar_project.dto.request.*;
 import com.iuh.rencar_project.dto.response.*;
 import com.iuh.rencar_project.service.template.*;
+import com.iuh.rencar_project.utils.enums.Status;
 import com.iuh.rencar_project.utils.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,8 +43,6 @@ public class ModeratorController {
 
     private final IPostMapper postMapper;
 
-    private final ICommentMapper commentMapper;
-
     private final ICategoryMapper categoryMapper;
 
     private final ICarMapper carMapper;
@@ -52,8 +51,10 @@ public class ModeratorController {
 
     private final IBillMapper billMapper;
 
+    private final ICommentMapper commentMapper;
+
     @Autowired
-    public ModeratorController(ITagService tagService, ICommentService commentService, IPostService postService, ICategoryService categoryService, ICarService carService, ICourseService courseService, IBillService billService, ITagMapper tagMapper, IPostMapper postMapper, ICommentMapper commentMapper, ICategoryMapper categoryMapper, ICarMapper carMapper, ICourseMapper courseMapper, IBillMapper billMapper) {
+    public ModeratorController(ITagService tagService, ICommentService commentService, IPostService postService, ICategoryService categoryService, ICarService carService, ICourseService courseService, IBillService billService, ITagMapper tagMapper, IPostMapper postMapper, ICategoryMapper categoryMapper, ICarMapper carMapper, ICourseMapper courseMapper, IBillMapper billMapper, ICommentMapper commentMapper) {
         this.tagService = tagService;
         this.commentService = commentService;
         this.postService = postService;
@@ -63,11 +64,11 @@ public class ModeratorController {
         this.billService = billService;
         this.tagMapper = tagMapper;
         this.postMapper = postMapper;
-        this.commentMapper = commentMapper;
         this.categoryMapper = categoryMapper;
         this.carMapper = carMapper;
         this.courseMapper = courseMapper;
         this.billMapper = billMapper;
+        this.commentMapper = commentMapper;
     }
 
     // ======================================
@@ -121,8 +122,8 @@ public class ModeratorController {
 
     @PutMapping("/posts/{id}")
     public ResponseEntity<?> updatePost(@PathVariable(name = "id") Long id,
-                                        @RequestPart(name = "post") PostRequest postRequest, @RequestPart(name = "file") MultipartFile multipartFile) {
-        return new ResponseEntity<>(new MessageResponse(postService.update(id, postRequest, multipartFile)), HttpStatus.OK);
+                                        @RequestPart(name = "post") PostRequest postRequest, @RequestPart(name = "file") Optional<MultipartFile> multipartFile) {
+        return multipartFile.map(file -> new ResponseEntity<>(new MessageResponse(postService.update(id, postRequest, file)), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(new MessageResponse(postService.update(id, postRequest)), HttpStatus.OK));
 
     }
 
@@ -140,8 +141,8 @@ public class ModeratorController {
     // ======================================
 
     @PutMapping("/comments/{id}")
-    public ResponseEntity<?> updateComment(@PathVariable(name = "id") Long id) {
-        return new ResponseEntity<>(new MessageResponse(commentService.update(id)), HttpStatus.OK);
+    public ResponseEntity<?> setCommentAvailability(@PathVariable(name = "id") Long id) {
+        return new ResponseEntity<>(new MessageResponse(commentService.setAvailability(id)), HttpStatus.OK);
 
     }
 
@@ -151,13 +152,26 @@ public class ModeratorController {
     }
 
     @GetMapping("/comments")
-    public ResponseEntity<?> getCommentPaginated(@RequestParam(name = "pageNo", defaultValue = "1am") int pageNo) {
-        Page<CommentResponse> pageCommentResponse = commentService.findAllPaginated(pageNo)
-                .map(commentMapper::toResponse);
-        PageResponse<CommentResponse> pageResult = new PageResponse<>(pageCommentResponse.getContent(),
-                pageCommentResponse.getTotalPages(), pageCommentResponse.getNumber());
-        return new ResponseEntity<>(pageResult, HttpStatus.OK);
+    public ResponseEntity<?> getCommentPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam(name = "status", required = false) Optional<String> status) {
+        Page<CommentResponse> pageCommentResponse = null;
+        if (status.isPresent()) {
+            if (status.get().equalsIgnoreCase(Status.DISABLE.name()))
+                pageCommentResponse = commentService.findAllPaginatedDisable(pageNo)
+                        .map(commentMapper::toResponse);
+            else if (status.get().equalsIgnoreCase(Status.ENABLE.name()))
+                pageCommentResponse = commentService.findAllPaginatedEnable(pageNo)
+                        .map(commentMapper::toResponse);
+        } else {
+            pageCommentResponse = commentService.findAllPaginated(pageNo)
+                    .map(commentMapper::toResponse);
+        }
+        PageResponse<CommentResponse> pageResult = null;
+        if (pageCommentResponse != null)
+            pageResult = new PageResponse<>(pageCommentResponse.getContent(),
+                    pageCommentResponse.getTotalPages(), pageCommentResponse.getNumber());
+        return new ResponseEntity<>(pageResult != null ? pageResult : new MessageResponse("Nothing found"), HttpStatus.OK);
     }
+
 
     // ======================================
     // ============== CATEGORY ==============
@@ -207,8 +221,8 @@ public class ModeratorController {
     @PutMapping("/cars/{id}")
     public ResponseEntity<?> updateCar(@PathVariable(name = "id") Long id,
                                        @RequestPart(name = "car") CarRequest carRequest,
-                                       @RequestPart(name = "file") MultipartFile multipartFile) {
-        return new ResponseEntity<>(new MessageResponse(carService.update(id, carRequest, multipartFile)), HttpStatus.OK);
+                                       @RequestPart(name = "file", required = false) Optional<MultipartFile> multipartFile) {
+        return multipartFile.map(file -> new ResponseEntity<>(new MessageResponse(carService.update(id, carRequest, file)), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(new MessageResponse(carService.update(id, carRequest)), HttpStatus.OK));
     }
 
     @GetMapping("/cars")
@@ -230,15 +244,15 @@ public class ModeratorController {
     }
 
     @GetMapping("/courses/{id}")
-    public ResponseEntity<?> getCourseByIdOrSlug(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<?> getCourseById(@PathVariable(name = "id") Long id) {
         CourseResponse courseResponse = courseMapper.toResponse(courseService.findById(id));
         return new ResponseEntity<>(courseResponse, HttpStatus.OK);
     }
 
     @PutMapping("/courses/{id}")
     public ResponseEntity<?> updateCourse(@PathVariable(name = "id") Long id,
-                                          @RequestBody Optional<CourseRequest> courseRequest) {
-        return courseRequest.map(request -> new ResponseEntity<>(new MessageResponse(courseService.update(id, request)), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(new MessageResponse(courseService.update(id)), HttpStatus.OK));
+                                          @RequestBody CourseRequest courseRequest) {
+        return new ResponseEntity<>(new MessageResponse(courseService.update(id, courseRequest)), HttpStatus.OK);
     }
 
     @GetMapping("/courses")

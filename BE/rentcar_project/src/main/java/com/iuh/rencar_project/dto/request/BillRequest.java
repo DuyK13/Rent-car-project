@@ -1,7 +1,6 @@
 package com.iuh.rencar_project.dto.request;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @author Duy Trần Thế
@@ -12,20 +11,11 @@ public class BillRequest {
     private String fullname;
     private String phoneNumber;
     private String email;
-    private LocalDateTime timeStart;
-    private double extraTime;
-    private List<String> courses;
+    private String type;
+    private LocalDateTime startTime;
+    private Long rentTime;
+    private String course;
     private String car;
-
-    public BillRequest(String fullname, String phoneNumber, String email, LocalDateTime timeStart, double extraTime, List<String> courses, String car) {
-        this.fullname = fullname;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.timeStart = timeStart;
-        this.extraTime = extraTime;
-        this.courses = courses;
-        this.car = car;
-    }
 
     public BillRequest() {
     }
@@ -54,28 +44,36 @@ public class BillRequest {
         this.email = email;
     }
 
-    public LocalDateTime getTimeStart() {
-        return timeStart;
+    public String getType() {
+        return type;
     }
 
-    public void setTimeStart(LocalDateTime timeStart) {
-        this.timeStart = timeStart;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public double getExtraTime() {
-        return extraTime;
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
-    public void setExtraTime(double extraTime) {
-        this.extraTime = extraTime;
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
-    public List<String> getCourses() {
-        return courses;
+    public Long getRentTime() {
+        return rentTime;
     }
 
-    public void setCourses(List<String> courses) {
-        this.courses = courses;
+    public void setRentTime(Long rentTime) {
+        this.rentTime = rentTime;
+    }
+
+    public String getCourse() {
+        return course;
+    }
+
+    public void setCourse(String course) {
+        this.course = course;
     }
 
     public String getCar() {

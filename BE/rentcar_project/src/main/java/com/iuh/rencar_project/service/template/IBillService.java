@@ -2,9 +2,8 @@ package com.iuh.rencar_project.service.template;
 
 import com.iuh.rencar_project.dto.request.BillRequest;
 import com.iuh.rencar_project.entity.Bill;
+import com.iuh.rencar_project.utils.enums.BillState;
 import org.springframework.data.domain.Page;
-
-import java.util.List;
 
 /**
  * @author Duy Trần Thế
@@ -16,13 +15,7 @@ public interface IBillService {
 
     String saveByStaff(BillRequest billRequest);
 
-    String updateBillPreOrder(Long id);
-
-    String updateBillPendingPayment(Long id);
-
     String delete(Long id);
-
-    String deletePreOrder(Long id);
 
     Bill findById(Long id);
 
@@ -30,7 +23,21 @@ public interface IBillService {
 
     Page<Bill> findAllPaginated(int pageNo);
 
-    List<Bill> findAllPreOrder();
+    Long getCurrentId();
 
-    List<Bill> findAllPendingPayment();
+    String updateBillPending(Long id);
+
+    String updateBillApproved(Long id, BillRequest billRequest);
+
+    String updateBillRented(Long id);
+
+    String deleteBillPending(Long id);
+
+    String deleteBillApproved(Long id);
+
+    Page<Bill> findAllPaginatedAndState(int pageNo, int pageSize, BillState state);
+
+    Long getBillAmountById(Long id);
+
+    Long getBillLateChargeById(Long id);
 }

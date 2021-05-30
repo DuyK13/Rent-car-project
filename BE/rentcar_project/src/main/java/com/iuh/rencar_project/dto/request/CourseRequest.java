@@ -8,13 +8,8 @@ package com.iuh.rencar_project.dto.request;
 public class CourseRequest {
     private String title;
     private Long price;
-    private Float timeCourse;
-
-    public CourseRequest(String title, Long price, Float timeCourse) {
-        this.title = title;
-        this.price = price;
-        this.timeCourse = timeCourse;
-    }
+    private Long timeCourse;
+    private float discount;
 
     public CourseRequest() {
     }
@@ -35,11 +30,19 @@ public class CourseRequest {
         this.price = price;
     }
 
-    public Float getTimeCourse() {
+    public Long getTimeCourse() {
         return timeCourse;
     }
 
-    public void setTimeCourse(Float timeCourse) {
+    public void setTimeCourse(Long timeCourse) {
         this.timeCourse = timeCourse;
+    }
+
+    public float getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(float discount) {
+        this.discount = discount;
     }
 }

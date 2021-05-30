@@ -5,6 +5,9 @@ import com.iuh.rencar_project.entity.Car;
 import com.iuh.rencar_project.entity.Category;
 import org.springframework.data.domain.Page;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * @author Duy Trần Thế
  * @version 1.0
@@ -33,9 +36,9 @@ public interface ICategoryService {
 
     Category findBySlug(String var);
 
-//    Category findByCar(Car car);
-
     Page<Category> findAllPaginatedForGuest(int pageNo);
 
     Category findBySlugForGuest(String slug);
+
+    List<Category> findAllEnable();
 }

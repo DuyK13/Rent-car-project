@@ -13,6 +13,8 @@ public interface IPostService {
 
     String update(Long id, PostRequest postRequest, MultipartFile multipartFile);
 
+    String update(Long id, PostRequest postRequest);
+
     String setAvailability(Long id);
 
     String delete(Long id);
@@ -32,4 +34,6 @@ public interface IPostService {
     Boolean existsByTitle(String title);
 
     List<Post> findByTag(Tag tag);
+
+    Post findByTitle(String title);
 }

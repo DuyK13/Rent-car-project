@@ -25,4 +25,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findAllByStatusIs(Status status, Pageable pageable);
 
     Optional<Post> findBySlugAndStatusIs(String slug, Status active);
+
+    Optional<Post> findByTitle(String title);
 }
