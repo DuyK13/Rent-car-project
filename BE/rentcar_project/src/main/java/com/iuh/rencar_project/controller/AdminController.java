@@ -1,11 +1,9 @@
 package com.iuh.rencar_project.controller;
 
 import com.iuh.rencar_project.dto.request.UserRequest;
-import com.iuh.rencar_project.dto.response.MessageResponse;
-import com.iuh.rencar_project.dto.response.PageResponse;
-import com.iuh.rencar_project.dto.response.RoleResponse;
-import com.iuh.rencar_project.dto.response.UserResponse;
+import com.iuh.rencar_project.dto.response.*;
 import com.iuh.rencar_project.service.template.*;
+import com.iuh.rencar_project.utils.mapper.IBillMapper;
 import com.iuh.rencar_project.utils.mapper.IRoleMapper;
 import com.iuh.rencar_project.utils.mapper.IUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +40,16 @@ public class AdminController {
 
     private final ICourseService courseService;
 
+    private final IBillService billService;
+
     private final IRoleMapper roleMapper;
 
     private final IUserMapper userMapper;
 
+    private final IBillMapper billMapper;
+
     @Autowired
-    public AdminController(IRoleService roleService, IUserService userService, ITagService tagService, ICommentService commentService, IPostService postService, ICategoryService categoryService, ICarService carService, ICourseService courseService, IRoleMapper roleMapper, IUserMapper userMapper) {
+    public AdminController(IRoleService roleService, IUserService userService, ITagService tagService, ICommentService commentService, IPostService postService, ICategoryService categoryService, ICarService carService, ICourseService courseService, IBillService billService, IRoleMapper roleMapper, IUserMapper userMapper, IBillMapper billMapper) {
         this.roleService = roleService;
         this.userService = userService;
         this.tagService = tagService;
@@ -56,8 +58,10 @@ public class AdminController {
         this.categoryService = categoryService;
         this.carService = carService;
         this.courseService = courseService;
+        this.billService = billService;
         this.roleMapper = roleMapper;
         this.userMapper = userMapper;
+        this.billMapper = billMapper;
     }
 
     // ======================================
@@ -164,9 +168,19 @@ public class AdminController {
     // ======================================
     // ============== COMMENT ===============
     // ======================================
-    @DeleteMapping("/comments/{id}")
-    public ResponseEntity<?> deleteComment(@PathVariable(name = "id") Long id) {
-        return new ResponseEntity<>(new MessageResponse(commentService.delete(id)), HttpStatus.OK);
+//    @DeleteMapping("/comments/{id}")
+//    public ResponseEntity<?> deleteComment(@PathVariable(name = "id") Long id) {
+//        return new ResponseEntity<>(new MessageResponse(commentService.delete(id)), HttpStatus.OK);
+//    }
+
+    // ======================================
+    // ============== BILL ==================
+    // ======================================
+
+    @GetMapping("/bills")
+    public ResponseEntity ưseeStatístics(@RequestParam(name = "month") int month, @RequestParam(name = "year") int year){
+        List<BillResponse> billResponseList = billService.findAllByMonthAndYear(month, year).stream().map(billMapper::toResponse).collect(Collectors.toList());
+        return new ResponseEntity(billResponseList, HttpStatus.OK);
     }
 }
 

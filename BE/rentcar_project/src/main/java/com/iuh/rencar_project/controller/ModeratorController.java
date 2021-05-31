@@ -109,14 +109,9 @@ public class ModeratorController {
         return new ResponseEntity<>(new MessageResponse(postService.save(postRequest, multipartFile)), HttpStatus.OK);
     }
 
-    @GetMapping("/posts/{var}")
-    public ResponseEntity<?> getPostByIdOrSlug(@PathVariable(name = "var") String var) {
-        PostResponse postResponse;
-        try {
-            postResponse = postMapper.toResponse(postService.findById(Long.valueOf(var)));
-        } catch (NumberFormatException e) {
-            postResponse = postMapper.toResponse(postService.findBySlug(var));
-        }
+    @GetMapping("/posts/{id}")
+    public ResponseEntity<?> getPostById(@PathVariable(name = "id") Long id) {
+        PostResponse postResponse = postMapper.toResponse(postService.findById(id));
         return new ResponseEntity<>(postResponse, HttpStatus.OK);
     }
 
