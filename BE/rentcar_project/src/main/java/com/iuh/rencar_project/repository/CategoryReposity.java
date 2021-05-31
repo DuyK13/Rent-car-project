@@ -24,6 +24,8 @@ public interface CategoryReposity extends JpaRepository<Category, Long> {
 
     Page<Category> findAllByStatusIs(Pageable pageable, Status status);
 
+    Page<Category> findAllByStatusIsAndParentNotNull(Pageable pageable, Status status);
+
     Optional<Category> findBySlugAndStatusIs(String slug, Status active);
 
     List<Category> findALlByStatusAndParentIsNotNull(Status status);
