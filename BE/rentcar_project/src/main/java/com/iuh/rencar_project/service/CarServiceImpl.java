@@ -67,6 +67,8 @@ public class CarServiceImpl implements ICarService {
     public String update(Long id, CarRequest carRequest) {
         Car newCar = this.findById(id);
         Car oldCar = this.findById(id);
+        System.out.println(oldCar.getName());
+        System.out.println(carRequest.getName());
         if (this.existsByName(carRequest.getName()) && !oldCar.getName().equals(carRequest.getName()))
             throw new EntityException("Car Exists");
         carMapper.updateEntity(carRequest, newCar);

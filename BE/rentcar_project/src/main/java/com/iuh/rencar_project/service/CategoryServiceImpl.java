@@ -158,7 +158,7 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     public Page<Category> findAllPaginatedForGuest(int pageNo) {
         Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
-        return categoryReposity.findAllByStatusIs(pageable, Status.ENABLE);
+        return categoryReposity.findAllByStatusIsAndParentNotNull(pageable, Status.ENABLE);
     }
 
     @Override
