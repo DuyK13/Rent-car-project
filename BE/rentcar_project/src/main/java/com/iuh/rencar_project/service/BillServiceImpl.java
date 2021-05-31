@@ -198,9 +198,21 @@ public class BillServiceImpl implements IBillService {
     }
 
     @Override
+    public Page<Bill> findAllPaginated(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Order.asc("id")));
+        return billRepository.findAll(pageable);
+    }
+
+    @Override
     public Page<Bill> findAllPaginatedAndState(int pageNo, int pageSize, BillState state) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Order.asc("id")));
         return billRepository.findAllByStateIs(pageable, state);
+    }
+
+    @Override
+    public Page<Bill> findAllPaginatedAndStateWithSearch(int pageNo, int pageSize, BillState state, String text) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Order.asc("id")));
+        return billRepository.search(text, state, pageable);
     }
 
     @Override
@@ -216,9 +228,6 @@ public class BillServiceImpl implements IBillService {
         Long rentTime = bill.getRentTime();
         LocalDateTime endTime = bill.getStartTime().plusHours(rentTime);
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
-        System.out.println(bill.getStartTime());
-        System.out.println(endTime);
-        System.out.println(now);
         Long minutes = Duration.between(endTime, now).toMinutes();
         return minutes > 29 ? (minutes / 30) * Bill.LATE_CHARGE : 0L;
     }
@@ -236,5 +245,10 @@ public class BillServiceImpl implements IBillService {
         } else {
             return bill.getCourse().getPrice();
         }
+    }
+
+    @Override
+    public List<Bill> findAllByMonthAndYear(int month, int year) {
+        return billRepository.findAllByMonthAndYear(month, year);
     }
 }

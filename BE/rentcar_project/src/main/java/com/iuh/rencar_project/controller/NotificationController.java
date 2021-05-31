@@ -26,8 +26,8 @@ public class NotificationController {
         this.billNotificationService = billNotificationService;
     }
 
-    @RequestMapping(value = "/subcribe", consumes = MediaType.ALL_VALUE)
-    public SseEmitter billSubcribe() {
+    @RequestMapping(value = "/subscribe", consumes = MediaType.ALL_VALUE)
+    public SseEmitter billSubscribe() {
         SseEmitter sseEmiter = new SseEmitter(Long.MAX_VALUE);
         this.sendInitEvent(sseEmiter);
         billNotificationService.addEmitter(sseEmiter);

@@ -78,7 +78,7 @@ public class GmailServiceImpl implements IEmailService {
                     "    </div>";
             message.setContent(htmlMsg, "text/html; charset=UTF-8");
             helper.setTo(bill.getEmail());
-            helper.setSubject("[Thuê Xe Vỹ Nguyên] - Thông báo đặt lịch hẹn thành công");
+            helper.setSubject("[Thuê Xe Vỹ Nguyên] - Thông báo đặt trước hẹn thành công");
         } catch (MessagingException e) {
             logger.error("Email Exception: ", e);
             return false;

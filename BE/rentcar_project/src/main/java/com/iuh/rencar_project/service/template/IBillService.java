@@ -5,6 +5,8 @@ import com.iuh.rencar_project.entity.Bill;
 import com.iuh.rencar_project.utils.enums.BillState;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 /**
  * @author Duy Trần Thế
  * @version 1.0
@@ -23,6 +25,8 @@ public interface IBillService {
 
     Page<Bill> findAllPaginated(int pageNo);
 
+    Page<Bill> findAllPaginated(int pageNo, int pageSize);
+
     Long getCurrentId();
 
     String updateBillPending(Long id);
@@ -37,7 +41,11 @@ public interface IBillService {
 
     Page<Bill> findAllPaginatedAndState(int pageNo, int pageSize, BillState state);
 
+    Page<Bill> findAllPaginatedAndStateWithSearch(int pageNo, int pageSize, BillState state, String text);
+
     Long getBillAmountById(Long id);
 
     Long getBillLateChargeById(Long id);
+
+    List<Bill> findAllByMonthAndYear(int month, int year);
 }

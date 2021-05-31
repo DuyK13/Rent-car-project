@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -178,17 +179,15 @@ public class StaffController {
      * @return
      */
     @GetMapping("/bills")
-    public ResponseEntity<?> getBillPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam(name = "pageSize", defaultValue = "5") int pageSize, @RequestParam(name = "state", defaultValue = "pending") String state) {
+    public ResponseEntity<?> getBillPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam(name = "pageSize", defaultValue = "5") int pageSize, @RequestParam(name = "state") String state, @RequestParam(name = "search", required = false) Optional<String> text) {
         Page<BillResponse> pageCourseResponse = null;
-        if (state.equalsIgnoreCase(BillState.PENDING.name()))
-            pageCourseResponse = billService.findAllPaginatedAndState(pageNo, pageSize, BillState.PENDING)
+        if (text.isPresent()) {
+            pageCourseResponse = billService.findAllPaginatedAndStateWithSearch(pageNo, pageSize, Enum.valueOf(BillState.class, state.toUpperCase()), text.get())
                     .map(billMapper::toResponse);
-        else if (state.equalsIgnoreCase(BillState.APPROVED.name()))
-            pageCourseResponse = billService.findAllPaginatedAndState(pageNo, pageSize, BillState.APPROVED)
+        } else {
+            pageCourseResponse = billService.findAllPaginatedAndState(pageNo, pageSize, Enum.valueOf(BillState.class, state.toUpperCase()))
                     .map(billMapper::toResponse);
-        else if (state.equalsIgnoreCase(BillState.RENTED.name()))
-            pageCourseResponse = billService.findAllPaginatedAndState(pageNo, pageSize, BillState.RENTED)
-                    .map(billMapper::toResponse);
+        }
         PageResponse<BillResponse> pageResult = null;
         if (pageCourseResponse != null)
             pageResult = new PageResponse<>(pageCourseResponse.getContent(),
