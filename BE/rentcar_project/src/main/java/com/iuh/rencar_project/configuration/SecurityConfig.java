@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -22,48 +21,48 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private final JwtAuthenticationEntryPoint authenticationEntryPoint;
+    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
 
-	private final UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
 
-	private final JwtRequestFilter jwtRequestFilter;
+    private final JwtRequestFilter jwtRequestFilter;
 
-	@Autowired
-	public SecurityConfig(JwtAuthenticationEntryPoint authenticationEntryPoint, UserDetailsServiceImpl userDetailsService, JwtRequestFilter jwtRequestFilter) {
-		this.authenticationEntryPoint = authenticationEntryPoint;
-		this.userDetailsService = userDetailsService;
-		this.jwtRequestFilter = jwtRequestFilter;
-	}
+    @Autowired
+    public SecurityConfig(JwtAuthenticationEntryPoint authenticationEntryPoint, UserDetailsServiceImpl userDetailsService, JwtRequestFilter jwtRequestFilter) {
+        this.authenticationEntryPoint = authenticationEntryPoint;
+        this.userDetailsService = userDetailsService;
+        this.jwtRequestFilter = jwtRequestFilter;
+    }
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-	}
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    }
 
-	@Bean
-	@Override
-	public AuthenticationManager authenticationManagerBean() throws Exception {
-		return super.authenticationManagerBean();
-	}
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable().httpBasic().and().exceptionHandling()
-				.authenticationEntryPoint(authenticationEntryPoint).and().sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-				.authorizeRequests()
-				.antMatchers("/api/login", "/api/guest/**", "/api/notification/subscribe").permitAll()
-				.antMatchers("/api/admin/**").hasAuthority(ERole.ROLE_ADMIN.name())
-				.antMatchers("/api/moderator/**", "/api/file/**").hasAnyAuthority(ERole.ROLE_MODERATOR.name(), ERole.ROLE_ADMIN.name())
-				.antMatchers("/api/staff/**", "/api/notification/bill/**", "/api/auth/**").hasAnyAuthority(ERole.ROLE_ADMIN.name(), ERole.ROLE_STAFF.name(), ERole.ROLE_MODERATOR.name())
-				.anyRequest().authenticated();
-		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-	}
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.cors().and().csrf().disable().httpBasic().and().exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint).and().sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .authorizeRequests()
+                .antMatchers("/api/notification/subscribe", "/api/login", "/api/guest/**").permitAll()
+                .antMatchers("/api/admin/**").hasAuthority(ERole.ROLE_ADMIN.name())
+                .antMatchers("/api/moderator/**", "/api/file/**").hasAnyAuthority(ERole.ROLE_MODERATOR.name(), ERole.ROLE_ADMIN.name())
+                .antMatchers("/api/staff/**", "/api/auth/**", "/api/notification/bill/**").hasAnyAuthority(ERole.ROLE_ADMIN.name(), ERole.ROLE_STAFF.name(), ERole.ROLE_MODERATOR.name())
+                .anyRequest().authenticated();
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+    }
 
 
 }
