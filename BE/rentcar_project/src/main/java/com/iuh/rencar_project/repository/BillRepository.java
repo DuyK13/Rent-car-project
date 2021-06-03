@@ -30,6 +30,6 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
     @Query(value = "SELECT * FROM bills b WHERE year(b.modified_date) = ?2 AND month(b.modified_date) = ?1", nativeQuery = true)
     List<Bill> findAllByMonthAndYear(int month, int year);
 
-    @Query(value = "SELECT b FROM Bill b WHERE b.fullname LIKE %?1% OR b.email LIKE %?1% OR b.phoneNumber LIKE %?1% AND b.state = ?2", countQuery = "SELECT b FROM Bill b WHERE b.fullname LIKE %?1% OR b.email LIKE %?1% OR b.phoneNumber LIKE %?1% AND b.state = ?2")
+    @Query(value = "SELECT b FROM Bill b WHERE CONCAT(b.fullname, ' ', b.phoneNumber, ' ', b.email, ' ') LIKE %?1% AND b.state = ?2")
     Page<Bill> search(String text, BillState state, Pageable pageable);
 }

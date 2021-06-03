@@ -8,6 +8,7 @@ import com.iuh.rencar_project.service.template.ICategoryService;
 import com.iuh.rencar_project.service.template.ICourseService;
 import com.iuh.rencar_project.utils.enums.BillState;
 import com.iuh.rencar_project.utils.mapper.IBillMapper;
+import com.iuh.rencar_project.utils.mapper.ICarMapper;
 import com.iuh.rencar_project.utils.mapper.ICategoryMapper;
 import com.iuh.rencar_project.utils.mapper.ICourseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +45,10 @@ public class StaffController {
 
     private final ICategoryMapper categoryMapper;
 
+    private final ICarMapper carMapper;
+
     @Autowired
-    public StaffController(IBillService billService, ICarService carService, ICategoryService categoryService, ICourseService courseService, IBillMapper billMapper, ICourseMapper courseMapper, ICategoryMapper categoryMapper) {
+    public StaffController(IBillService billService, ICarService carService, ICategoryService categoryService, ICourseService courseService, IBillMapper billMapper, ICourseMapper courseMapper, ICategoryMapper categoryMapper, ICarMapper carMapper) {
         this.billService = billService;
         this.carService = carService;
         this.categoryService = categoryService;
@@ -53,11 +56,22 @@ public class StaffController {
         this.billMapper = billMapper;
         this.courseMapper = courseMapper;
         this.categoryMapper = categoryMapper;
+        this.carMapper = carMapper;
+    }
+    // ======================================
+    // ================= CAR ================
+    // ======================================
+
+    @GetMapping("/courses")
+    public ResponseEntity<?> getCarEnable() {
+        List<CarResponse> carResponseList = carService.findAllEnable().stream().map(carMapper::toResponse).collect(Collectors.toList());
+        return new ResponseEntity<>(carResponseList, HttpStatus.OK);
     }
 
     // ======================================
     // ================ COURSE ==============
     // ======================================
+
 
     @GetMapping("/courses")
     public ResponseEntity<?> getCoursesEnable() {

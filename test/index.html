@@ -7,11 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
     <title>index</title>
-    <script
-      src="https://code.jquery.com/jquery-3.1.1.js"
-      integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>  
     <script src="./js/require.js"></script>
   </head>
 
@@ -25,7 +24,7 @@
     <form>
       <!-- Test insert date time -->
       <!-- <input type="datetime-local" id="mydate"/> -->
-      <!-- <input type="file" id="myFile" /> -->
+      <input type="file" id="myFile" />
     </form>
     <!-- Test form -->
     <!--   <div id="body">
@@ -48,90 +47,92 @@
     <!-- Footer Section End -->
     <script>
       $(document).ready(function () {
-      	var test = [];
-      	$("button").click(function () {
-      		var getData = async () => {
-      			let result;
-      			try{
-      				result = await $.ajax({
-	      				url: "http://localhost:8080/success",
-		                type: "GET",
-		                contentType: "application/json; charset=utf-8",
-		                dataType: "json"
-	               	});
-      				return result;
-      			}catch(error){
-      				console.log(error);
-      			 }
-      			};
-      		console.log(await getData());
+        // var test = [];
+        // $("button").click(function () {
+        // 	var getData = async () => {
+        // 		let result;
+        // 		try{
+        // 			result = await $.ajax({
+        //   				url: "http://localhost:8080/success",
+        //                 type: "GET",
+        //                 contentType: "application/json; charset=utf-8",
+        //                 dataType: "json"
+        //            	});
+        // 			return result;
+        // 		}catch(error){
+        // 			console.log(error);
+        // 		 }
+        // 		};
+        // 	console.log(await getData());
         // var data = {
         //   username: "admin",
         //   password: "admin",
         // };
-        // $("button").click(function () {
-        //   // Post Json + File upload
-        //   var formData = new FormData();
-        //   var car = {
-        //     name: "name 3",
-        //     year: 1999,
-        //     price: 1000000,
-        //     carType: "MANUAL",
-        //     categoryName: "category 2",
-        //   };
-        //   formData.append(
-        //     "car",
-        //     new Blob([JSON.stringify(car)], {
-        //       type: "application/json",
-        //     })
-        //   );
-        //   formData.append("file", $("#myFile").prop("files")[0]);
-        //   $.ajax({
-        //     url: "http://localhost:8081/api/file/upload/cars",
-        //     type: "POST",
-        //     headers: {
-        //       Authorization:
-        //         "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkdXl0dDEiLCJleHAiOjE2MjE5NjczNjQsImlhdCI6MTYyMTg4MDk2NH0.Z-R2fOPLt8tyZnl-eTbTGuhE-40UIaHoAc08nyko54KMo69O_d3JOHWkkxOcN4DXnEh-VOMSr9hlh0AwgH_AFA",
-        //     },
-        //     data: formData,
-        //     processData: false,
-        //     contentType: false,
-        //     processData: false,
-        //     success: function (dataa) {
-        //       console.log(dataa);
-        //     },
-        //     error: function (XMLHttpRequest, textStatus, errorThrown) {
-        //       var jsonData = XMLHttpRequest.responseJSON;
-        //       console.log(jsonData);
-        //     },
-        //   });
-          // POST data (no authentication)
-          //  	var currentData = {
-          //  		fullname: "Duy",
-          // phoneNumber: "0798455595",
-          // email: "trantheduyk13@gmail.com",
-          // timeStart: $("#mydate").val(),
-          // extraTime: 2,
-          // courses: ["course 1"],
-          // car: "name 1"
-          //  	};
-          //  	console.log(currentData);
-          //      $.ajax({
-          //          url: "http://localhost:8081/api/guest/bills",
-          //          type: "POST",
-          //          data: JSON.stringify(currentData),
-          //          contentType: "application/json; charset=utf-8",
-          //          dataType: "json",
-          //          success: function(dataa) {
-          //              console.log(dataa);
-          //          },
-          //          error: function(XMLHttpRequest, textStatus, errorThrown) {
-
-          //          	var jsonData = XMLHttpRequest.responseJSON;
-          //          	console.log(jsonData);
-          //          }
-          //      });
+        $("button").click(function () {
+          // Post Json + File upload
+          var formData = new FormData();
+          var car = {
+            name: "Toyota Zace 2005",
+            manufacturingYear: 2005,
+            costPerHour: 120000,
+            availableQuantity: 2,
+            categoryName: "Xe số sàn 7 chỗ",
+          };
+          formData.append(
+            "car",
+            new Blob([JSON.stringify(car)], {
+              type: "application/json",
+            })
+          );
+          formData.append("file", $("#myFile").prop("files")[0]);
+          $.ajax({
+            url: "http://localhost:8081/api/moderator/cars",
+            type: "POST",
+            headers: {
+              Authorization:
+                "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkdXl0dDEiLCJleHAiOjE2MjI1OTE0NjgsImlhdCI6MTYyMjU2MjY2OH0.GzGEWhVF8qdw-2A_TKNHQU3jZ0ctoYT8UM0uf3apzFCqtC2ZTu-KVI_h7TfnEGUpbyI0oxaclcteKhQA0A_kyQ",
+            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (dataa) {
+              console.log(dataa);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+              var jsonData = XMLHttpRequest.responseJSON;
+              console.log(jsonData);
+            },
+          });
         });
+        // POST data (no authentication)
+        //  	var currentData = {
+        //  		fullname: "Duy",
+        // phoneNumber: "0798455595",
+        // email: "trantheduyk13@gmail.com",
+        // timeStart: $("#mydate").val(),
+        // extraTime: 2,
+        // courses: ["course 1"],
+        // car: "name 1"
+        //  	};
+        //  	console.log(currentData);
+        //      $.ajax({
+        //          url: "http://localhost:8081/api/guest/bills",
+        //          type: "POST",
+        //          data: JSON.stringify(currentData),
+        //          contentType: "application/json; charset=utf-8",
+        //          dataType: "json",
+        //          success: function(dataa) {
+        //              console.log(dataa);
+        //          },
+        //          error: function(XMLHttpRequest, textStatus, errorThrown) {
+
+        //          	var jsonData = XMLHttpRequest.responseJSON;
+        //          	console.log(jsonData);
+        //          }
+        //      });
+
+        // }); END Button click
+
         // GET data with authentication
         // $.ajax({
         //         url: "localhost:8081/api/auth/users/1321231",

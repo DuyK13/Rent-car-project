@@ -20,6 +20,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 /**
  * @author Duy Trần Thế
  * @version 1.0
@@ -46,7 +48,8 @@ public class CarServiceImpl implements ICarService {
         String name = carRequest.getName();
         if (this.existsByName(name))
             throw new EntityException("Car Exists");
-        String fileUrl = fileService.uploadCarImage(multipartFile, name);
+//        String fileUrl = fileService.uploadCarImage(multipartFile, name);
+        String fileUrl = multipartFile.getOriginalFilename();
         Car car = carMapper.toEntity(carRequest);
         car.setImage(fileUrl);
         return categoryService.addCarToCategory(carRequest.getCategoryName(), car);
@@ -165,5 +168,10 @@ public class CarServiceImpl implements ICarService {
     public Page<Car> findAllPaginated(int pageNo) {
         Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
         return carRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Car> findAllEnable() {
+        return carRepository.findAllByStatus(Status.ENABLE);
     }
 }

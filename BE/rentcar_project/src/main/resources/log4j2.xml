@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
+    <Properties>
+        <Property name="LOG_PATTERN">
+            %highlight{%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %-40.40c{1.} : %msg %n}{FATAL=white, ERROR=red, WARN=blue,
+            INFO=black, DEBUG=green, TRACE=blue}
+        </Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+
+            <PatternLayout disableAnsi="false"
+                           pattern="${LOG_PATTERN}"></PatternLayout>
+        </Console>
+
+        <RollingFile name="RollingFile" fileName="logs/discovery-service.log"
+                     filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz"
+                     ignoreExceptions="false">
+            <PatternLayout disableAnsi="false"
+                           pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+</Configuration>
