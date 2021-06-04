@@ -18,16 +18,16 @@ import java.util.Optional;
  */
 public class AuditorAwareImpl implements AuditorAware<User> {
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-	@Override
-	public Optional<User> getCurrentAuditor() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null || !authentication.isAuthenticated())
-			return Optional.empty();
-		String username = authentication.getName();
-		return userRepository.findByUsername(username);
-	}
+    @Override
+    public Optional<User> getCurrentAuditor() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated())
+            return Optional.empty();
+        String username = authentication.getName();
+        return userRepository.findByUsername(username);
+    }
 
 }

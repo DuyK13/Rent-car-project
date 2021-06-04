@@ -1,7 +1,5 @@
 package com.iuh.rencar_project.utils.exception.bind;
 
-import java.io.File;
-
 /**
  * @author Duy Trần Thế
  * @version 1.0

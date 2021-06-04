@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "cars", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "slug"})})
+@Table(name = "cars", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "slug", "license_plate"})}, indexes = {@Index(name = "IDX_Search", columnList = "name, manufacturing_year, license_plate, created_date, modified_date")})
 public class Car {
 
     @Id
@@ -39,6 +39,9 @@ public class Car {
 
     private Status status;
 
+    @Column(name = "license_plate")
+    private String licensePlate;
+
     @CreatedBy
     @ManyToOne
     @JoinColumn(name = "created_by", referencedColumnName = "id")
@@ -57,7 +60,7 @@ public class Car {
     @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
 
-    public Car(Long id, String name, int manufacturingYear, int costPerHour, String slug, String image, int availableQuantity, Status status, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate) {
+    public Car(Long id, String name, int manufacturingYear, int costPerHour, String slug, String image, int availableQuantity, Status status, String licensePlate, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate) {
         this.id = id;
         this.name = name;
         this.manufacturingYear = manufacturingYear;
@@ -66,6 +69,7 @@ public class Car {
         this.image = image;
         this.availableQuantity = availableQuantity;
         this.status = status;
+        this.licensePlate = licensePlate;
         this.createdBy = createdBy;
         this.createdDate = createdDate;
         this.modifiedBy = modifiedBy;
@@ -171,6 +175,14 @@ public class Car {
         this.status = status;
     }
 
+    public String getLicensePlate() {
+        return licensePlate;
+    }
+
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
+    }
+
     @Override
     public String toString() {
         return "Car{" +
@@ -182,6 +194,7 @@ public class Car {
                 ", image='" + image + '\'' +
                 ", availableQuantity=" + availableQuantity +
                 ", status=" + status +
+                ", licensePlate='" + licensePlate + '\'' +
                 ", createdBy=" + createdBy +
                 ", createdDate=" + createdDate +
                 ", modifiedBy=" + modifiedBy +

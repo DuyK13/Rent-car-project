@@ -20,9 +20,11 @@ public interface ITagService {
 
 	Tag findByName(String name);
 
-	Page<Tag> findAllPaginated(int pageNo);
+	Page<Tag> findAllPaginated(int pageNo, int pageSize);
 	
 	Boolean existsByName(String name);
 
     List<Tag> findAll();
+
+	Page<Tag> search(int pageNo, int pageSize, String s);
 }

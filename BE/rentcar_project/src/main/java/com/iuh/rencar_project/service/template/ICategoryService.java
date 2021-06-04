@@ -5,7 +5,6 @@ import com.iuh.rencar_project.entity.Car;
 import com.iuh.rencar_project.entity.Category;
 import org.springframework.data.domain.Page;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -28,7 +27,7 @@ public interface ICategoryService {
 
     Category findById(Long id);
 
-    Page<Category> findAllPaginated(int pageNo);
+    Page<Category> findAllPaginated(int pageNo, int pageSize);
 
     Boolean existsByName(String name);
 
@@ -36,9 +35,11 @@ public interface ICategoryService {
 
     Category findBySlug(String var);
 
-    Page<Category> findAllPaginatedForGuest(int pageNo);
+    Page<Category> findAllPaginatedForGuest(int pageNo, int pageSize);
 
     Category findBySlugForGuest(String slug);
 
     List<Category> findAllEnable();
+
+    Page<Category> search(int pageNo, int pageSize, String s);
 }

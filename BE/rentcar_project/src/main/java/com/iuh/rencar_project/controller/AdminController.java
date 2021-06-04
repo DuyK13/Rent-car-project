@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -29,8 +30,6 @@ public class AdminController {
     private final IUserService userService;
 
     private final ITagService tagService;
-
-    private final ICommentService commentService;
 
     private final IPostService postService;
 
@@ -49,11 +48,10 @@ public class AdminController {
     private final IBillMapper billMapper;
 
     @Autowired
-    public AdminController(IRoleService roleService, IUserService userService, ITagService tagService, ICommentService commentService, IPostService postService, ICategoryService categoryService, ICarService carService, ICourseService courseService, IBillService billService, IRoleMapper roleMapper, IUserMapper userMapper, IBillMapper billMapper) {
+    public AdminController(IRoleService roleService, IUserService userService, ITagService tagService, IPostService postService, ICategoryService categoryService, ICarService carService, ICourseService courseService, IBillService billService, IRoleMapper roleMapper, IUserMapper userMapper, IBillMapper billMapper) {
         this.roleService = roleService;
         this.userService = userService;
         this.tagService = tagService;
-        this.commentService = commentService;
         this.postService = postService;
         this.categoryService = categoryService;
         this.carService = carService;
@@ -94,9 +92,9 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<?> getAllUserPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
-        Page<UserResponse> pageUserResponse = userService.findAllPaginated(pageNo)
-                .map(userMapper::toResponse);
+    public ResponseEntity<?> getAllUserPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam(name = "pageSize", defaultValue = "5") int pageSize, @RequestParam(name = "search", required = false) Optional<String> search) {
+        Page<UserResponse> pageUserResponse = search.map(s -> userService.search(pageNo, pageSize, s).map(userMapper::toResponse)).orElseGet(() -> userService.findAllPaginated(pageNo, pageSize)
+                .map(userMapper::toResponse));
         PageResponse<UserResponse> pageResult = new PageResponse<>(pageUserResponse.getContent(),
                 pageUserResponse.getTotalPages(), pageUserResponse.getNumber());
         return new ResponseEntity<>(pageResult, HttpStatus.OK);
@@ -166,21 +164,13 @@ public class AdminController {
     }
 
     // ======================================
-    // ============== COMMENT ===============
-    // ======================================
-//    @DeleteMapping("/comments/{id}")
-//    public ResponseEntity<?> deleteComment(@PathVariable(name = "id") Long id) {
-//        return new ResponseEntity<>(new MessageResponse(commentService.delete(id)), HttpStatus.OK);
-//    }
-
-    // ======================================
     // ============== BILL ==================
     // ======================================
 
     @GetMapping("/bills")
-    public ResponseEntity ưseeStatístics(@RequestParam(name = "month") int month, @RequestParam(name = "year") int year){
+    public ResponseEntity<?> getStatistics(@RequestParam(name = "month") int month, @RequestParam(name = "year") int year) {
         List<BillResponse> billResponseList = billService.findAllByMonthAndYear(month, year).stream().map(billMapper::toResponse).collect(Collectors.toList());
-        return new ResponseEntity(billResponseList, HttpStatus.OK);
+        return new ResponseEntity<>(billResponseList, HttpStatus.OK);
     }
 }
 

@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "categories", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
+@Table(name = "categories", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "slug"})}, indexes = {@Index(name = "IDX_Search", columnList = "name, modified_date, created_date")})
 public class Category {
 
     @Id

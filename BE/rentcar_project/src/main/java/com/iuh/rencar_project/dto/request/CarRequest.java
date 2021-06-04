@@ -7,6 +7,7 @@ package com.iuh.rencar_project.dto.request;
  */
 public class CarRequest {
     private String name;
+    private String licensePlate;
     private int manufacturingYear;
     private int costPerHour;
     private int availableQuantity;
@@ -21,6 +22,14 @@ public class CarRequest {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getLicensePlate() {
+        return licensePlate;
+    }
+
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
     }
 
     public int getManufacturingYear() {
@@ -54,4 +63,5 @@ public class CarRequest {
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
+
 }

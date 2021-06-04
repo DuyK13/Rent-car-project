@@ -21,12 +21,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * @author Duy Trần Thế
- * @version 1.0
- * @date 5/24/2021 9:35 AM
- */
-
 @RestController
 @RequestMapping("/api/staff")
 public class StaffController {
@@ -62,7 +56,7 @@ public class StaffController {
     // ================= CAR ================
     // ======================================
 
-    @GetMapping("/courses")
+    @GetMapping("/cars")
     public ResponseEntity<?> getCarEnable() {
         List<CarResponse> carResponseList = carService.findAllEnable().stream().map(carMapper::toResponse).collect(Collectors.toList());
         return new ResponseEntity<>(carResponseList, HttpStatus.OK);
@@ -93,90 +87,41 @@ public class StaffController {
     // ================ BILL ================
     // ======================================
 
-    /**
-     * WORK
-     *
-     * @param billRequest
-     * @return
-     */
     @PostMapping("/bills")
     public ResponseEntity<?> saveBill(@RequestBody BillRequest billRequest) {
         return new ResponseEntity<>(new MessageResponse(billService.saveByStaff(billRequest)), HttpStatus.OK);
     }
 
-    /**
-     * WORK
-     *
-     * @param id
-     * @return
-     */
     @PutMapping("/bills/{id}/pending")
     public ResponseEntity<?> updateBillPending(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(new MessageResponse(billService.updateBillPending(id)), HttpStatus.OK);
     }
 
-    /**
-     * WORK
-     *
-     * @param id
-     * @return
-     */
     @DeleteMapping("/bills/{id}/pending")
     public ResponseEntity<?> deleteBillPending(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(new MessageResponse(billService.deleteBillPending(id)), HttpStatus.OK);
     }
 
-    /**
-     * WORK
-     *
-     * @param id
-     * @param billRequest
-     * @return
-     */
     @PutMapping("/bills/{id}/approved")
     public ResponseEntity<?> updateBillApproved(@PathVariable(name = "id") Long id, @RequestBody BillRequest billRequest) {
         return new ResponseEntity<>(new MessageResponse(billService.updateBillApproved(id, billRequest)), HttpStatus.OK);
     }
 
-    /**
-     * WORD
-     *
-     * @param id
-     * @return
-     */
     @DeleteMapping("/bills/{id}/approved")
     public ResponseEntity<?> deleteBillApproved(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(new MessageResponse(billService.deleteBillApproved(id)), HttpStatus.OK);
     }
 
-    /**
-     * WORK
-     *
-     * @param id
-     * @return
-     */
     @PutMapping("/bills/{id}/rented")
     public ResponseEntity<?> updateBillRented(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(new MessageResponse(billService.updateBillRented(id)), HttpStatus.OK);
     }
 
-    /**
-     * WORK
-     *
-     * @param id
-     * @return
-     */
     @GetMapping("/bills/{id}")
     public ResponseEntity<?> getBillById(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(billMapper.toResponse(billService.findById(id)), HttpStatus.OK);
     }
 
-    /**
-     * WORK
-     *
-     * @param id
-     * @return
-     */
     @GetMapping("/bills/{id}/calculate-charge")
     public ResponseEntity<?> getBillChargeById(@PathVariable(name = "id") Long id) {
         Long amount = billService.getBillAmountById(id);
@@ -184,28 +129,14 @@ public class StaffController {
         return new ResponseEntity<>(new ChargeResponse(amount, lateCharge), HttpStatus.OK);
     }
 
-    /**
-     * WORK
-     *
-     * @param pageNo
-     * @param pageSize
-     * @param state
-     * @return
-     */
     @GetMapping("/bills")
     public ResponseEntity<?> getBillPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam(name = "pageSize", defaultValue = "5") int pageSize, @RequestParam(name = "state") String state, @RequestParam(name = "search", required = false) Optional<String> text) {
-        Page<BillResponse> pageCourseResponse = null;
-        if (text.isPresent()) {
-            pageCourseResponse = billService.findAllPaginatedAndStateWithSearch(pageNo, pageSize, Enum.valueOf(BillState.class, state.toUpperCase()), text.get())
-                    .map(billMapper::toResponse);
-        } else {
-            pageCourseResponse = billService.findAllPaginatedAndState(pageNo, pageSize, Enum.valueOf(BillState.class, state.toUpperCase()))
-                    .map(billMapper::toResponse);
-        }
-        PageResponse<BillResponse> pageResult = null;
-        if (pageCourseResponse != null)
-            pageResult = new PageResponse<>(pageCourseResponse.getContent(),
-                    pageCourseResponse.getTotalPages(), pageCourseResponse.getNumber());
-        return new ResponseEntity<>((pageResult != null && pageResult.getContent().size() > 0) ? pageResult : new MessageResponse("Nothing to show"), HttpStatus.OK);
+        Page<BillResponse> pageCourseResponse = text.map(s -> billService.findAllPaginatedAndStateWithSearch(pageNo, pageSize, Enum.valueOf(BillState.class, state.toUpperCase()), s)
+                .map(billMapper::toResponse)).orElseGet(() -> billService.findAllPaginatedAndState(pageNo, pageSize, Enum.valueOf(BillState.class, state.toUpperCase()))
+                .map(billMapper::toResponse));
+        PageResponse<BillResponse> pageResult;
+        pageResult = new PageResponse<>(pageCourseResponse.getContent(),
+                pageCourseResponse.getTotalPages(), pageCourseResponse.getNumber());
+        return new ResponseEntity<>(pageResult.getContent().size() > 0 ? pageResult : new MessageResponse("Nothing to show"), HttpStatus.OK);
     }
 }

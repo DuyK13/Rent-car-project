@@ -8,8 +8,8 @@ import com.iuh.rencar_project.utils.enums.Status;
 import com.iuh.rencar_project.utils.exception.bind.EntityException;
 import com.iuh.rencar_project.utils.exception.bind.NotFoundException;
 import com.iuh.rencar_project.utils.mapper.ICourseMapper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,7 +27,7 @@ import java.util.List;
 @Service
 public class CourseServiceImpl implements ICourseService {
 
-    private static final Logger logger = LogManager.getLogger(CourseServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(CourseServiceImpl.class);
 
     private final CourseRepository courseRepository;
     private final ICourseMapper courseMapper;
@@ -120,19 +120,19 @@ public class CourseServiceImpl implements ICourseService {
     }
 
     @Override
-    public Page<Course> findAllPaginated(int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
+    public Page<Course> findAllPaginated(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Order.asc("id")));
         return courseRepository.findAll(pageable);
     }
 
     @Override
-    public Page<Course> findAllPaginatedForGuest(int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo, 4, Sort.by(Sort.Order.asc("id")));
+    public Page<Course> findAllPaginatedForGuest(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Order.asc("id")));
         return courseRepository.findAllByStatus(Status.ENABLE, pageable);
     }
 
     @Override
-    public List<Course> findAllForGuest(int pageNo) {
+    public List<Course> findAllForGuest() {
         return courseRepository.findAllByStatus(Status.ENABLE);
     }
 

@@ -8,10 +8,9 @@ import com.iuh.rencar_project.service.template.ICategoryService;
 import com.iuh.rencar_project.utils.enums.Status;
 import com.iuh.rencar_project.utils.exception.bind.EntityException;
 import com.iuh.rencar_project.utils.exception.bind.NotFoundException;
-import com.iuh.rencar_project.utils.mapper.ICarMapper;
 import com.iuh.rencar_project.utils.mapper.ICategoryMapper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,16 +28,14 @@ import java.util.Set;
  */
 @Service
 public class CategoryServiceImpl implements ICategoryService {
-    private static final Logger logger = LogManager.getLogger(CategoryServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
     private final CategoryReposity categoryReposity;
     private final ICategoryMapper categoryMapper;
-    private final ICarMapper carMapper;
 
     @Autowired
-    public CategoryServiceImpl(CategoryReposity categoryReposity, ICategoryMapper categoryMapper, ICarMapper carMapper) {
+    public CategoryServiceImpl(CategoryReposity categoryReposity, ICategoryMapper categoryMapper) {
         this.categoryReposity = categoryReposity;
         this.categoryMapper = categoryMapper;
-        this.carMapper = carMapper;
     }
 
 
@@ -111,7 +108,7 @@ public class CategoryServiceImpl implements ICategoryService {
     public String updateCarToCategory(String name, Car oldCar, Car newCar) {
         Category category = this.findByName(name);
         Set<Car> cars = category.getCars();
-        if(!cars.remove(oldCar) || !cars.add(newCar)){
+        if (!cars.remove(oldCar) || !cars.add(newCar)) {
             throw new EntityException("Car update failed");
         }
         category.setCars(cars);
@@ -150,14 +147,14 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     @Override
-    public Page<Category> findAllPaginated(int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
+    public Page<Category> findAllPaginated(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Order.asc("id")));
         return categoryReposity.findAll(pageable);
     }
 
     @Override
-    public Page<Category> findAllPaginatedForGuest(int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
+    public Page<Category> findAllPaginatedForGuest(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Order.asc("id")));
         return categoryReposity.findAllByStatusIsAndParentNotNull(pageable, Status.ENABLE);
     }
 
@@ -174,5 +171,11 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     public List<Category> findAllEnable() {
         return categoryReposity.findALlByStatusAndParentIsNotNull(Status.ENABLE);
+    }
+
+    @Override
+    public Page<Category> search(int pageNo, int pageSize, String s) {
+        Pageable pageable = PageRequest.of(pageNo-1,pageSize,Sort.by(Sort.Order.asc("id")));
+        return categoryReposity.search(s, pageable);
     }
 }

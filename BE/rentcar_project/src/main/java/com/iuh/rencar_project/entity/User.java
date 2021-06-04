@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username", "email"})})
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username", "email"})}, indexes = {@Index(name = "IDX_Search", columnList = "username, email, status")})
 public class User {
 
     @Id

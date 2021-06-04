@@ -18,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -39,15 +38,13 @@ public class BillServiceImpl implements IBillService {
     private static final Logger logger = LogManager.getLogger(BillServiceImpl.class);
     private final BillRepository billRepository;
     private final IBillMapper billMapper;
-    private final PasswordEncoder passwordEncoder;
     private final IEmailService emailService;
     private final ICarService carService;
 
     @Autowired
-    public BillServiceImpl(BillRepository billRepository, IBillMapper billMapper, PasswordEncoder passwordEncoder, IEmailService emailService, ICarService carService) {
+    public BillServiceImpl(BillRepository billRepository, IBillMapper billMapper, IEmailService emailService, ICarService carService) {
         this.billRepository = billRepository;
         this.billMapper = billMapper;
-        this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
         this.carService = carService;
     }
@@ -105,7 +102,7 @@ public class BillServiceImpl implements IBillService {
             Long rentTime = bill.getRentTime();
             Long lateCharge = this.calculateLateCharge(bill);
             bill.setLateCharge(lateCharge);
-            bill.setBillAmount(rentTime * bill.getCar().getCostPerHour() + lateCharge);
+            bill.setBillAmount(rentTime * bill.getCar().getCostPerHour());
             bill.setCar(carService.updateCarForBillPaid(bill.getCar()));
             bill.setState(BillState.PAID);
             try {
@@ -192,12 +189,6 @@ public class BillServiceImpl implements IBillService {
     }
 
     @Override
-    public Page<Bill> findAllPaginated(int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
-        return billRepository.findAll(pageable);
-    }
-
-    @Override
     public Page<Bill> findAllPaginated(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Order.asc("id")));
         return billRepository.findAll(pageable);
@@ -228,7 +219,7 @@ public class BillServiceImpl implements IBillService {
         Long rentTime = bill.getRentTime();
         LocalDateTime endTime = bill.getStartTime().plusHours(rentTime);
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
-        Long minutes = Duration.between(endTime, now).toMinutes();
+        long minutes = Duration.between(endTime, now).toMinutes();
         return minutes > 29 ? (minutes / 30) * Bill.LATE_CHARGE : 0L;
     }
 
@@ -245,6 +236,12 @@ public class BillServiceImpl implements IBillService {
         } else {
             return bill.getCourse().getPrice();
         }
+    }
+
+    @Override
+    public Page<Bill> search(int pageNo, int pageSize, String text) {
+        Pageable pageable = PageRequest.of(pageNo-1,pageSize, Sort.by(Sort.Order.asc("id")));
+        return billRepository.search(text, pageable);
     }
 
     @Override

@@ -23,8 +23,6 @@ public interface IBillService {
 
     Bill findBySlug(String var);
 
-    Page<Bill> findAllPaginated(int pageNo);
-
     Page<Bill> findAllPaginated(int pageNo, int pageSize);
 
     Long getCurrentId();
@@ -42,6 +40,8 @@ public interface IBillService {
     Page<Bill> findAllPaginatedAndState(int pageNo, int pageSize, BillState state);
 
     Page<Bill> findAllPaginatedAndStateWithSearch(int pageNo, int pageSize, BillState state, String text);
+
+    Page<Bill> search(int pageNo, int pageSize, String text);
 
     Long getBillAmountById(Long id);
 

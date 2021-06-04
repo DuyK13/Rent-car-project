@@ -1,13 +1,10 @@
 package com.iuh.rencar_project.service.template;
 
-import com.iuh.rencar_project.dto.request.BillRequest;
 import com.iuh.rencar_project.dto.request.CarRequest;
-import com.iuh.rencar_project.entity.Bill;
 import com.iuh.rencar_project.entity.Car;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -35,7 +32,7 @@ public interface ICarService {
 
     Boolean existsByName(String name);
 
-    Page<Car> findAllPaginated(int pageNo);
+    Page<Car> findAllPaginated(int pageNo, int pageSize);
 
     Car findBySlugForGuest(String slug);
 
@@ -44,4 +41,6 @@ public interface ICarService {
     Car updateCarForBillPaid(Car car);
 
     List<Car> findAllEnable();
+
+    Page<Car> search(int pageNo, int pageSize, String s);
 }

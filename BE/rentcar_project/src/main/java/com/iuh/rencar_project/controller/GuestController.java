@@ -42,8 +42,6 @@ public class GuestController {
 
     private final ICourseMapper courseMapper;
 
-    private final ICommentMapper commentMapper;
-
     private final ICategoryMapper categoryMapper;
 
     private final ICarMapper carMapper;
@@ -53,7 +51,7 @@ public class GuestController {
     private final ITagMapper tagMapper;
 
     @Autowired
-    public GuestController(IPostService postService, ICourseService courseService, ICommentService commentService, ICategoryService categoryService, ITagService tagService, ICarService carService, IBillService billService, IPostMapper postMapper, ICourseMapper courseMapper, ICommentMapper commentMapper, ICategoryMapper categoryMapper, ICarMapper carMapper, IBillMapper billMapper, ITagMapper tagMapper) {
+    public GuestController(IPostService postService, ICourseService courseService, ICommentService commentService, ICategoryService categoryService, ITagService tagService, ICarService carService, IBillService billService, IPostMapper postMapper, ICourseMapper courseMapper, ICategoryMapper categoryMapper, ICarMapper carMapper, IBillMapper billMapper, ITagMapper tagMapper) {
         this.postService = postService;
         this.courseService = courseService;
         this.commentService = commentService;
@@ -63,7 +61,6 @@ public class GuestController {
         this.billService = billService;
         this.postMapper = postMapper;
         this.courseMapper = courseMapper;
-        this.commentMapper = commentMapper;
         this.categoryMapper = categoryMapper;
         this.carMapper = carMapper;
         this.billMapper = billMapper;
@@ -85,16 +82,16 @@ public class GuestController {
     // ======================================
 
     @GetMapping("/tags/{tagSlug}/posts")
-    public ResponseEntity<?> getPagePostByTagSLug(@PathVariable(name = "tagSlug") String tagSlug, @RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
+    public ResponseEntity<?> getPagePostByTagSLug(@PathVariable(name = "tagSlug") String tagSlug, @RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam(name = "pageSize", defaultValue = "5") int pageSize) {
         Tag tag = tagService.findBySlug(tagSlug);
-        Page<PostResponse> postResponsePage = postService.findAllPaginatedByTagForGuest(tag, pageNo).map(postMapper::toResponse);
+        Page<PostResponse> postResponsePage = postService.findAllPaginatedByTagForGuest(tag, pageNo, pageSize).map(postMapper::toResponse);
         PageResponse<PostResponse> pageResult = new PageResponse<>(postResponsePage.getContent(), postResponsePage.getTotalPages(), postResponsePage.getNumber());
         return new ResponseEntity<>(pageResult, HttpStatus.OK);
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<?> getPagePost(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
-        Page<PostResponse> postResponsePage = postService.findAllPaginatedForGuest(pageNo).map(postMapper::toResponse);
+    public ResponseEntity<?> getPagePost(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam(name = "pageSize", defaultValue = "5") int pageSize) {
+        Page<PostResponse> postResponsePage = postService.findAllPaginatedForGuest(pageNo, pageSize).map(postMapper::toResponse);
         PageResponse<PostResponse> pageResult = new PageResponse<>(postResponsePage.getContent(), postResponsePage.getTotalPages(), postResponsePage.getNumber());
         return new ResponseEntity<>(pageResult, HttpStatus.OK);
     }
@@ -111,7 +108,7 @@ public class GuestController {
 
     @GetMapping("/courses")
     public ResponseEntity<?> getListCourses() {
-        List<CourseResponse> courseResponseList = courseService.findAll().stream().map(courseMapper::toResponse).collect(Collectors.toList());
+        List<CourseResponse> courseResponseList = courseService.findAllForGuest().stream().map(courseMapper::toResponse).collect(Collectors.toList());
         return new ResponseEntity<>(courseResponseList, HttpStatus.OK);
     }
 
@@ -143,8 +140,8 @@ public class GuestController {
     // ======================================
 
     @GetMapping("/categories")
-    public ResponseEntity<?> getPageCategories(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
-        Page<CategoryResponse> categoryResponsePage = categoryService.findAllPaginatedForGuest(pageNo).map(categoryMapper::toResponse);
+    public ResponseEntity<?> getPageCategories(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam(name = "pageSize", defaultValue = "5") int pageSize) {
+        Page<CategoryResponse> categoryResponsePage = categoryService.findAllPaginatedForGuest(pageNo, pageSize).map(categoryMapper::toResponse);
         PageResponse<CategoryResponse> pageResult = new PageResponse<>(categoryResponsePage.getContent(), categoryResponsePage.getTotalPages(), categoryResponsePage.getNumber());
         return new ResponseEntity<>(pageResult, HttpStatus.OK);
     }

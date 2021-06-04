@@ -6,6 +6,7 @@ import com.iuh.rencar_project.utils.enums.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,4 +28,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Optional<Post> findBySlugAndStatusIs(String slug, Status active);
 
     Optional<Post> findByTitle(String title);
+
+    @Query(value = "SELECT p FROM Post p WHERE CONCAT(p.title, ' ', p.modifiedDate, ' ', p.createdDate, ' ', p.createdBy.username, ' ', p.modifiedBy.username, ' ') LIKE %?1%")
+    Page<Post> search(String s, Pageable pageable);
 }

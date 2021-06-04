@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.iuh.rencar_project.auditing.AuditorAwareImpl;
 import com.iuh.rencar_project.entity.User;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.auditing.DateTimeProvider;
@@ -26,6 +27,7 @@ import java.util.Optional;
  */
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider", dateTimeProviderRef = "auditingDateTimeProvider")
 @Configuration
+@EnableCaching
 public class AppConfig {
 
 

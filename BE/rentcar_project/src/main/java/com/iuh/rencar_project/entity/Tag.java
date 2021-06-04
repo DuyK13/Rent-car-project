@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "tags", uniqueConstraints = {@UniqueConstraint(columnNames = "slug")})
+@Table(name = "tags", uniqueConstraints = {@UniqueConstraint(columnNames = {"slug", "name"})}, indexes = @Index(name = "IDX_Search", columnList = "name, created_date, modified_date"))
 public class Tag {
 
     @Id
@@ -37,7 +37,7 @@ public class Tag {
     private User modifiedBy;
 
     @LastModifiedDate
-    @Column(name = "modefied_date")
+    @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
 
     public Tag(Long id, String name, String slug, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate) {

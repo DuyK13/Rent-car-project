@@ -5,7 +5,7 @@ import com.iuh.rencar_project.utils.enums.ERole;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "roles", uniqueConstraints = { @UniqueConstraint(columnNames = "name") })
+@Table(name = "roles", uniqueConstraints = { @UniqueConstraint(columnNames = "name") }, indexes = {@Index(name = "IDX_Search", columnList = "name")})
 public class Role {
 
 	@Id

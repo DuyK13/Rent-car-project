@@ -4,8 +4,6 @@ import com.iuh.rencar_project.dto.request.CommentRequest;
 import com.iuh.rencar_project.entity.Comment;
 import org.springframework.data.domain.Page;
 
-import java.util.stream.DoubleStream;
-
 /**
  * @author Duy Trần Thế
  * @version 1.0
@@ -20,9 +18,9 @@ public interface ICommentService {
 
     Comment findById(Long id);
 
-    Page<Comment> findAllPaginatedDisable(int pageNo);
+    Page<Comment> findAllPaginatedDisable(int pageNo, int pageSize);
 
-    Page<Comment> findAllPaginated(int pageNo);
+    Page<Comment> findAllPaginated(int pageNo, int pageSize);
 
-    Page<Comment> findAllPaginatedEnable(int pageNo);
+    Page<Comment> findAllPaginatedEnable(int pageNo, int pageSize);
 }

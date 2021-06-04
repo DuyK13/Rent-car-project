@@ -1,10 +1,3 @@
-/*==============================================================================
-  System name: rentcar_project
-  Version: 1.0
-  Created date: May 2, 2021 2:44:22 PM
-  Description: Created by Duy Trần Thế
-  Copyright (c) 2021 by Duy Trần Thế. All rights reserved.
-===============================================================================*/
 package com.iuh.rencar_project.controller;
 
 import com.iuh.rencar_project.dto.request.*;
@@ -93,8 +86,8 @@ public class ModeratorController {
     }
 
     @GetMapping("/tags")
-    public ResponseEntity<?> getTagPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
-        Page<TagResponse> pageUserResponse = tagService.findAllPaginated(pageNo).map(tagMapper::toResponse);
+    public ResponseEntity<?> getTagPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam(name = "pageSize", defaultValue = "5") int pageSize, @RequestParam(name = "search", required = false) Optional<String> search) {
+        Page<TagResponse> pageUserResponse = search.map(s -> tagService.search(pageNo, pageSize, s).map(tagMapper::toResponse)).orElseGet(() -> tagService.findAllPaginated(pageNo, pageSize).map(tagMapper::toResponse));
         PageResponse<TagResponse> pageResult = new PageResponse<>(pageUserResponse.getContent(),
                 pageUserResponse.getTotalPages(), pageUserResponse.getNumber());
         return new ResponseEntity<>(pageResult, HttpStatus.OK);
@@ -123,9 +116,10 @@ public class ModeratorController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<?> getPostPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
-        Page<PostResponse> pagePostResponse = postService.findAllPaginated(pageNo)
-                .map(postMapper::toResponse);
+    public ResponseEntity<?> getPostPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam(name = "pageSize", defaultValue = "5") int pageSize, @RequestParam(name = "search", required = false) Optional<String> search) {
+        Page<PostResponse> pagePostResponse = search.map(s -> postService.search(pageNo, pageSize, s)
+                .map(postMapper::toResponse)).orElseGet(() -> postService.findAllPaginated(pageNo, pageSize)
+                .map(postMapper::toResponse));
         PageResponse<PostResponse> pageResult = new PageResponse<>(pagePostResponse.getContent(),
                 pagePostResponse.getTotalPages(), pagePostResponse.getNumber());
         return new ResponseEntity<>(pageResult, HttpStatus.OK);
@@ -147,17 +141,17 @@ public class ModeratorController {
     }
 
     @GetMapping("/comments")
-    public ResponseEntity<?> getCommentPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam(name = "status", required = false) Optional<String> status) {
+    public ResponseEntity<?> getCommentPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam(name = "status", required = false) Optional<String> status, @RequestParam(name = "pageSize", defaultValue = "5") int pageSize) {
         Page<CommentResponse> pageCommentResponse = null;
         if (status.isPresent()) {
             if (status.get().equalsIgnoreCase(Status.DISABLE.name()))
-                pageCommentResponse = commentService.findAllPaginatedDisable(pageNo)
+                pageCommentResponse = commentService.findAllPaginatedDisable(pageNo, pageSize)
                         .map(commentMapper::toResponse);
             else if (status.get().equalsIgnoreCase(Status.ENABLE.name()))
-                pageCommentResponse = commentService.findAllPaginatedEnable(pageNo)
+                pageCommentResponse = commentService.findAllPaginatedEnable(pageNo, pageSize)
                         .map(commentMapper::toResponse);
         } else {
-            pageCommentResponse = commentService.findAllPaginated(pageNo)
+            pageCommentResponse = commentService.findAllPaginated(pageNo, pageSize)
                     .map(commentMapper::toResponse);
         }
         PageResponse<CommentResponse> pageResult = null;
@@ -190,9 +184,11 @@ public class ModeratorController {
     }
 
     @GetMapping("/categories")
-    public ResponseEntity<?> getCategoryPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
-        Page<CategoryResponse> pageCategoryResponse = categoryService.findAllPaginated(pageNo)
-                .map(categoryMapper::toResponse);
+    public ResponseEntity<?> getCategoryPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam(name
+            = "pageSize", defaultValue = "5") int pageSize, @RequestParam(name = "search", required = false) Optional<String> search) {
+        Page<CategoryResponse> pageCategoryResponse = search.map(s -> categoryService.search(pageNo, pageSize, s)
+                .map(categoryMapper::toResponse)).orElseGet(() -> categoryService.findAllPaginated(pageNo, pageSize)
+                .map(categoryMapper::toResponse));
         PageResponse<CategoryResponse> pageResult = new PageResponse<>(pageCategoryResponse.getContent(),
                 pageCategoryResponse.getTotalPages(), pageCategoryResponse.getNumber());
         return new ResponseEntity<>(pageResult, HttpStatus.OK);
@@ -221,9 +217,10 @@ public class ModeratorController {
     }
 
     @GetMapping("/cars")
-    public ResponseEntity<?> getCarPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
-        Page<CarResponse> pageCarResponse = carService.findAllPaginated(pageNo)
-                .map(carMapper::toResponse);
+    public ResponseEntity<?> getCarPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam(name = "pageSize", defaultValue = "5") int pageSize, @RequestParam(name = "search", required = false) Optional<String> search) {
+        Page<CarResponse> pageCarResponse = search.map(s -> carService.search(pageNo, pageSize, s)
+                .map(carMapper::toResponse)).orElseGet(() -> carService.findAllPaginated(pageNo, pageSize)
+                .map(carMapper::toResponse));
         PageResponse<CarResponse> pageResult = new PageResponse<>(pageCarResponse.getContent(),
                 pageCarResponse.getTotalPages(), pageCarResponse.getNumber());
         return new ResponseEntity<>(pageResult, HttpStatus.OK);
@@ -251,8 +248,8 @@ public class ModeratorController {
     }
 
     @GetMapping("/courses")
-    public ResponseEntity<?> getCoursePaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
-        Page<CourseResponse> pageCourseResponse = courseService.findAllPaginated(pageNo)
+    public ResponseEntity<?> getCoursePaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam(name = "pageSize", defaultValue = "5") int pageSize) {
+        Page<CourseResponse> pageCourseResponse = courseService.findAllPaginated(pageNo, pageSize)
                 .map(courseMapper::toResponse);
         PageResponse<CourseResponse> pageResult = new PageResponse<>(pageCourseResponse.getContent(),
                 pageCourseResponse.getTotalPages(), pageCourseResponse.getNumber());
@@ -270,9 +267,10 @@ public class ModeratorController {
     }
 
     @GetMapping("/bills")
-    public ResponseEntity<?> getBillPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
-        Page<BillResponse> pageBillResponse = billService.findAllPaginated(pageNo)
-                .map(billMapper::toResponse);
+    public ResponseEntity<?> getBillPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam(name = "pageSize", defaultValue = "5") int pageSize, @RequestParam(name = "search", required = false) Optional<String> search) {
+        Page<BillResponse> pageBillResponse = search.map(s -> billService.search(pageNo, pageSize, s)
+                .map(billMapper::toResponse)).orElseGet(() -> billService.findAllPaginated(pageNo, pageSize)
+                .map(billMapper::toResponse));
         PageResponse<BillResponse> pageResult = new PageResponse<>(pageBillResponse.getContent(),
                 pageBillResponse.getTotalPages(), pageBillResponse.getNumber());
         return new ResponseEntity<>(pageResult, HttpStatus.OK);

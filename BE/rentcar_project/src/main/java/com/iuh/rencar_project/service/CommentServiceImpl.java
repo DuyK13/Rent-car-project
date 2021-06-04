@@ -9,8 +9,8 @@ import com.iuh.rencar_project.utils.enums.Status;
 import com.iuh.rencar_project.utils.exception.bind.EntityException;
 import com.iuh.rencar_project.utils.exception.bind.NotFoundException;
 import com.iuh.rencar_project.utils.mapper.ICommentMapper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CommentServiceImpl implements ICommentService {
-    private static final Logger logger = LogManager.getLogger(CommentServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(CommentServiceImpl.class);
     private final CommentRepository commentRepository;
     private final ICommentMapper commentMapper;
     private final IPostService postService;
@@ -80,20 +80,20 @@ public class CommentServiceImpl implements ICommentService {
     }
 
     @Override
-    public Page<Comment> findAllPaginatedDisable(int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
+    public Page<Comment> findAllPaginatedDisable(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Order.asc("id")));
         return commentRepository.findAllByStatus(pageable, Status.DISABLE);
     }
 
     @Override
-    public Page<Comment> findAllPaginatedEnable(int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
+    public Page<Comment> findAllPaginatedEnable(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Order.asc("id")));
         return commentRepository.findAllByStatus(pageable, Status.ENABLE);
     }
 
     @Override
-    public Page<Comment> findAllPaginated(int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
+    public Page<Comment> findAllPaginated(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Order.asc("id")));
         return commentRepository.findAll(pageable);
     }
 }
