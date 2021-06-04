@@ -14,20 +14,50 @@
 </head>
 
 <body>
-  <div>Notifications <span class="badge badge-light" id="badge-pending">1</span></div>
-
-  <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="toast-header">
-      <strong class="mr-auto">Bootstrap</strong>
-      <small class="text-muted">11 mins ago</small>
-      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="toast-body">
-      Hello, world! This is a toast message.
-    </div>
-  </div>
+  <div>
+                           <div style="width: 750px">
+                             <img src='https://tran-the-duy-208.s3-ap-southeast-1.amazonaws.com/logo.png' width='250' height='250'
+                              style='display: block; margin-left: auto; margin-right: auto;'>
+                           </div>
+                           <div>Đơn : #" + id + "</div>
+                           <p>Thân mến " + bill.getFullname() + ",</p>
+                       <p>Cám ơn vì đã sử dụng dịch vụ của chúng tôi.</p> 
+                           <p>Đây là thông tin hoá đơn thuê xe của bạn</p>
+                           <p><span>ĐƠN HÀNG: #id</span></p>
+                              <caption>CHI TIẾT ĐƠN HÀNG</caption>
+                            <table style="border: 1px solid black;width: 50%; border-collapse: collapse; text-align: center">
+                              <thead>
+                                <tr>
+                                  <th style="border: 1px solid black;padding: 8px;">type</th>
+                                  <th style="border: 1px solid black;padding: 8px;">gio thue</th>
+                                  <th style="border: 1px solid black;padding: 8px;">so gio thue</th>
+                                  <th style="border: 1px solid black;padding: 8px;">Gio tra</th>
+                                  <th style="border: 1px solid black;padding: 8px;">Xe</th>
+                                  <th style="border: 1px solid black;padding: 8px;">Bien so</th>
+                                  <th style="border: 1px solid black;padding: 8px;">Tien thue</th>
+                                  <th style="border: 1px solid black;padding: 8px;">Phi tre han</th>
+                                  <th style="border: 1px solid black;padding: 8px;">thanh tien</th> 
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td style="border: 1px solid black;padding: 8px;">type</td>
+                                  <td style="border: 1px solid black;padding: 8px;">gio thue</td>
+                                  <td style="border: 1px solid black;padding: 8px;">so gio thue</td>
+                                  <td style="border: 1px solid black;padding: 8px;">Gio tra</td>
+                                  <td style="border: 1px solid black;padding: 8px;">Xe</td>
+                                  <td style="border: 1px solid black;padding: 8px;">Bien so</td>
+                                  <td style="border: 1px solid black;padding: 8px;">Tien thue</td>
+                                  <td style="border: 1px solid black;padding: 8px;">Phi tre han</td>
+                                  <td style="border: 1px solid black;padding: 8px;">thanh tien</td> 
+                                </tr>
+                              </tbody>
+                            </table>
+                            <br/>
+                           <p>Nếu bạn có bất cứ câu hỏi nào, đừng ngần ngại liên lạc với chúng tôi tại: <b>thuexevynguyen@gmail.com</b></p>
+                           <p><sup>*</sup>: tính theo giờ</p>
+                           <p><sup>**</sup>: cứ 30 phút trễ sẽ tăng phí trễ hạn</p>
+                       </div>
 
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.1.1/dist/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"

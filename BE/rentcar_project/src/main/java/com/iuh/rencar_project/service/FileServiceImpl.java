@@ -9,8 +9,8 @@ import com.iuh.rencar_project.entity.Post;
 import com.iuh.rencar_project.service.template.IFileService;
 import com.iuh.rencar_project.utils.StringUtils;
 import com.iuh.rencar_project.utils.exception.bind.FileUploadException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -32,7 +32,7 @@ import java.util.Objects;
 @Service
 public class FileServiceImpl implements IFileService {
 
-    private static final Logger logger = LogManager.getLogger(FileServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
 
     private final AmazonS3 amazonS3;
 

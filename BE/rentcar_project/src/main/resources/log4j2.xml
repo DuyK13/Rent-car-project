@@ -1,23 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
-    <Properties>
-        <Property name="LOG_PATTERN">
-            %highlight{%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %-40.40c{1.} : %msg %n}{FATAL=white, ERROR=red, WARN=blue,
-            INFO=black, DEBUG=green, TRACE=blue}
-        </Property>
-    </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
 
             <PatternLayout disableAnsi="false"
-                           pattern="${LOG_PATTERN}"></PatternLayout>
+                           pattern="%d{yyyy-MM-dd HH:mm:ss} %highlight{%-5level}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=green,
+                        DEBUG=green bold, TRACE=blue} %style{${sys:PID}}{magenta} [%15.15t] %style{%-30.30c{1.}}{cyan} : %msg %n"></PatternLayout>
         </Console>
 
-        <RollingFile name="RollingFile" fileName="logs/discovery-service.log"
+        <RollingFile name="RollingFile" fileName="logs/app.log"
                      filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz"
                      ignoreExceptions="false">
             <PatternLayout disableAnsi="false"
-                           pattern="${LOG_PATTERN}"/>
+                           pattern="%d{yyyy-MM-dd HH:mm:ss} %-5level ${sys:PID} [%15.15t] %-30.30c{1.} : %msg %n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="10MB"/>
             </Policies>

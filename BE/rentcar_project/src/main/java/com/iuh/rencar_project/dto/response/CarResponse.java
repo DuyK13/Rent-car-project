@@ -11,6 +11,7 @@ public class CarResponse {
     private Long id;
     private String name;
     private int manufacturingYear;
+    private String licensePlate;
     private int costPerHour;
     private String slug;
     private String image;
@@ -21,6 +22,14 @@ public class CarResponse {
     private LocalDateTime modifiedDate;
 
     public CarResponse() {
+    }
+
+    public String getLicensePlate() {
+        return licensePlate;
+    }
+
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
     }
 
     public Long getId() {

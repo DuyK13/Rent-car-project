@@ -5,8 +5,8 @@ import com.iuh.rencar_project.repository.RoleRepository;
 import com.iuh.rencar_project.service.template.IRoleService;
 import com.iuh.rencar_project.utils.enums.ERole;
 import com.iuh.rencar_project.utils.exception.bind.NotFoundException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ import java.util.List;
 @Service
 public class RoleServiceImpl implements IRoleService {
 
-    private static final Logger logger = LogManager.getLogger(RoleServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(RoleServiceImpl.class);
 
     private final RoleRepository roleRepository;
 
@@ -33,6 +33,14 @@ public class RoleServiceImpl implements IRoleService {
 
     private Boolean existsByName(String name) {
         return roleRepository.existsByName(EnumType.valueOf(ERole.class, name));
+    }
+
+    private void save(Role role) {
+        try {
+            roleRepository.saveAndFlush(role);
+        } catch (Exception e) {
+            logger.error("Role Exception: ", e);
+        }
     }
 
     @Override
@@ -48,13 +56,13 @@ public class RoleServiceImpl implements IRoleService {
     @PostConstruct
     private void initRole() {
         if (!this.existsByName(ERole.ROLE_ADMIN.name())) {
-            roleRepository.saveAndFlush(new Role(0l, ERole.ROLE_ADMIN));
+            this.save(new Role(0L, ERole.ROLE_ADMIN));
         }
         if (!this.existsByName(ERole.ROLE_MODERATOR.name())) {
-            roleRepository.saveAndFlush(new Role(0l, ERole.ROLE_MODERATOR));
+            this.save(new Role(0L, ERole.ROLE_MODERATOR));
         }
         if (!this.existsByName(ERole.ROLE_STAFF.name())) {
-            roleRepository.saveAndFlush(new Role(0l, ERole.ROLE_STAFF));
+            this.save(new Role(0L, ERole.ROLE_STAFF));
         }
     }
 }

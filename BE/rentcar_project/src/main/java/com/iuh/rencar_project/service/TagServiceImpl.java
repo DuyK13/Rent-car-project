@@ -9,8 +9,8 @@ import com.iuh.rencar_project.service.template.ITagService;
 import com.iuh.rencar_project.utils.exception.bind.EntityException;
 import com.iuh.rencar_project.utils.exception.bind.NotFoundException;
 import com.iuh.rencar_project.utils.mapper.ITagMapper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +25,7 @@ import java.util.Set;
 @Service
 public class TagServiceImpl implements ITagService {
 
-    private static final Logger logger = LogManager.getLogger(TagServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(TagServiceImpl.class);
 
     private final TagRepository tagRepository;
 
@@ -71,8 +71,8 @@ public class TagServiceImpl implements ITagService {
     }
 
     @Override
-    public Page<Tag> findAllPaginated(int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Order.asc("id")));
+    public Page<Tag> findAllPaginated(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Order.asc("id")));
         return tagRepository.findAll(pageable);
     }
 
@@ -119,5 +119,11 @@ public class TagServiceImpl implements ITagService {
     @Override
     public List<Tag> findAll() {
         return tagRepository.findAll();
+    }
+
+    @Override
+    public Page<Tag> search(int pageNo, int pageSize, String s) {
+        Pageable pageable = PageRequest.of(pageNo-1, pageSize, Sort.by(Order.asc("id")));
+        return tagRepository.search(s, pageable);
     }
 }

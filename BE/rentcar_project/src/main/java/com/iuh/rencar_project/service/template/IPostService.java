@@ -25,15 +25,17 @@ public interface IPostService {
 
     Post findBySlugForGuest(String slug);
 
-    Page<Post> findAllPaginated(int pageNo);
+    Page<Post> findAllPaginated(int pageNo, int pageSize);
 
-    Page<Post> findAllPaginatedForGuest(int pageNo);
+    Page<Post> findAllPaginatedForGuest(int pageNo, int pageSize);
 
-    Page<Post> findAllPaginatedByTagForGuest(Tag tag, int pageNo);
+    Page<Post> findAllPaginatedByTagForGuest(Tag tag, int pageNo, int pageSize);
 
     Boolean existsByTitle(String title);
 
     List<Post> findByTag(Tag tag);
 
     Post findByTitle(String title);
+
+    Page<Post> search(int pageNo, int pageSize, String s);
 }

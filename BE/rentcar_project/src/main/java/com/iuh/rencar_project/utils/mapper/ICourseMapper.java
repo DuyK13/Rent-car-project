@@ -3,7 +3,6 @@ package com.iuh.rencar_project.utils.mapper;
 import com.iuh.rencar_project.dto.request.CourseRequest;
 import com.iuh.rencar_project.dto.response.CourseResponse;
 import com.iuh.rencar_project.entity.Course;
-import com.iuh.rencar_project.utils.enums.Status;
 import com.iuh.rencar_project.utils.mapper.annotation.StringToSlugMapping;
 import com.iuh.rencar_project.utils.mapper.annotation.UserToStringMapping;
 import com.iuh.rencar_project.utils.mapper.helper.HelperMapper;

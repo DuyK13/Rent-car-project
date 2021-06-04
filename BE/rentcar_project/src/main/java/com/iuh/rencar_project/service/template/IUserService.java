@@ -34,5 +34,7 @@ public interface IUserService {
 
     Boolean isUserEnable(String username);
 
-    Page<User> findAllPaginated(int pageNo);
+    Page<User> findAllPaginated(int pageNo, int pageSize);
+
+    Page<User> search(int pageNo, int pageSize, String s);
 }

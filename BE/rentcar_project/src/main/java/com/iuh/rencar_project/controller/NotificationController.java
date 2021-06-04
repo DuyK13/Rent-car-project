@@ -1,6 +1,6 @@
 package com.iuh.rencar_project.controller;
 
-import com.iuh.rencar_project.service.BillNotificationServiceImpl;
+import com.iuh.rencar_project.service.template.INotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,32 +19,32 @@ import java.io.IOException;
 @RequestMapping("/api/notification")
 public class NotificationController {
 
-    private final BillNotificationServiceImpl billNotificationService;
+    private final INotificationService billNotificationService;
 
     @Autowired
-    public NotificationController(BillNotificationServiceImpl billNotificationService) {
+    public NotificationController(INotificationService billNotificationService) {
         this.billNotificationService = billNotificationService;
     }
 
     @RequestMapping(value = "/subscribe", consumes = MediaType.ALL_VALUE)
     public SseEmitter billSubscribe() {
-        SseEmitter sseEmiter = new SseEmitter(Long.MAX_VALUE);
-        this.sendInitEvent(sseEmiter);
-        billNotificationService.addEmitter(sseEmiter);
-        sseEmiter.onCompletion(() -> billNotificationService.removeEmitter(sseEmiter));
-        sseEmiter.onTimeout(() -> billNotificationService.removeEmitter(sseEmiter));
-        sseEmiter.onError((e) -> billNotificationService.removeEmitter(sseEmiter));
-        return sseEmiter;
+        SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
+        this.sendInitEvent(sseEmitter);
+        billNotificationService.addEmitter(sseEmitter);
+        sseEmitter.onCompletion(() -> billNotificationService.removeEmitter(sseEmitter));
+        sseEmitter.onTimeout(() -> billNotificationService.removeEmitter(sseEmitter));
+        sseEmitter.onError((e) -> billNotificationService.removeEmitter(sseEmitter));
+        return sseEmitter;
     }
 
     @PostMapping(value = "/bill/notifyAll")
-    public void billNotifyAll(){
+    public void billNotifyAll() {
         billNotificationService.doNotify();
     }
 
-    private void sendInitEvent(SseEmitter sseEmiter) {
+    private void sendInitEvent(SseEmitter sseEmitter) {
         try {
-            sseEmiter.send(SseEmitter.event().name("INIT"));
+            sseEmitter.send(SseEmitter.event().name("INIT"));
         } catch (IOException e) {
             e.printStackTrace();
         }

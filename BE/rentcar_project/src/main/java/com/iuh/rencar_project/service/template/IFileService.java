@@ -1,11 +1,8 @@
 package com.iuh.rencar_project.service.template;
 
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.iuh.rencar_project.entity.Car;
 import com.iuh.rencar_project.entity.Post;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
 
 /**
  * @author Duy Trần Thế

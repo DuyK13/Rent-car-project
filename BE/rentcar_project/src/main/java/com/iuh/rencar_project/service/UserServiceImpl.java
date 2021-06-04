@@ -51,6 +51,7 @@ public class UserServiceImpl implements IUserService {
         this.roleService = roleService;
     }
 
+
     @Override
     public String save(UserRequest userRequest) {
         String username = userRequest.getUsername();
@@ -118,8 +119,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public Page<User> findAllPaginated(int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Order.asc("id")));
+    public Page<User> findAllPaginated(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Order.asc("id")));
         return userRepository.findAll(pageable);
     }
 
@@ -160,6 +161,12 @@ public class UserServiceImpl implements IUserService {
     public Boolean isUserEnable(String username) {
         User currentUser = this.findByUsername(username);
         return currentUser.getStatus().compareTo(Status.ENABLE) == 0;
+    }
+
+    @Override
+    public Page<User> search(int pageNo, int pageSize, String s) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Order.asc("id")));
+        return userRepository.search(s, pageable);
     }
 
     @DependsOn("initRole")

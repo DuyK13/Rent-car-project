@@ -10,8 +10,8 @@ import com.iuh.rencar_project.utils.enums.Status;
 import com.iuh.rencar_project.utils.exception.bind.EntityException;
 import com.iuh.rencar_project.utils.exception.bind.NotFoundException;
 import com.iuh.rencar_project.utils.mapper.ICarMapper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,7 +29,7 @@ import java.util.List;
  */
 @Service
 public class CarServiceImpl implements ICarService {
-    private static final Logger logger = LogManager.getLogger(CarServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(CarServiceImpl.class);
     private final CarRepository carRepository;
     private final ICarMapper carMapper;
     private final ICategoryService categoryService;
@@ -48,8 +48,7 @@ public class CarServiceImpl implements ICarService {
         String name = carRequest.getName();
         if (this.existsByName(name))
             throw new EntityException("Car Exists");
-//        String fileUrl = fileService.uploadCarImage(multipartFile, name);
-        String fileUrl = multipartFile.getOriginalFilename();
+        String fileUrl = fileService.uploadCarImage(multipartFile, name);
         Car car = carMapper.toEntity(carRequest);
         car.setImage(fileUrl);
         return categoryService.addCarToCategory(carRequest.getCategoryName(), car);
@@ -165,13 +164,19 @@ public class CarServiceImpl implements ICarService {
     }
 
     @Override
-    public Page<Car> findAllPaginated(int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
+    public Page<Car> findAllPaginated(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Order.asc("id")));
         return carRepository.findAll(pageable);
     }
 
     @Override
     public List<Car> findAllEnable() {
         return carRepository.findAllByStatus(Status.ENABLE);
+    }
+
+    @Override
+    public Page<Car> search(int pageNo, int pageSize, String s) {
+        Pageable pageable = PageRequest.of(pageNo-1, pageSize, Sort.by(Sort.Order.asc("id")));
+        return carRepository.search(s, pageable);
     }
 }

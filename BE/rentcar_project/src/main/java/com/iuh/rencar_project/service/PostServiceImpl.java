@@ -10,8 +10,8 @@ import com.iuh.rencar_project.utils.enums.Status;
 import com.iuh.rencar_project.utils.exception.bind.EntityException;
 import com.iuh.rencar_project.utils.exception.bind.NotFoundException;
 import com.iuh.rencar_project.utils.mapper.IPostMapper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +30,7 @@ import java.util.List;
 @Service
 public class PostServiceImpl implements IPostService {
 
-    private static final Logger logger = LogManager.getLogger(PostServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(PostServiceImpl.class);
 
     private final PostRepository postRepository;
 
@@ -140,20 +140,20 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    public Page<Post> findAllPaginated(int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
+    public Page<Post> findAllPaginated(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Order.asc("id")));
         return postRepository.findAll(pageable);
     }
 
     @Override
-    public Page<Post> findAllPaginatedForGuest(int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
+    public Page<Post> findAllPaginatedForGuest(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Order.asc("id")));
         return postRepository.findAllByStatusIs(Status.ENABLE, pageable);
     }
 
     @Override
-    public Page<Post> findAllPaginatedByTagForGuest(Tag tag, int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo - 1, 5, Sort.by(Sort.Order.asc("id")));
+    public Page<Post> findAllPaginatedByTagForGuest(Tag tag, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Order.asc("id")));
         return postRepository.findByTagsIsContainingAndStatusIs(tag, Status.ENABLE, pageable);
     }
 
@@ -170,5 +170,11 @@ public class PostServiceImpl implements IPostService {
     @Override
     public Post findByTitle(String title) {
         return postRepository.findByTitle(title).orElseThrow(() -> new NotFoundException("Post not found"));
+    }
+
+    @Override
+    public Page<Post> search(int pageNo, int pageSize, String s) {
+        Pageable pageable = PageRequest.of(pageNo-1,pageSize,Sort.by(Sort.Order.asc("id")));
+        return postRepository.search(s, pageable);
     }
 }
