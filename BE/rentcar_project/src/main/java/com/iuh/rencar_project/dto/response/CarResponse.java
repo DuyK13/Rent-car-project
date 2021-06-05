@@ -15,8 +15,9 @@ public class CarResponse {
     private int costPerHour;
     private String slug;
     private String image;
-    private int availableQuantity;
+    private String state;
     private String createdBy;
+    private String status;
     private LocalDateTime createdDate;
     private String modifiedBy;
     private LocalDateTime modifiedDate;
@@ -80,12 +81,20 @@ public class CarResponse {
         this.image = image;
     }
 
-    public int getAvailableQuantity() {
-        return availableQuantity;
+    public String getState() {
+        return state;
     }
 
-    public void setAvailableQuantity(int availableQuantity) {
-        this.availableQuantity = availableQuantity;
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getCreatedBy() {

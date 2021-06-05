@@ -1,5 +1,6 @@
 package com.iuh.rencar_project.entity;
 
+import com.iuh.rencar_project.utils.enums.CarState;
 import com.iuh.rencar_project.utils.enums.Status;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -34,9 +35,11 @@ public class Car {
     @Column(nullable = false)
     private String image;
 
-    @Column(name = "available_quantity", nullable = false)
-    private int availableQuantity;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CarState state;
 
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @Column(name = "license_plate")
@@ -60,14 +63,14 @@ public class Car {
     @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
 
-    public Car(Long id, String name, int manufacturingYear, int costPerHour, String slug, String image, int availableQuantity, Status status, String licensePlate, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate) {
+    public Car(Long id, String name, int manufacturingYear, int costPerHour, String slug, String image, int availableQuantity, CarState state, Status status, String licensePlate, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate) {
         this.id = id;
         this.name = name;
         this.manufacturingYear = manufacturingYear;
         this.costPerHour = costPerHour;
         this.slug = slug;
         this.image = image;
-        this.availableQuantity = availableQuantity;
+        this.state = state;
         this.status = status;
         this.licensePlate = licensePlate;
         this.createdBy = createdBy;
@@ -127,12 +130,12 @@ public class Car {
         this.image = image;
     }
 
-    public int getAvailableQuantity() {
-        return availableQuantity;
+    public CarState getState() {
+        return state;
     }
 
-    public void setAvailableQuantity(int availableQuantity) {
-        this.availableQuantity = availableQuantity;
+    public void setState(CarState state) {
+        this.state = state;
     }
 
     public User getCreatedBy() {
@@ -192,7 +195,7 @@ public class Car {
                 ", costPerHour=" + costPerHour +
                 ", slug='" + slug + '\'' +
                 ", image='" + image + '\'' +
-                ", availableQuantity=" + availableQuantity +
+                ", state=" + state +
                 ", status=" + status +
                 ", licensePlate='" + licensePlate + '\'' +
                 ", createdBy=" + createdBy +

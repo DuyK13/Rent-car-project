@@ -10,7 +10,7 @@ public class CarRequest {
     private String licensePlate;
     private int manufacturingYear;
     private int costPerHour;
-    private int availableQuantity;
+    private String state;
     private String categoryName;
 
     public CarRequest() {
@@ -48,12 +48,12 @@ public class CarRequest {
         this.costPerHour = costPerHour;
     }
 
-    public int getAvailableQuantity() {
-        return availableQuantity;
+    public String getState() {
+        return state;
     }
 
-    public void setAvailableQuantity(int availableQuantity) {
-        this.availableQuantity = availableQuantity;
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getCategoryName() {

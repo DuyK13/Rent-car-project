@@ -12,9 +12,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@EntityListeners(AuditingEntityListener.class)
-@Table(name = "posts", uniqueConstraints = {@UniqueConstraint(columnNames = {"title", "slug"})}, indexes = @Index(name = "IDX_Search", columnList = "title, status, modified_date, created_date"))
+@Entity@EntityListeners(AuditingEntityListener.class)@Table(name = "posts", uniqueConstraints = {@UniqueConstraint(columnNames = {"title", "slug"})}, indexes = @Index(name = "IDX_Search", columnList = "title, status, modified_date, created_date"))
 public class Post {
 
     @Id

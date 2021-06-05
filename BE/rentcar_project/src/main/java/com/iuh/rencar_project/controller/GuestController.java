@@ -128,13 +128,6 @@ public class GuestController {
         return new ResponseEntity<>(new MessageResponse(message), HttpStatus.OK);
     }
 
-//    @GetMapping("/posts/{slug}/comments")
-//    public ResponseEntity<?> getCommentsByPost(@PathVariable(name = "slug") String slug, @RequestParam(name = "limit", defaultValue = "5") int limit){
-//        List<CommentResponse> commentResponseList = postService.findCommentsBySlug(slug).stream().map(commentMapper::toResponse).collect(Collectors.toList());
-////        List<CommentResponse> commentResponseList = postService.findCommentsBySlugAndCommentsCommentIdAndCommentsCommentStatus(slug, null, Status.ACTIVE).stream().map(commentMapper::toResponse).collect(Collectors.toList());
-//        return new ResponseEntity<>(commentResponseList, HttpStatus.OK);
-//    }
-
     // ======================================
     // =============== Category =============
     // ======================================
