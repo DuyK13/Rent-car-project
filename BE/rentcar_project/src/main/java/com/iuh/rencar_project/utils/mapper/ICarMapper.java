@@ -23,7 +23,6 @@ public interface ICarMapper {
             @Mapping(target = "costPerHour", source = "costPerHour"),
             @Mapping(target = "slug", source = "name", qualifiedBy = StringToSlugMapping.class),
             @Mapping(target = "image", ignore = true),
-            @Mapping(target = "availableQuantity", source = "availableQuantity"),
             @Mapping(target = "createdBy", ignore = true),
             @Mapping(target = "createdDate", ignore = true),
             @Mapping(target = "modifiedBy", ignore = true),

@@ -6,6 +6,7 @@ import com.iuh.rencar_project.repository.CarRepository;
 import com.iuh.rencar_project.service.template.ICarService;
 import com.iuh.rencar_project.service.template.ICategoryService;
 import com.iuh.rencar_project.service.template.IFileService;
+import com.iuh.rencar_project.utils.enums.CarState;
 import com.iuh.rencar_project.utils.enums.Status;
 import com.iuh.rencar_project.utils.exception.bind.EntityException;
 import com.iuh.rencar_project.utils.exception.bind.NotFoundException;
@@ -79,9 +80,8 @@ public class CarServiceImpl implements ICarService {
 
     @Override
     public Car updateCarForBillRented(Car car) {
-        int quantity = car.getAvailableQuantity();
-        if (quantity > 0 && car.getStatus() == Status.ENABLE) {
-            car.setAvailableQuantity(quantity - 1);
+        if (car.getState() == CarState.AVAILABLE && car.getStatus() == Status.ENABLE) {
+            car.setState(CarState.UNAVAILABLE);
             try {
                 car = carRepository.saveAndFlush(car);
             } catch (Exception e) {
@@ -96,8 +96,7 @@ public class CarServiceImpl implements ICarService {
 
     @Override
     public Car updateCarForBillPaid(Car car) {
-        int quantity = car.getAvailableQuantity();
-        car.setAvailableQuantity(quantity + 1);
+        car.setState(CarState.AVAILABLE);
         try {
             car = carRepository.saveAndFlush(car);
         } catch (Exception e) {
@@ -176,7 +175,7 @@ public class CarServiceImpl implements ICarService {
 
     @Override
     public Page<Car> search(int pageNo, int pageSize, String s) {
-        Pageable pageable = PageRequest.of(pageNo-1, pageSize, Sort.by(Sort.Order.asc("id")));
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Order.asc("id")));
         return carRepository.search(s, pageable);
     }
 }

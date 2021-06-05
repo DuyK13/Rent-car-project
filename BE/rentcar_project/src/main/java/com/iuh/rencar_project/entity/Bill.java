@@ -1,5 +1,8 @@
 package com.iuh.rencar_project.entity;
 
+import com.iuh.rencar_project.entity.Car;
+import com.iuh.rencar_project.entity.Course;
+import com.iuh.rencar_project.entity.User;
 import com.iuh.rencar_project.utils.enums.BillState;
 import com.iuh.rencar_project.utils.enums.BillType;
 import org.springframework.data.annotation.CreatedDate;
@@ -10,9 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@EntityListeners(AuditingEntityListener.class)
-@Table(name = "bills", uniqueConstraints = {@UniqueConstraint(columnNames = "slug")}, indexes = @Index(name = "IDX_Search", columnList = "fullname, phone_number, email"))
+@Entity@EntityListeners(AuditingEntityListener.class)@Table(name = "bills", uniqueConstraints = {@UniqueConstraint(columnNames = "slug")}, indexes = @Index(name = "IDX_Search", columnList = "fullname, phone_number, email"))
 public class Bill {
 
     @Transient

@@ -40,6 +40,7 @@ public class CommentServiceImpl implements ICommentService {
     @Override
     public String save(String postSlug, CommentRequest commentRequest) {
         Comment comment = commentMapper.toEntity(commentRequest);
+        comment.setPost(postService.findBySlug(postSlug));
         try {
             commentRepository.saveAndFlush(comment);
         } catch (Exception e) {
@@ -52,7 +53,6 @@ public class CommentServiceImpl implements ICommentService {
     @Override
     public String setAvailability(Long id) {
         Comment currentComment = this.findById(id);
-        String message;
         currentComment.setStatus(Status.ENABLE);
         try {
             commentRepository.saveAndFlush(currentComment);
