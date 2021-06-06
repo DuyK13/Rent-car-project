@@ -91,6 +91,7 @@ public class CarServiceImpl implements ICarService {
         } else {
             throw new EntityException("Car not available for rent");
         }
+        System.out.println(car);
         return car;
     }
 
@@ -170,7 +171,7 @@ public class CarServiceImpl implements ICarService {
 
     @Override
     public List<Car> findAllEnable() {
-        return carRepository.findAllByStatus(Status.ENABLE);
+        return carRepository.findAllByStatusAndState(Status.ENABLE, CarState.AVAILABLE);
     }
 
     @Override

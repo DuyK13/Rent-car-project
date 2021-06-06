@@ -1,6 +1,7 @@
 package com.iuh.rencar_project.repository;
 
 import com.iuh.rencar_project.entity.Car;
+import com.iuh.rencar_project.utils.enums.CarState;
 import com.iuh.rencar_project.utils.enums.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +23,7 @@ public interface CarRepository extends JpaRepository<Car, Long> {
 
     Optional<Car> findBySlugAndStatus(String slug, Status enable);
 
-    List<Car> findAllByStatus(Status status);
+    List<Car> findAllByStatusAndState(Status status, CarState carState);
 
     @Query(value = "SELECT c FROM Car c WHERE CONCAT(c.name, ' ', c.licensePlate, ' ', c.createdBy.username, ' ', c.modifiedBy.username, ' ', c.createdDate, ' ', c.modifiedDate, ' ') LIKE %?1%")
     Page<Car> search(String s, Pageable pageable);
