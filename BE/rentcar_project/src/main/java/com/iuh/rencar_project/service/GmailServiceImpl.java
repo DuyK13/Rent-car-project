@@ -13,8 +13,10 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.text.NumberFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Currency;
+import java.util.Locale;
 
 /**
  * @author Duy Trần Thế
@@ -39,7 +41,11 @@ public class GmailServiceImpl implements IEmailService {
 
     @Override
     public Boolean sendBillEmailByStaff(Bill bill) {
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh giờ mm phút");
+        Locale vn = new Locale("vi", "VN");
+        Locale.setDefault(vn);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm");
+        Currency vnd = Currency.getInstance(vn);
+        NumberFormat format = NumberFormat.getCurrencyInstance(vn);
         Long id = bill.getId();
         Long billAmount = bill.getBillAmount();
         Long lateCharge = bill.getLateCharge();
@@ -58,8 +64,8 @@ public class GmailServiceImpl implements IEmailService {
                     "                       <p>Cám ơn vì đã sử dụng dịch vụ của chúng tôi.</p> \n" +
                     "                           <p>Đây là thông tin hoá đơn thuê xe của bạn</p>\n" +
                     "                           <p><span>ĐƠN HÀNG: #" + bill.getId() + "</span></p>\n" +
-                    "                              <caption>CHI TIẾT ĐƠN HÀNG</caption>\n" +
-                    "                            <table style=\"border: 1px solid black;width: 50%; border-collapse: collapse; text-align: center\">\n" +
+                    "                              <caption style=\"width: 100%\">CHI TIẾT ĐƠN HÀNG</caption>\n" +
+                    "                            <table style=\"border: 1px solid black;width: 100%; border-collapse: collapse; text-align: center\">\n" +
                     "                              <thead>\n" +
                     "                                <tr>\n" +
 //                    "                                  <th style=\"border: 1px solid black;padding: 8px;\">Loại</th>\n" +
@@ -77,26 +83,27 @@ public class GmailServiceImpl implements IEmailService {
                     "                              <tbody>\n" +
                     "                                <tr>\n" +
 //                    "                                  <td style=\"border: 1px solid black;padding: 8px;\">type</td>\n" +
-                    "                                  <td style=\"border: 1px solid black;padding: 8px;\">" + df.format(bill.getStartTime()) + "</td>\n" +
+                    "                                  <td style=\"border: 1px solid black;padding: 8px;\">" + formatter.format(bill.getStartTime()) + "</td>\n" +
                     "                                  <td style=\"border: 1px solid black;padding: 8px;\">" + rentTime + "</td>\n" +
-                    "                                  <td style=\"border: 1px solid black;padding: 8px;\">" + df.format(bill.getStartTime().plusHours(rentTime)) + "</td>\n" +
+                    "                                  <td style=\"border: 1px solid black;padding: 8px;\">" + formatter.format(bill.getStartTime().plusHours(rentTime)) + "</td>\n" +
                     "                                  <td style=\"border: 1px solid black;padding: 8px;\">" + car.getName() + " " + bill.getCar().getManufacturingYear() + "</td>\n" +
                     "                                  <td style=\"border: 1px solid black;padding: 8px;\">" + car.getLicensePlate() + "</td>\n" +
-                    "                                  <td style=\"border: 1px solid black;padding: 8px;\">" + car.getCostPerHour() + "</td>\n" +
-                    "                                  <td style=\"border: 1px solid black;padding: 8px;\">" + billAmount + "</td>\n" +
-                    "                                  <td style=\"border: 1px solid black;padding: 8px;\">" + lateCharge + "</td>\n" +
-                    "                                  <td style=\"border: 1px solid black;padding: 8px;\">" + (billAmount + lateCharge) + "</td> \n" +
+                    "                                  <td style=\"border: 1px solid black;padding: 8px;\">" + format.format(car.getCostPerHour()) + "</td>\n" +
+                    "                                  <td style=\"border: 1px solid black;padding: 8px;\">" + format.format(billAmount) + "</td>\n" +
+                    "                                  <td style=\"border: 1px solid black;padding: 8px;\">" + format.format(lateCharge) + "</td>\n" +
+                    "                                  <td style=\"border: 1px solid black;padding: 8px;\">" + format.format(billAmount + lateCharge) + "</td> \n" +
                     "                                </tr>\n" +
                     "                              </tbody>\n" +
                     "                            </table>\n" +
                     "                            <br/>\n" +
                     "                           <p>Nếu bạn có bất cứ câu hỏi nào, đừng ngần ngại liên lạc với chúng tôi tại: <b>thuexevynguyen@gmail.com</b></p>\n" +
                     "                       </div>" +
-                    "                           <p><sup>*</sup>: tính theo giờ</p>\n" +
-                    "                           <p><sup>**</sup>: cứ 30 phút trễ sẽ tăng phí trễ hạn</p>";
+                    "                           <p><h3>Lưu ý:</h3>\n" +
+                    "                           <p>&emsp;<b><sup>*</sup></b>: tính theo giờ</p>\n" +
+                    "                           <p>&emsp;<b><sup>**</sup></b>: cứ 30 phút trễ sẽ tăng phí trễ hạn</p>";
             message.setContent(htmlMsg, "text/html; charset=UTF-8");
             helper.setTo(bill.getEmail());
-            helper.setSubject("[Thuê Xe Vỹ Nguyên] - Đơn đặt trước #" + id);
+            helper.setSubject("[Thuê Xe Vỹ Nguyên] - Đơn #" + id);
         } catch (MessagingException e) {
             logger.error("Email Exception: ", e);
             return false;
@@ -118,7 +125,7 @@ public class GmailServiceImpl implements IEmailService {
                     "                              style='display: block; margin-left: auto; margin-right: auto;'>\n" +
                     "                           </div>\n" +
                     "        <p>Thân mến " + bill.getFullname() + ",</p>" +
-                    "        <p>Bạn đã đặt lịch hẹn thành công,</p>" +
+                    "        <p>Bạn đã đặt trước thành công,</p>" +
                     "        <p>Cám ơn vì đã sử dụng dịch vụ của chúng tôi.</p>" +
                     "        <p>Nếu bạn có bất cứ câu hỏi nào, đừng ngần ngại liên lạc với chúng tôi tại: <b>thuexevynguyen@gmail.com</b></p>" +
                     "    </div>";

@@ -7,12 +7,12 @@ import com.iuh.rencar_project.service.template.IBillService;
 import com.iuh.rencar_project.service.template.ICarService;
 import com.iuh.rencar_project.service.template.IEmailService;
 import com.iuh.rencar_project.utils.enums.BillState;
+import com.iuh.rencar_project.utils.enums.CarState;
 import com.iuh.rencar_project.utils.exception.bind.EntityException;
 import com.iuh.rencar_project.utils.exception.bind.NotFoundException;
 import com.iuh.rencar_project.utils.mapper.IBillMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -67,15 +67,15 @@ public class BillServiceImpl implements IBillService {
     @Override
     public String saveByStaff(BillRequest billRequest) {
         Bill bill = billMapper.toEntityByStaff(billRequest);
+        if (bill.getCar().getState() == CarState.UNAVAILABLE)
+            throw new EntityException("Car can not rent");
         try {
             billRepository.saveAndFlush(bill);
         } catch (Exception e) {
             logger.error("Bill Exception: ", e);
             throw new EntityException("Bill save failed");
         }
-        if (emailService.sendBillEmailByStaff(bill)) {
-            return "Bill save successful and email sent";
-        }
+        carService.updateCarForBillRented(bill.getCar());
         return "Bill save successful";
     }
 
@@ -111,36 +111,29 @@ public class BillServiceImpl implements IBillService {
                 logger.error("Bill Exception: ", e);
                 throw new EntityException("Pay for rental car failed");
             }
+            if (emailService.sendBillEmailByStaff(bill)) {
+                return "Pay for rental car successful. Bill sending to customer";
+            }
         } else throw new EntityException("Bill not rented");
+
         return "Pay for rental car successful";
     }
 
     @Override
     public String updateBillApproved(Long id, BillRequest billRequest) {
         Bill bill = this.findById(id);
-        boolean isRented = Strings.isEmpty(billRequest.getCourse());
         if (bill.getState() == BillState.APPROVED) {
             billMapper.updateEntityToRentedOrPaid(billRequest, bill);
-            if (isRented)
-                bill.setCar(carService.updateCarForBillRented(bill.getCar()));
             try {
-                billRepository.saveAndFlush(bill);
+                bill = billRepository.saveAndFlush(bill);
             } catch (Exception e) {
                 logger.error("Bill Exception: ", e);
-                if (isRented)
-                    throw new EntityException("Rent car failed");
-                else
-                    throw new EntityException("Pay course failed");
+                throw new EntityException("Rent car failed");
             }
         } else
             throw new EntityException("Bill not approved");
-        if (isRented) {
-            if (emailService.sendBillEmailByStaff(bill)) {
-                return "Rent car successful and email sent";
-            }
+        carService.updateCarForBillRented(bill.getCar());
             return "Rent car successful";
-        } else
-            return "Pay course successful";
     }
 
     @Override
@@ -240,7 +233,7 @@ public class BillServiceImpl implements IBillService {
 
     @Override
     public Page<Bill> search(int pageNo, int pageSize, String text) {
-        Pageable pageable = PageRequest.of(pageNo-1,pageSize, Sort.by(Sort.Order.asc("id")));
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Order.asc("id")));
         return billRepository.search(text, pageable);
     }
 
