@@ -9,7 +9,7 @@ import com.iuh.rencar_project.entity.Bill;
  */
 public interface IEmailService {
 
-    Boolean sendBillEmailByGuest(Bill bill);
+    Boolean preserve(Bill bill);
 
     Boolean sendBillEmailByStaff(Bill bill);
 }

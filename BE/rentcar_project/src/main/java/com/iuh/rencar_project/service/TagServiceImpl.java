@@ -65,7 +65,7 @@ public class TagServiceImpl implements ITagService {
             tagRepository.saveAndFlush(currentTag);
         } catch (Exception e) {
             logger.error(e.getMessage(), e.getCause());
-            return "Tag update failed";
+            throw new EntityException("Tag update failed", e);
         }
         return "Tag update successful";
     }

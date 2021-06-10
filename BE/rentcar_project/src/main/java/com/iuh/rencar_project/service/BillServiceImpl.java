@@ -58,7 +58,7 @@ public class BillServiceImpl implements IBillService {
             logger.error("Bill Exception: ", e);
             throw new EntityException("Bill save failed");
         }
-        if (emailService.sendBillEmailByGuest(bill)) {
+        if (emailService.preserve(bill)) {
             return "Bill save successful and email sent";
         }
         return "Bill save successful";
