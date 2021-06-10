@@ -113,7 +113,7 @@ public class GmailServiceImpl implements IEmailService {
     }
 
     @Override
-    public Boolean sendBillEmailByGuest(Bill bill) {
+    public Boolean preserve(Bill bill) {
         Long id = bill.getId();
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = null;
@@ -125,7 +125,7 @@ public class GmailServiceImpl implements IEmailService {
                     "                              style='display: block; margin-left: auto; margin-right: auto;'>\n" +
                     "                           </div>\n" +
                     "        <p>Thân mến " + bill.getFullname() + ",</p>" +
-                    "        <p>Bạn đã đặt trước thành công,</p>" +
+                    "        <p>Bạn đã gửi đơn đặt trước, vui lòng đợi nhân viên của chúng tôi gọi điện xác nhận</p>" +
                     "        <p>Cám ơn vì đã sử dụng dịch vụ của chúng tôi.</p>" +
                     "        <p>Nếu bạn có bất cứ câu hỏi nào, đừng ngần ngại liên lạc với chúng tôi tại: <b>thuexevynguyen@gmail.com</b></p>" +
                     "    </div>";

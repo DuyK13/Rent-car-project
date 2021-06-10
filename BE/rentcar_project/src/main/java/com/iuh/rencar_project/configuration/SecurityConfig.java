@@ -56,10 +56,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(authenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/api/notification/subscribe", "/api/login", "/api/guest/**").permitAll()
+                .antMatchers("/api/notification/**", "/api/login", "/api/guest/**").permitAll()
                 .antMatchers("/api/admin/**").hasAuthority(ERole.ROLE_ADMIN.name())
                 .antMatchers("/api/moderator/**", "/api/file/**").hasAnyAuthority(ERole.ROLE_MODERATOR.name(), ERole.ROLE_ADMIN.name())
-                .antMatchers("/api/staff/**", "/api/auth/**", "/api/notification/bill/**").hasAnyAuthority(ERole.ROLE_ADMIN.name(), ERole.ROLE_STAFF.name(), ERole.ROLE_MODERATOR.name())
+                .antMatchers("/api/staff/**", "/api/auth/**").hasAnyAuthority(ERole.ROLE_ADMIN.name(), ERole.ROLE_STAFF.name(), ERole.ROLE_MODERATOR.name())
                 .anyRequest().authenticated();
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }

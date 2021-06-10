@@ -65,7 +65,7 @@ public class PostServiceImpl implements IPostService {
     @Override
     public String update(Long id, PostRequest postRequest, MultipartFile multipartFile) {
         Post currentPost = this.findById(id);
-        if (this.existsByTitle(postRequest.getTitle()) && !currentPost.getTitle().equals(postRequest.getTitle()))
+            if (this.existsByTitle(postRequest.getTitle()) && !currentPost.getTitle().equals(postRequest.getTitle()))
             throw new EntityException("Post exists");
         postMapper.updateEntity(postRequest, currentPost);
         currentPost.setImage(fileService.updatePostImage(multipartFile, currentPost));
@@ -174,7 +174,7 @@ public class PostServiceImpl implements IPostService {
 
     @Override
     public Page<Post> search(int pageNo, int pageSize, String s) {
-        Pageable pageable = PageRequest.of(pageNo-1,pageSize,Sort.by(Sort.Order.asc("id")));
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Order.asc("id")));
         return postRepository.search(s, pageable);
     }
 }
