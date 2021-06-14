@@ -18,4 +18,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query(value = "SELECT r FROM Reservation r WHERE CONCAT(r.fullName, ' ', r.phoneNumber, ' ', r.email, ' ') LIKE %?1% AND r.state = ?2")
     Page<Reservation> search(String search, ReservationState state, Pageable pageable);
+
+    @Query(value = "SELECT r FROM Reservation r WHERE CONCAT(r.fullName, ' ', r.phoneNumber, ' ', r.email, ' ') LIKE %?1%")
+    Page<Reservation> search(String search, Pageable pageable);
 }

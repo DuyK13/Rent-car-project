@@ -1,6 +1,7 @@
 package com.iuh.rencar_project.service.template;
 
 import com.iuh.rencar_project.entity.Bill;
+import com.iuh.rencar_project.entity.Reservation;
 
 /**
  * @author Duy Trần Thế
@@ -9,7 +10,7 @@ import com.iuh.rencar_project.entity.Bill;
  */
 public interface IEmailService {
 
-    Boolean preserve(Bill bill);
+    Boolean reservation(Reservation reservation);
 
     Boolean sendBillEmailByStaff(Bill bill);
 }

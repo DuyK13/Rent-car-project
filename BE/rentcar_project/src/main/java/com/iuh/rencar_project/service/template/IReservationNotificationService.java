@@ -14,6 +14,4 @@ public interface IReservationNotificationService {
     void removeEmitter(SseEmitter emitter);
 
     void doPendingNotify();
-
-    void doExpiredNotify();
 }

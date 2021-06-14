@@ -16,7 +16,7 @@ public interface IReservationService {
 
     String cancelReservation(Long id);
 
-    String expiredReservation(Long id);
-
     Page<Reservation> getPageByState(String state, String search, int pageNo, int pageSize);
+
+    String remove(Long id);
 }
