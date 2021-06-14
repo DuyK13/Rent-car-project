@@ -66,11 +66,12 @@ public class BillServiceImpl implements IBillService {
         Bill bill = this.findById(id);
         billMapper.updateBill(billRequest, bill);
         try {
-            billRepository.saveAndFlush(bill);
+            bill = billRepository.saveAndFlush(bill);
         } catch (Exception e) {
             logger.error("Bill Exception: ", e);
             throw new EntityException("Pay for rental car failed");
         }
+        carService.updateCarForBillPaid(bill.getCar());
         if (emailService.sendBillEmailByStaff(bill)) {
             return "Pay for rental car successful. Bill sending to customer";
         }
@@ -80,7 +81,9 @@ public class BillServiceImpl implements IBillService {
 
     @Override
     public Bill findById(Long id) {
-        return billRepository.findById(id).orElseThrow(() -> new NotFoundException("Bill not found"));
+        Bill bill = billRepository.findById(id).orElseThrow(() -> new NotFoundException("Bill not found"));
+        emailService.sendBillEmailByStaff(bill);
+        return bill;
     }
 
     @Override
