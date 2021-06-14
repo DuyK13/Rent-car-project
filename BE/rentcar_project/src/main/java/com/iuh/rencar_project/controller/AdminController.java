@@ -37,8 +37,6 @@ public class AdminController {
 
     private final ICarService carService;
 
-    private final ICourseService courseService;
-
     private final IBillService billService;
 
     private final IRoleMapper roleMapper;
@@ -48,14 +46,13 @@ public class AdminController {
     private final IBillMapper billMapper;
 
     @Autowired
-    public AdminController(IRoleService roleService, IUserService userService, ITagService tagService, IPostService postService, ICategoryService categoryService, ICarService carService, ICourseService courseService, IBillService billService, IRoleMapper roleMapper, IUserMapper userMapper, IBillMapper billMapper) {
+    public AdminController(IRoleService roleService, IUserService userService, ITagService tagService, IPostService postService, ICategoryService categoryService, ICarService carService, IBillService billService, IRoleMapper roleMapper, IUserMapper userMapper, IBillMapper billMapper) {
         this.roleService = roleService;
         this.userService = userService;
         this.tagService = tagService;
         this.postService = postService;
         this.categoryService = categoryService;
         this.carService = carService;
-        this.courseService = courseService;
         this.billService = billService;
         this.roleMapper = roleMapper;
         this.userMapper = userMapper;
@@ -147,20 +144,6 @@ public class AdminController {
     @PutMapping("/cars/{id}")
     public ResponseEntity<?> setCarAvailability(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(new MessageResponse(carService.setAvailability(id)), HttpStatus.OK);
-    }
-
-    // ======================================
-    // ============== COURSE ================
-    // ======================================
-
-    @DeleteMapping("/course/{id}")
-    public ResponseEntity<?> deleteCourse(@PathVariable(name = "id") Long id) {
-        return new ResponseEntity<>(new MessageResponse(courseService.delete(id)), HttpStatus.OK);
-    }
-
-    @PutMapping("/courses/{id}")
-    public ResponseEntity<?> setCourseAvailability(@PathVariable(name = "id") Long id) {
-        return new ResponseEntity<>(new MessageResponse(courseService.setAvailability(id)), HttpStatus.OK);
     }
 
     // ======================================

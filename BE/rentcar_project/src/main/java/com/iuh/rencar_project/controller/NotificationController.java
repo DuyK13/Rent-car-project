@@ -1,6 +1,6 @@
 package com.iuh.rencar_project.controller;
 
-import com.iuh.rencar_project.service.template.INotificationService;
+import com.iuh.rencar_project.service.template.IReservationNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,34 +19,34 @@ import java.io.IOException;
 @RequestMapping("/api/notification")
 public class NotificationController {
 
-    private final INotificationService billNotificationService;
+    private final IReservationNotificationService reservationNotificationService;
 
     @Autowired
-    public NotificationController(INotificationService billNotificationService) {
-        this.billNotificationService = billNotificationService;
+    public NotificationController(IReservationNotificationService reservationNotificationService) {
+        this.reservationNotificationService = reservationNotificationService;
     }
 
-    @RequestMapping(value = "/subscribe", consumes = MediaType.ALL_VALUE)
-    public SseEmitter billSubscribe() {
-        SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
-        this.sendInitEvent(sseEmitter);
-        billNotificationService.addEmitter(sseEmitter);
-        sseEmitter.onCompletion(() -> billNotificationService.removeEmitter(sseEmitter));
-        sseEmitter.onTimeout(() -> billNotificationService.removeEmitter(sseEmitter));
-        sseEmitter.onError((e) -> billNotificationService.removeEmitter(sseEmitter));
-        return sseEmitter;
-    }
-
-    @PostMapping(value = "/bill/notifyAll")
-    public void billNotifyAll() {
-        billNotificationService.doNotify();
-    }
-
-    private void sendInitEvent(SseEmitter sseEmitter) {
-        try {
-            sseEmitter.send(SseEmitter.event().name("INIT"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    @RequestMapping(value = "/subscribe", consumes = MediaType.ALL_VALUE)
+//    public SseEmitter billSubscribe() {
+//        SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
+//        this.sendInitEvent(sseEmitter);
+//        billNotificationService.addEmitter(sseEmitter);
+//        sseEmitter.onCompletion(() -> billNotificationService.removeEmitter(sseEmitter));
+//        sseEmitter.onTimeout(() -> billNotificationService.removeEmitter(sseEmitter));
+//        sseEmitter.onError((e) -> billNotificationService.removeEmitter(sseEmitter));
+//        return sseEmitter;
+//    }
+//
+//    @PostMapping(value = "/bill/notifyAll")
+//    public void billNotifyAll() {
+//        billNotificationService.doNotify();
+//    }
+//
+//    private void sendInitEvent(SseEmitter sseEmitter) {
+//        try {
+//            sseEmitter.send(SseEmitter.event().name("INIT"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

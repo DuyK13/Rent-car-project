@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequestMapping("/api/moderator")
 @RestController
@@ -20,15 +21,11 @@ public class ModeratorController {
 
     private final ITagService tagService;
 
-    private final ICommentService commentService;
-
     private final IPostService postService;
 
     private final ICategoryService categoryService;
 
     private final ICarService carService;
-
-    private final ICourseService courseService;
 
     private final IBillService billService;
 
@@ -40,28 +37,20 @@ public class ModeratorController {
 
     private final ICarMapper carMapper;
 
-    private final ICourseMapper courseMapper;
-
     private final IBillMapper billMapper;
 
-    private final ICommentMapper commentMapper;
-
     @Autowired
-    public ModeratorController(ITagService tagService, ICommentService commentService, IPostService postService, ICategoryService categoryService, ICarService carService, ICourseService courseService, IBillService billService, ITagMapper tagMapper, IPostMapper postMapper, ICategoryMapper categoryMapper, ICarMapper carMapper, ICourseMapper courseMapper, IBillMapper billMapper, ICommentMapper commentMapper) {
+    public ModeratorController(ITagService tagService, IPostService postService, ICategoryService categoryService, ICarService carService, IBillService billService, ITagMapper tagMapper, IPostMapper postMapper, ICategoryMapper categoryMapper, ICarMapper carMapper, IBillMapper billMapper) {
         this.tagService = tagService;
-        this.commentService = commentService;
         this.postService = postService;
         this.categoryService = categoryService;
         this.carService = carService;
-        this.courseService = courseService;
         this.billService = billService;
         this.tagMapper = tagMapper;
         this.postMapper = postMapper;
         this.categoryMapper = categoryMapper;
         this.carMapper = carMapper;
-        this.courseMapper = courseMapper;
         this.billMapper = billMapper;
-        this.commentMapper = commentMapper;
     }
 
     // ======================================
@@ -126,43 +115,6 @@ public class ModeratorController {
     }
 
     // ======================================
-    // =============== COMMENT ==============
-    // ======================================
-
-    @PutMapping("/comments/{id}")
-    public ResponseEntity<?> setCommentAvailability(@PathVariable(name = "id") Long id) {
-        return new ResponseEntity<>(new MessageResponse(commentService.setAvailability(id)), HttpStatus.OK);
-
-    }
-
-    @DeleteMapping("/comments/{id}")
-    public ResponseEntity<?> deleteComment(@PathVariable(name = "id") Long id) {
-        return new ResponseEntity<>(new MessageResponse(commentService.delete(id)), HttpStatus.OK);
-    }
-
-    @GetMapping("/comments")
-    public ResponseEntity<?> getCommentPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam(name = "status", required = false) Optional<String> status, @RequestParam(name = "pageSize", defaultValue = "5") int pageSize) {
-        Page<CommentResponse> pageCommentResponse = null;
-        if (status.isPresent()) {
-            if (status.get().equalsIgnoreCase(Status.DISABLE.name()))
-                pageCommentResponse = commentService.findAllPaginatedDisable(pageNo, pageSize)
-                        .map(commentMapper::toResponse);
-            else if (status.get().equalsIgnoreCase(Status.ENABLE.name()))
-                pageCommentResponse = commentService.findAllPaginatedEnable(pageNo, pageSize)
-                        .map(commentMapper::toResponse);
-        } else {
-            pageCommentResponse = commentService.findAllPaginated(pageNo, pageSize)
-                    .map(commentMapper::toResponse);
-        }
-        PageResponse<CommentResponse> pageResult = null;
-        if (pageCommentResponse != null)
-            pageResult = new PageResponse<>(pageCommentResponse.getContent(),
-                    pageCommentResponse.getTotalPages(), pageCommentResponse.getNumber());
-        return new ResponseEntity<>(pageResult != null ? pageResult : new MessageResponse("Nothing found"), HttpStatus.OK);
-    }
-
-
-    // ======================================
     // ============== CATEGORY ==============
     // ======================================
 
@@ -194,6 +146,11 @@ public class ModeratorController {
         return new ResponseEntity<>(pageResult, HttpStatus.OK);
     }
 
+    @GetMapping("/categories/list")
+    public ResponseEntity<?> getListCategory() {
+        return new ResponseEntity<>(categoryService.findAll().stream().map(categoryMapper::toResponse).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
     // ======================================
     // ================= CAR ================
     // ======================================
@@ -223,36 +180,6 @@ public class ModeratorController {
                 .map(carMapper::toResponse));
         PageResponse<CarResponse> pageResult = new PageResponse<>(pageCarResponse.getContent(),
                 pageCarResponse.getTotalPages(), pageCarResponse.getNumber());
-        return new ResponseEntity<>(pageResult, HttpStatus.OK);
-    }
-
-    // ======================================
-    // ============== COURSE ================
-    // ======================================
-
-    @PostMapping("/courses")
-    public ResponseEntity<?> saveCourse(@RequestBody CourseRequest courseRequest) {
-        return new ResponseEntity<>(new MessageResponse(courseService.save(courseRequest)), HttpStatus.OK);
-    }
-
-    @GetMapping("/courses/{id}")
-    public ResponseEntity<?> getCourseById(@PathVariable(name = "id") Long id) {
-        CourseResponse courseResponse = courseMapper.toResponse(courseService.findById(id));
-        return new ResponseEntity<>(courseResponse, HttpStatus.OK);
-    }
-
-    @PutMapping("/courses/{id}")
-    public ResponseEntity<?> updateCourse(@PathVariable(name = "id") Long id,
-                                          @RequestBody CourseRequest courseRequest) {
-        return new ResponseEntity<>(new MessageResponse(courseService.update(id, courseRequest)), HttpStatus.OK);
-    }
-
-    @GetMapping("/courses")
-    public ResponseEntity<?> getCoursePaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam(name = "pageSize", defaultValue = "5") int pageSize) {
-        Page<CourseResponse> pageCourseResponse = courseService.findAllPaginated(pageNo, pageSize)
-                .map(courseMapper::toResponse);
-        PageResponse<CourseResponse> pageResult = new PageResponse<>(pageCourseResponse.getContent(),
-                pageCourseResponse.getTotalPages(), pageCourseResponse.getNumber());
         return new ResponseEntity<>(pageResult, HttpStatus.OK);
     }
 

@@ -14,8 +14,10 @@ public class BillRequest {
     private String type;
     private LocalDateTime startTime;
     private Long rentTime;
-    private String course;
     private String car;
+    private Long billAmount;
+    private Long charges;
+    private String note;
 
     public BillRequest() {
     }
@@ -68,19 +70,35 @@ public class BillRequest {
         this.rentTime = rentTime;
     }
 
-    public String getCourse() {
-        return course;
-    }
-
-    public void setCourse(String course) {
-        this.course = course;
-    }
-
     public String getCar() {
         return car;
     }
 
     public void setCar(String car) {
         this.car = car;
+    }
+
+    public Long getBillAmount() {
+        return billAmount;
+    }
+
+    public void setBillAmount(Long billAmount) {
+        this.billAmount = billAmount;
+    }
+
+    public Long getCharges() {
+        return charges;
+    }
+
+    public void setCharges(Long charges) {
+        this.charges = charges;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

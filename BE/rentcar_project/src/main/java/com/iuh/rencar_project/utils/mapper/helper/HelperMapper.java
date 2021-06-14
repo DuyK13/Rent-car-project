@@ -28,11 +28,7 @@ public class HelperMapper {
 
     private ITagService tagService;
 
-    private ICommentService commentService;
-
     private ICategoryService categoryService;
-
-    private ICourseService courseService;
 
     private IBillService billService;
 
@@ -60,10 +56,6 @@ public class HelperMapper {
         this.billService = billService;
     }
 
-    @Autowired
-    public void setCourseService(ICourseService courseService) {
-        this.courseService = courseService;
-    }
 
     @Autowired
     public void setTagService(ITagService tagService) {
@@ -73,11 +65,6 @@ public class HelperMapper {
     @Autowired
     public void setRoleService(IRoleService roleService) {
         this.roleService = roleService;
-    }
-
-    @Autowired
-    public void setCommentService(ICommentService commentService) {
-        this.commentService = commentService;
     }
 
     @Autowired
@@ -122,25 +109,11 @@ public class HelperMapper {
         return tag.getName();
     }
 
-    @LongToCommentMapping
-    public Comment toComment(Long id) {
-        if (id == null)
-            return null;
-        return commentService.findById(id);
-    }
-
     @StringToCategoryMapping
     public Category toCategory(String name) {
         if (Strings.isEmpty(name))
             return null;
         return categoryService.findByName(name);
-    }
-
-    @StringToCourseMapping
-    public Course toCourse(String title) {
-        if (Strings.isEmpty(title))
-            return null;
-        return courseService.findByTitle(title);
     }
 
     @StringToCarMapping
@@ -150,25 +123,6 @@ public class HelperMapper {
         return carService.findByName(name);
     }
 
-    @BillSlugMapping
-    public String toBillSlug(String fullname) {
-        return passwordEncoder.encode(billService.getCurrentId() + "").replace("/", "");
-    }
-
-    @CommentLevelMapping
-    public int toLevel(Long id) {
-        if (Objects.isNull(id)) {
-            return 0;
-        } else {
-            Comment comment = commentService.findById(id);
-            if (comment.getLevel() == Comment.MAX_LEVEL)
-                throw new EntityException("Can not reply comment");
-            else
-                return comment.getLevel() + 1;
-        }
-    }
-
-    @StringToPostMapping
     public Post toPost(String title){
         return postService.findByTitle(title);
     }

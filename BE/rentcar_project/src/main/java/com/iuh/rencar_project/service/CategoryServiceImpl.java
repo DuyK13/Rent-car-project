@@ -175,7 +175,12 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public Page<Category> search(int pageNo, int pageSize, String s) {
-        Pageable pageable = PageRequest.of(pageNo-1,pageSize,Sort.by(Sort.Order.asc("id")));
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Order.asc("id")));
         return categoryReposity.search(s, pageable);
+    }
+
+    @Override
+    public List<Category> findAll() {
+        return categoryReposity.findAll();
     }
 }
