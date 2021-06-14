@@ -81,42 +81,15 @@ public class StaffController {
         return new ResponseEntity<>(new MessageResponse(billService.create(billRequest)), HttpStatus.OK);
     }
 
-//    @PutMapping("/bills/{id}/pending")
-//    public ResponseEntity<?> updateBillPending(@PathVariable(name = "id") Long id) {
-//        return new ResponseEntity<>(new MessageResponse(billService.updateBillPending(id)), HttpStatus.OK);
-//    }
-
-//    @DeleteMapping("/bills/{id}/pending")
-//    public ResponseEntity<?> deleteBillPending(@PathVariable(name = "id") Long id) {
-//        return new ResponseEntity<>(new MessageResponse(billService.deleteBillPending(id)), HttpStatus.OK);
-//    }
-
-//    @PutMapping("/bills/{id}/approved")
-//    public ResponseEntity<?> updateBillApproved(@PathVariable(name = "id") Long id, @RequestBody BillRequest billRequest) {
-//        return new ResponseEntity<>(new MessageResponse(billService.updateBillApproved(id, billRequest)), HttpStatus.OK);
-//    }
-//
-//    @DeleteMapping("/bills/{id}/approved")
-//    public ResponseEntity<?> deleteBillApproved(@PathVariable(name = "id") Long id) {
-//        return new ResponseEntity<>(new MessageResponse(billService.deleteBillApproved(id)), HttpStatus.OK);
-//    }
-
-//    @PutMapping("/bills/{id}/rented")
-//    public ResponseEntity<?> updateBillRented(@PathVariable(name = "id") Long id) {
-//        return new ResponseEntity<>(new MessageResponse(billService.updateBillRented(id)), HttpStatus.OK);
-//    }
+    @PutMapping("/bills/{id}/rented")
+    public ResponseEntity<?> updateBillRented(@PathVariable(name = "id") Long id, @RequestBody BillRequest billRequest) {
+        return new ResponseEntity<>(new MessageResponse(billService.updateBillRented(id, billRequest)), HttpStatus.OK);
+    }
 
     @GetMapping("/bills/{id}")
     public ResponseEntity<?> getBillById(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(billMapper.toResponse(billService.findById(id)), HttpStatus.OK);
     }
-
-//    @GetMapping("/bills/{id}/calculate-charge")
-//    public ResponseEntity<?> getBillChargeById(@PathVariable(name = "id") Long id) {
-//        Long amount = billService.getBillAmountById(id);
-//        Long lateCharge = billService.getBillLateChargeById(id);
-//        return new ResponseEntity<>(new ChargeResponse(amount, lateCharge), HttpStatus.OK);
-//    }
 
     @GetMapping("/bills")
     public ResponseEntity<?> getBillPaginated(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam(name = "pageSize", defaultValue = "5") int pageSize, @RequestParam(name = "state") String state, @RequestParam(name = "search", required = false) Optional<String> text) {
@@ -133,18 +106,18 @@ public class StaffController {
     // ============= RESERVATION ============
     // ======================================
 
-    @PutMapping("reservation/{id}/approved")
+    @PutMapping("reservation/{id}")
     public ResponseEntity<MessageResponse> approvedReservation(@PathVariable Long id) {
         return new ResponseEntity<>(new MessageResponse(reservationService.approvedReservation(id)), HttpStatus.OK);
     }
 
-    @PutMapping("reservation/{id}/cancel")
+    @DeleteMapping("reservation/{id}")
     public ResponseEntity<MessageResponse> cancelReservation(@PathVariable Long id) {
         return new ResponseEntity<>(new MessageResponse(reservationService.cancelReservation(id)), HttpStatus.OK);
     }
 
     @GetMapping("reservation")
-    public ResponseEntity<PageResponse<ReservationResponse>> getPage(@RequestParam(name = "pageNo") int pageNo, @RequestParam(name = "pageSize") int pageSize, @RequestParam(name = "state", defaultValue = "") String state, @RequestParam(name = "search", defaultValue = "") String search) {
+    public ResponseEntity<PageResponse<ReservationResponse>> getPage(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo, @RequestParam(name = "pageSize", defaultValue = "5") int pageSize, @RequestParam(name = "state", defaultValue = "") String state, @RequestParam(name = "search", defaultValue = "") String search) {
         Page<ReservationResponse> responsePage = reservationService.getPageByState(state.toUpperCase(), search, pageNo, pageSize).map(reservationMapper::toResponse);
         PageResponse<ReservationResponse> reservationResponsePageResponse = new PageResponse<>(responsePage.getContent(), responsePage.getTotalPages(), responsePage.getNumber());
         return new ResponseEntity<>(reservationResponsePageResponse, HttpStatus.OK);

@@ -38,11 +38,6 @@ public class ReservationNotificationServiceImpl implements IReservationNotificat
         doNotify(ReservationState.PENDING.name(), "New reservation");
     }
 
-    @Override
-    public void doExpiredNotify() {
-        doNotify(ReservationState.EXPIRED.name(), "Expired reservation");
-    }
-
     @Async
     void doNotify(String name, String data) {
         List<SseEmitter> deadEmitters = new ArrayList<>();

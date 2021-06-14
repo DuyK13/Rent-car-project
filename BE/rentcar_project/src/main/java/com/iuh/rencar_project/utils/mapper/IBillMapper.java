@@ -3,7 +3,10 @@ package com.iuh.rencar_project.utils.mapper;
 import com.iuh.rencar_project.dto.request.BillRequest;
 import com.iuh.rencar_project.dto.response.BillResponse;
 import com.iuh.rencar_project.entity.Bill;
-import com.iuh.rencar_project.utils.mapper.annotation.*;
+import com.iuh.rencar_project.utils.mapper.annotation.BillTypeToStringMapping;
+import com.iuh.rencar_project.utils.mapper.annotation.StringToCarMapping;
+import com.iuh.rencar_project.utils.mapper.annotation.StringToTypeNameMapping;
+import com.iuh.rencar_project.utils.mapper.annotation.UserToStringMapping;
 import com.iuh.rencar_project.utils.mapper.helper.HelperMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -42,14 +45,14 @@ public interface IBillMapper {
             @Mapping(target = "createdDate", ignore = true),
             @Mapping(target = "modifiedBy", ignore = true),
             @Mapping(target = "modifiedDate", ignore = true),
-            @Mapping(target = "type", source = "type", qualifiedBy = StringToTypeNameMapping.class),
-            @Mapping(target = "car", source = "car", qualifiedBy = StringToCarMapping.class),
-            @Mapping(target = "state", expression = "java(com.iuh.rencar_project.utils.enums.BillState.RENTED)"),
+            @Mapping(target = "type", ignore = true),
+            @Mapping(target = "car", ignore = true),
+            @Mapping(target = "state", expression = "java(com.iuh.rencar_project.utils.enums.BillState.PAID)"),
             @Mapping(target = "billAmount", ignore = true),
-            @Mapping(target = "charges", ignore = true),
-            @Mapping(target = "note", ignore = true)
+            @Mapping(target = "charges", source = "charges"),
+            @Mapping(target = "note", source = "note")
     })
-    void paidBill(BillRequest billRequest, @MappingTarget Bill bill);
+    void updateBill(BillRequest billRequest, @MappingTarget Bill bill);
 
     @Mappings({
             @Mapping(target = "createdBy", source = "createdBy", qualifiedBy = UserToStringMapping.class),

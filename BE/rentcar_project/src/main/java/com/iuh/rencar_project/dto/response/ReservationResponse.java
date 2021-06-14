@@ -9,15 +9,15 @@ import java.time.LocalDateTime;
  */
 public class ReservationResponse {
     private Long id;
-    private LocalDateTime pickupdDate;
+    private LocalDateTime pickupDate;
     private String fullName;
     private String phoneNumber;
     private String email;
     private String state;
 
-    public ReservationResponse(Long id, LocalDateTime pickupdDate, String fullName, String phoneNumber, String email, String state) {
+    public ReservationResponse(Long id, LocalDateTime pickupDate, String fullName, String phoneNumber, String email, String state) {
         this.id = id;
-        this.pickupdDate = pickupdDate;
+        this.pickupDate = pickupDate;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.email = email;
@@ -35,12 +35,12 @@ public class ReservationResponse {
         this.id = id;
     }
 
-    public LocalDateTime getPickupdDate() {
-        return pickupdDate;
+    public LocalDateTime getPickupDate() {
+        return pickupDate;
     }
 
-    public void setPickupdDate(LocalDateTime pickupdDate) {
-        this.pickupdDate = pickupdDate;
+    public void setPickupDate(LocalDateTime pickupDate) {
+        this.pickupDate = pickupDate;
     }
 
     public String getFullName() {
