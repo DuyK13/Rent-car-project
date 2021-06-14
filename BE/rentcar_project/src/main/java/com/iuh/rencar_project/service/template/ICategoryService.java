@@ -42,4 +42,6 @@ public interface ICategoryService {
     List<Category> findAllEnable();
 
     Page<Category> search(int pageNo, int pageSize, String s);
+
+    List<Category> findAll();
 }

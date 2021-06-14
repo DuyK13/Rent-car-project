@@ -11,7 +11,6 @@ public class BillResponse {
 
     private Long id;
     private String fullname;
-    private String slug;
     private String phoneNumber;
     private String email;
     private String createdBy;
@@ -21,11 +20,11 @@ public class BillResponse {
     private String type;
     private LocalDateTime startTime;
     private Long rentTime;
-    private CourseResponse course;
     private CarResponse car;
     private String state;
+    private Long charges;
     private Long billAmount;
-    private Long lateCharge;
+    private String note;
 
     public BillResponse() {
     }
@@ -44,14 +43,6 @@ public class BillResponse {
 
     public void setFullname(String fullname) {
         this.fullname = fullname;
-    }
-
-    public String getSlug() {
-        return slug;
-    }
-
-    public void setSlug(String slug) {
-        this.slug = slug;
     }
 
     public String getPhoneNumber() {
@@ -126,14 +117,6 @@ public class BillResponse {
         this.rentTime = rentTime;
     }
 
-    public CourseResponse getCourse() {
-        return course;
-    }
-
-    public void setCourse(CourseResponse course) {
-        this.course = course;
-    }
-
     public CarResponse getCar() {
         return car;
     }
@@ -158,11 +141,19 @@ public class BillResponse {
         this.billAmount = billAmount;
     }
 
-    public Long getLateCharge() {
-        return lateCharge;
+    public Long getCharges() {
+        return charges;
     }
 
-    public void setLateCharge(Long lateCharge) {
-        this.lateCharge = lateCharge;
+    public void setCharges(Long charges) {
+        this.charges = charges;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

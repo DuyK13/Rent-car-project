@@ -13,29 +13,29 @@ import java.util.List;
  * @date 5/15/2021 10:06 AM
  */
 public interface IBillService {
-    String save(BillRequest billRequest);
-
-    String saveByStaff(BillRequest billRequest);
-
-    String delete(Long id);
-
+//    String save(BillRequest billRequest);
+//
+    String create(BillRequest billRequest);
+//
+//    String delete(Long id);
+//
     Bill findById(Long id);
-
-    Bill findBySlug(String var);
-
+//
+//    Bill findBySlug(String var);
+//
     Page<Bill> findAllPaginated(int pageNo, int pageSize);
+//
+//    Long getCurrentId();
 
-    Long getCurrentId();
+//    String updateBillPending(Long id);
 
-    String updateBillPending(Long id);
+//    String updateBillApproved(Long id, BillRequest billRequest);
 
-    String updateBillApproved(Long id, BillRequest billRequest);
+//    String updateBillRented(Long id);
 
-    String updateBillRented(Long id);
+//    String deleteBillPending(Long id);
 
-    String deleteBillPending(Long id);
-
-    String deleteBillApproved(Long id);
+//    String deleteBillApproved(Long id);
 
     Page<Bill> findAllPaginatedAndState(int pageNo, int pageSize, BillState state);
 
@@ -45,7 +45,7 @@ public interface IBillService {
 
     Long getBillAmountById(Long id);
 
-    Long getBillLateChargeById(Long id);
+//    Long getBillLateChargeById(Long id);
 
     List<Bill> findAllByMonthAndYear(int month, int year);
 }

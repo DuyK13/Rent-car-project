@@ -1,7 +1,6 @@
 package com.iuh.rencar_project.controller;
 
-import com.iuh.rencar_project.dto.request.BillRequest;
-import com.iuh.rencar_project.dto.request.CommentRequest;
+import com.iuh.rencar_project.dto.request.ReservationRequest;
 import com.iuh.rencar_project.dto.response.*;
 import com.iuh.rencar_project.entity.Tag;
 import com.iuh.rencar_project.service.template.*;
@@ -26,11 +25,9 @@ public class GuestController {
 
     private final IPostService postService;
 
-    private final ICourseService courseService;
-
-    private final ICommentService commentService;
-
     private final ICategoryService categoryService;
+
+    private final IReservationService reservationService;
 
     private final ITagService tagService;
 
@@ -40,8 +37,6 @@ public class GuestController {
 
     private final IPostMapper postMapper;
 
-    private final ICourseMapper courseMapper;
-
     private final ICategoryMapper categoryMapper;
 
     private final ICarMapper carMapper;
@@ -50,21 +45,22 @@ public class GuestController {
 
     private final ITagMapper tagMapper;
 
+    private final IReservationMapper reservationMapper;
+
     @Autowired
-    public GuestController(IPostService postService, ICourseService courseService, ICommentService commentService, ICategoryService categoryService, ITagService tagService, ICarService carService, IBillService billService, IPostMapper postMapper, ICourseMapper courseMapper, ICategoryMapper categoryMapper, ICarMapper carMapper, IBillMapper billMapper, ITagMapper tagMapper) {
+    public GuestController(IPostService postService, ICategoryService categoryService, IReservationService reservationService, ITagService tagService, ICarService carService, IBillService billService, IPostMapper postMapper, ICategoryMapper categoryMapper, ICarMapper carMapper, IBillMapper billMapper, ITagMapper tagMapper, IReservationMapper reservationMapper) {
         this.postService = postService;
-        this.courseService = courseService;
-        this.commentService = commentService;
         this.categoryService = categoryService;
+        this.reservationService = reservationService;
         this.tagService = tagService;
         this.carService = carService;
         this.billService = billService;
         this.postMapper = postMapper;
-        this.courseMapper = courseMapper;
         this.categoryMapper = categoryMapper;
         this.carMapper = carMapper;
         this.billMapper = billMapper;
         this.tagMapper = tagMapper;
+        this.reservationMapper = reservationMapper;
     }
 
     // ======================================
@@ -103,32 +99,6 @@ public class GuestController {
     }
 
     // ======================================
-    // =============== Course ===============
-    // ======================================
-
-    @GetMapping("/courses")
-    public ResponseEntity<?> getListCourses() {
-        List<CourseResponse> courseResponseList = courseService.findAllForGuest().stream().map(courseMapper::toResponse).collect(Collectors.toList());
-        return new ResponseEntity<>(courseResponseList, HttpStatus.OK);
-    }
-
-    @GetMapping("/courses/{slug}")
-    public ResponseEntity<?> getCourseBySlug(@PathVariable(name = "slug") String slug) {
-        CourseResponse courseResponse = courseMapper.toResponse(courseService.findBySlug(slug));
-        return new ResponseEntity<>(courseResponse, HttpStatus.OK);
-    }
-
-    // ======================================
-    // =============== Comment ==============
-    // ======================================
-
-    @PostMapping("/posts/{slug}/comments")
-    public ResponseEntity<?> saveComment(@RequestBody CommentRequest commentRequest, @PathVariable(name = "slug") String slug) {
-        String message = commentService.save(slug, commentRequest);
-        return new ResponseEntity<>(new MessageResponse(message), HttpStatus.OK);
-    }
-
-    // ======================================
     // =============== Category =============
     // ======================================
 
@@ -156,18 +126,12 @@ public class GuestController {
     }
 
     // ======================================
-    // ================= Bill ===============
+    // ============= RESERVATION ============
     // ======================================
 
-    @PostMapping("/bills")
-    public ResponseEntity<?> registerBill(@RequestBody BillRequest billRequest) {
-        String message = billService.save(billRequest);
-        return new ResponseEntity<>(new MessageResponse(message), HttpStatus.OK);
+    @PostMapping("reservation")
+    public ResponseEntity<MessageResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
+        return new ResponseEntity<>(new MessageResponse(reservationService.save(reservationRequest)), HttpStatus.OK);
     }
 
-    @GetMapping("/bills/{slug}")
-    public ResponseEntity<?> getBillBySlug(@PathVariable(name = "slug") String slug) {
-        BillResponse billResponse = billMapper.toResponse(billService.findBySlug(slug));
-        return new ResponseEntity<>(billResponse, HttpStatus.OK);
-    }
 }

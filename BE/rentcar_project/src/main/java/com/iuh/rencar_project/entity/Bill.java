@@ -1,8 +1,5 @@
 package com.iuh.rencar_project.entity;
 
-import com.iuh.rencar_project.entity.Car;
-import com.iuh.rencar_project.entity.Course;
-import com.iuh.rencar_project.entity.User;
 import com.iuh.rencar_project.utils.enums.BillState;
 import com.iuh.rencar_project.utils.enums.BillType;
 import org.springframework.data.annotation.CreatedDate;
@@ -13,11 +10,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity@EntityListeners(AuditingEntityListener.class)@Table(name = "bills", uniqueConstraints = {@UniqueConstraint(columnNames = "slug")}, indexes = @Index(name = "IDX_Search", columnList = "fullname, phone_number, email"))
+@Entity
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "bills", indexes = @Index(name = "IDX_Search", columnList = "fullname, phone_number, email"))
 public class Bill {
-
-    @Transient
-    public static final Long LATE_CHARGE = 50000L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,9 +21,6 @@ public class Bill {
 
     @Column(nullable = false)
     private String fullname;
-
-    @Column(nullable = false)
-    private String slug;
 
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
@@ -63,10 +56,6 @@ public class Bill {
     private Long rentTime;
 
     @ManyToOne
-    @JoinColumn(name = "course_id", referencedColumnName = "id")
-    private Course course;
-
-    @ManyToOne
     @JoinColumn(name = "car_id", referencedColumnName = "id")
     private Car car;
 
@@ -77,13 +66,13 @@ public class Bill {
     @Column(name = "bill_amount")
     private Long billAmount;
 
-    @Column(name = "late_charge")
-    private Long lateCharge;
+    private Long charges;
 
-    public Bill(Long id, String fullname, String slug, String phoneNumber, String email, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate, BillType type, LocalDateTime startTime, Long rentTime, Course course, Car car, BillState state, Long billAmount, Long lateCharge) {
+    private String note;
+
+    public Bill(Long id, String fullname, String phoneNumber, String email, User createdBy, LocalDateTime createdDate, User modifiedBy, LocalDateTime modifiedDate, BillType type, LocalDateTime startTime, Long rentTime, Car car, BillState state, Long billAmount, Long charges, String note) {
         this.id = id;
         this.fullname = fullname;
-        this.slug = slug;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.createdBy = createdBy;
@@ -93,11 +82,11 @@ public class Bill {
         this.type = type;
         this.startTime = startTime;
         this.rentTime = rentTime;
-        this.course = course;
         this.car = car;
         this.state = state;
         this.billAmount = billAmount;
-        this.lateCharge = lateCharge;
+        this.charges = charges;
+        this.note = note;
     }
 
     public Bill() {
@@ -117,14 +106,6 @@ public class Bill {
 
     public void setFullname(String fullname) {
         this.fullname = fullname;
-    }
-
-    public String getSlug() {
-        return slug;
-    }
-
-    public void setSlug(String slug) {
-        this.slug = slug;
     }
 
     public String getPhoneNumber() {
@@ -199,14 +180,6 @@ public class Bill {
         this.rentTime = rentTime;
     }
 
-    public Course getCourse() {
-        return course;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
-    }
-
     public Car getCar() {
         return car;
     }
@@ -231,34 +204,19 @@ public class Bill {
         this.billAmount = billAmount;
     }
 
-    public Long getLateCharge() {
-        return lateCharge;
+    public Long getCharges() {
+        return charges;
     }
 
-    public void setLateCharge(Long lateCharge) {
-        this.lateCharge = lateCharge;
+    public void setCharges(Long charges) {
+        this.charges = charges;
     }
 
-    @Override
-    public String toString() {
-        return "Bill{" +
-                "id=" + id +
-                ", fullname='" + fullname + '\'' +
-                ", slug='" + slug + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", email='" + email + '\'' +
-                ", createdBy=" + createdBy +
-                ", createdDate=" + createdDate +
-                ", modifiedBy=" + modifiedBy +
-                ", modifiedDate=" + modifiedDate +
-                ", type=" + type +
-                ", startTime=" + startTime +
-                ", rentTime=" + rentTime +
-                ", course=" + course +
-                ", car=" + car +
-                ", state=" + state +
-                ", billAmount=" + billAmount +
-                ", lateCharge=" + lateCharge +
-                '}';
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }
