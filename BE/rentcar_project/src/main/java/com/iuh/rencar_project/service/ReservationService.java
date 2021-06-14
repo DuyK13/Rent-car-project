@@ -88,7 +88,7 @@ public class ReservationService implements IReservationService {
     @Override
     public Page<Reservation> getPageByState(String state, String search, int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Order.asc("id")));
-        return state.isEmpty()?reservationRepository.search(search, pageable):reservationRepository.search(search, Enum.valueOf(ReservationState.class, state), pageable);
+        return state.isEmpty() ? reservationRepository.search(search, pageable) : reservationRepository.search(search, Enum.valueOf(ReservationState.class, state), pageable);
     }
 
     @Override
@@ -119,6 +119,4 @@ public class ReservationService implements IReservationService {
             }
         }, Timestamp.valueOf(reservation.getPickupDate()));
     }
-
-
 }

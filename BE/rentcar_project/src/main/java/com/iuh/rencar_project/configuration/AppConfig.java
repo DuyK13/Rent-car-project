@@ -27,7 +27,6 @@ import java.util.Optional;
  */
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider", dateTimeProviderRef = "auditingDateTimeProvider")
 @Configuration
-@EnableCaching
 public class AppConfig {
 
 
