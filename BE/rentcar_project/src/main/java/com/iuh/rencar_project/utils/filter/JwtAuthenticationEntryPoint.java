@@ -7,8 +7,8 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    private static final Logger logger = LogManager.getLogger(JwtAuthenticationEntryPoint.class);
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationEntryPoint.class);
 
     private final LocalDateTime now = LocalDateTime.now();
 
@@ -88,7 +88,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             errorResponse = new ErrorResponse(message, HttpStatus.UNAUTHORIZED, now);
             response.getWriter().write(this.writeBody(errorResponse, exception, "Illegal Argument Error: "));
         } else {
-            message = ((authException.getCause() != null) ? authException.getCause().toString() + " ": "") + authException.getMessage();
+            message = ((authException.getCause() != null) ? authException.getCause().toString() + " " : "") + authException.getMessage();
             errorResponse = new ErrorResponse(message, HttpStatus.UNAUTHORIZED, now);
             response.getWriter().write(this.writeBody(errorResponse, authException, "Auth Error: "));
         }
