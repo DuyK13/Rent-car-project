@@ -26,27 +26,27 @@ public class NotificationController {
         this.reservationNotificationService = reservationNotificationService;
     }
 
-//    @RequestMapping(value = "/subscribe", consumes = MediaType.ALL_VALUE)
-//    public SseEmitter billSubscribe() {
-//        SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
-//        this.sendInitEvent(sseEmitter);
-//        billNotificationService.addEmitter(sseEmitter);
-//        sseEmitter.onCompletion(() -> billNotificationService.removeEmitter(sseEmitter));
-//        sseEmitter.onTimeout(() -> billNotificationService.removeEmitter(sseEmitter));
-//        sseEmitter.onError((e) -> billNotificationService.removeEmitter(sseEmitter));
-//        return sseEmitter;
-//    }
-//
-//    @PostMapping(value = "/bill/notifyAll")
-//    public void billNotifyAll() {
-//        billNotificationService.doNotify();
-//    }
-//
-//    private void sendInitEvent(SseEmitter sseEmitter) {
-//        try {
-//            sseEmitter.send(SseEmitter.event().name("INIT"));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    @RequestMapping(value = "/subscribe", consumes = MediaType.ALL_VALUE)
+    public SseEmitter billSubscribe() {
+        SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
+        this.sendInitEvent(sseEmitter);
+        reservationNotificationService.addEmitter(sseEmitter);
+        sseEmitter.onCompletion(() -> reservationNotificationService.removeEmitter(sseEmitter));
+        sseEmitter.onTimeout(() -> reservationNotificationService.removeEmitter(sseEmitter));
+        sseEmitter.onError((e) -> reservationNotificationService.removeEmitter(sseEmitter));
+        return sseEmitter;
+    }
+
+    @PostMapping(value = "/reservation/pending-notify")
+    public void billNotifyAll() {
+        reservationNotificationService.doPendingNotify();
+    }
+
+    private void sendInitEvent(SseEmitter sseEmitter) {
+        try {
+            sseEmitter.send(SseEmitter.event().name("INIT"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
