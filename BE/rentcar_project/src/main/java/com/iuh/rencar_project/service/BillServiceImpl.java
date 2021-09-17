@@ -82,7 +82,6 @@ public class BillServiceImpl implements IBillService {
     @Override
     public Bill findById(Long id) {
         Bill bill = billRepository.findById(id).orElseThrow(() -> new NotFoundException("Bill not found"));
-        emailService.sendBillEmailByStaff(bill);
         return bill;
     }
 

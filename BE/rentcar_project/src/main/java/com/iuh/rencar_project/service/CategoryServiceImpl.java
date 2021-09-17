@@ -170,7 +170,7 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public List<Category> findAllEnable() {
-        return categoryReposity.findALlByStatusAndParentIsNotNull(Status.ENABLE);
+        return categoryReposity.findAllByStatusAndParentIsNotNull(Status.ENABLE);
     }
 
     @Override

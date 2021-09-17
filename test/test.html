@@ -15,7 +15,7 @@
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
     $(document).ready(function () {
-      var url = "http://ec2-54-251-169-142.ap-southeast-1.compute.amazonaws.com:8081/api/notification/subscribe";
+      var url = "http://ec2-13-213-74-229.ap-southeast-1.compute.amazonaws.com:8081/api/notification/subscribe";
       var eventSource = new EventSource(url);
       eventSource.addEventListener("PENDING", (event) => {
         alert(event.data);

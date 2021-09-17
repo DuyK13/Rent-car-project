@@ -29,7 +29,7 @@ public interface CategoryReposity extends JpaRepository<Category, Long> {
 
     Optional<Category> findBySlugAndStatusIs(String slug, Status active);
 
-    List<Category> findALlByStatusAndParentIsNotNull(Status status);
+    List<Category> findAllByStatusAndParentIsNotNull(Status status);
 
     @Query(value = "SELECT c FROM Category c WHERE CONCAT(c.name, ' ', c.createdDate, ' ', c.modifiedDate, ' ', c.createdBy.username, ' ', c.modifiedBy.username, ' ', c.parent.name, ' ') LIKE %?1%")
     Page<Category> search(String s, Pageable pageable);
